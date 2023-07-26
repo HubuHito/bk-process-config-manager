@@ -10,18 +10,18 @@
         <div id="app"></div>
         <script>
             window.PROJECT_CONFIG = (function () {
-                const CSRF_COOKIE_NAME = '{{CSRF_COOKIE_NAME}}' // 401 登录地址
-                const IS_MOCK = '{{IS_MOCK}}' // 401 登录地址
-                let SITE_URL = '{{SITE_URL}}' // URL 路由基本前缀，例如：/saas/gsekit
-                let BK_STATIC_URL = '{{BK_STATIC_URL}}' // 静态文件路径，前端 index.html 所在路径相对于静态资源根路径，如 /gsekit/dist
-                const AJAX_URL_PREFIX = '{{AJAX_URL_PREFIX}}' // ajax 请求路径
-                const LOGIN_SERVICE_URL = '{{LOGIN_SERVICE_URL}}' // 401 登录地址
-                const TAM_AEGIS_KEY = '{{TAM_AEGIS_KEY}}' // TAM监控key
-                const TAM_AEGIS_URL = '{{TAM_AEGIS_URL}}' // TAM监控接入链接
-                const CMDB_URL = '{{CMDB_URL}}' // 配置平台路径
-                const LOGIN_URL = '{{LOGIN_URL}}'
-                const APP_NAME = '{{ APP_NAME }}' // 应用名称
-                const BKAPP_DOCS_URL = '{{ BKAPP_DOCS_URL }}' // 文档链接
+                const CSRF_COOKIE_NAME = '<%= process.env.BK_CSRF_COOKIE_NAME %>' // 401 登录地址
+                const IS_MOCK = false // 401 登录地址
+                let SITE_URL = '<%= process.env.BK_SITE_URL %>' // URL 路由基本前缀，例如：/saas/gsekit
+                let BK_STATIC_URL = '<%= process.env.BK_STATIC_URL %>' // 静态文件路径，前端 index.html 所在路径相对于静态资源根路径，如 /gsekit/dist
+                const AJAX_URL_PREFIX = '<%= process.env.BK_AJAX_URL_PREFIX %>' // ajax 请求路径
+                const LOGIN_SERVICE_URL = '<%= process.env.BK_LOGIN_SERVICE_URL %>' // 401 登录地址
+                const TAM_AEGIS_KEY = '<%= process.env.BK_TAM_AEGIS_KEY %>' // TAM监控key
+                const TAM_AEGIS_URL = '<%= process.env.BK_TAM_AEGIS_URL %>' // TAM监控接入链接
+                const CMDB_URL = '<%= process.env.BK_CMDB_URL %>' // 配置平台路径
+                const LOGIN_URL = '<%= process.env.BK_LOGIN_URL %>'
+                const APP_NAME = '<%= process.env.BK_APP_NAME %>' // 应用名称
+                const BKAPP_DOCS_URL = '<%= process.env.BK_BKAPP_DOCS_URL %>' // 文档链接
 
                 // BK_STATIC_URL 不能以 / 结尾
                 if (BK_STATIC_URL.endsWith('/')) {

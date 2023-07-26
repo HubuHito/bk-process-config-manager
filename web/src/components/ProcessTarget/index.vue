@@ -3,9 +3,11 @@
     <section class="topo-tab">
       <div class="bk-button-group">
         <bk-button
-          v-for="tab in tabList" :key="tab.id"
+          v-for="tab in tabList"
+          :key="tab.id"
           :theme="tab.id === tabActive ? 'primary' : 'default'"
-          @click="handleTabClick(tab)">
+          @click="handleTabClick(tab)"
+        >
           {{ tab.name }}
         </bk-button>
       </div>
@@ -17,7 +19,8 @@
         :placeholder="$t('请输入关键字')"
         :right-icon="'bk-icon icon-search'"
         clearable
-        @change="handleSearch">
+        @change="handleSearch"
+      >
       </bk-input>
       <bk-input
         v-show="!showBizTopo"
@@ -25,29 +28,43 @@
         :right-icon="'bk-icon icon-search'"
         v-model.trim="tempSearchKeyword"
         clearable
-        @change="handleSearch">
+        @change="handleSearch"
+      >
       </bk-input>
     </div>
-    <div v-show="showBizTopo" class="topo-content" v-bkloading="{ isLoading: loading || searchLoading, opacity: 1 }">
+    <div
+      v-show="showBizTopo"
+      class="topo-content"
+      v-bkloading="{ loading: loading || searchLoading, opacity: 1 }"
+    >
       <TopoTree
         ref="topoTree"
         load-position="child"
         :data="treeData"
         node-reload
         @selected="handleTreeSelected"
-        @format-tree="handleUpdateTree" />
+        @format-tree="handleUpdateTree"
+      />
     </div>
-    <div v-show="!showBizTopo" class="topo-content" v-bkloading="{ isLoading: loading || searchLoading, opacity: 0 }">
-      <ServerTemplate ref="serverTemp" :search-word="tempSearchKeyword" :list="templateList" @click="handleTempClick" />
+    <div
+      v-show="!showBizTopo"
+      class="topo-content"
+      v-bkloading="{ loading: loading || searchLoading, opacity: 0 }"
+    >
+      <ServerTemplate
+        ref="serverTemp"
+        :search-word="tempSearchKeyword"
+        :list="templateList"
+        @click="handleTempClick"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import ServerTemplate from './ServerTemplate';
-import TopoTree from './TopoTree';
-// import { sortByCustom } from '@/common/util'
-
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
+import ServerTemplate from './ServerTemplate'
+import TopoTree from './TopoTree'
 export default {
   name: 'ProcessTarget',
   components: {
@@ -94,110 +111,109 @@ export default {
       tempSearchKeyword: '',
       topoSearchKeyword: '',
       searchTimer: null,
-    };
+    }
   },
   computed: {
     showBizTopo() {
-      return this.tabActive === 'node';
+      return this.tabActive === 'node'
     },
   },
   methods: {
     handleTabClick(tab) {
       if (tab !== this.tabActive) {
         if (this.timely) {
-          this.handleTimelyChange(tab);
+          this.handleTimelyChange(tab)
         }
-        this.$emit('tab-change', tab.id);
+        $emit(this, 'tab-change', tab.id)
       }
     },
     handleSearch(value) {
-      this.searchLoading = true;
-      this.searchTimer && clearTimeout(this.searchTimer);
+      this.searchLoading = true
+      this.searchTimer && clearTimeout(this.searchTimer)
       this.searchTimer = setTimeout(() => {
         if (this.tabActive === 'node') {
-          this.topoSearchKeyword = value.trim();
-          this.$refs.topoTree.handleSearch(this.topoSearchKeyword);
+          this.topoSearchKeyword = value.trim()
+          this.$refs.topoTree.handleSearch(this.topoSearchKeyword)
         } else {
-          this.tempSearchKeyword = value.trim();
+          this.tempSearchKeyword = value.trim()
         }
-        this.searchLoading = false;
-      }, this.debounceTime);
+        this.searchLoading = false
+      }, this.debounceTime)
     },
     handleTempClick(val) {
-      this.$refs.topoTree.cancelTopoActive();
-      this.$emit('temp-selected', val);
+      this.$refs.topoTree.cancelTopoActive()
+      $emit(this, 'temp-selected', val)
     },
     handleTreeSelected(node) {
-      this.$refs.serverTemp.cancelActive();
-      this.$emit('tree-selected', node);
+      this.$refs.serverTemp.cancelActive()
+      $emit(this, 'tree-selected', node)
     },
     handleUpdateTree(list) {
-      this.$emit('format-tree', list);
+      $emit(this, 'format-tree', list)
     },
     handleTimelyChange(type) {
       if (type === 'template') {
-        this.topoSearchKeyword = '';
-        this.$refs.topoTree.cancelTopoActive();
+        this.topoSearchKeyword = ''
+        this.$refs.topoTree.cancelTopoActive()
       } else {
-        this.$refs.serverTemp.cancelActive();
-        this.tempSearchKeyword = '';
+        this.$refs.serverTemp.cancelActive()
+        this.tempSearchKeyword = ''
       }
     },
     handleSetTemplateActive(item) {
-      this.$refs.serverTemp.setAtive(item);
+      this.$refs.serverTemp.setAtive(item)
     },
     handleSetTopoActive(uuid) {
-      this.$refs.topoTree.setTopoActive(null, uuid);
+      this.$refs.topoTree.setTopoActive(null, uuid)
     },
   },
-};
+  emits: ['tab-change', 'temp-selected', 'tree-selected', 'format-tree'],
+}
 </script>
 
 <style lang="postcss" scoped>
-  @import '../../css/mixins/scroll.css';
+@import '../../css/mixins/scroll.css';
+.process-target {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  overflow: hidden;
+  .topo-tab {
+    margin-bottom: 12px;
+    padding: 0 20px;
 
-  .process-target {
-    display: flex;
-    flex-direction: column;
-    max-height: 100%;
-    overflow: hidden;
+    .bk-button-group {
+      display: flex;
 
-    .topo-tab {
-      margin-bottom: 12px;
-      padding: 0 20px;
+      .bk-button {
+        flex: 1;
+        padding: 0;
 
-      .bk-button-group {
-        display: flex;
-
-        .bk-button {
-          flex: 1;
-          padding: 0;
-
-          &.bk-primary {
-            position: relative;
-            border-radius: 2px;
-            border: 1px solid #3a84ff;
-            color: #3a84ff;
-            background-color: #c7dcff;
-            z-index: 4;
-          }
+        &.bk-primary {
+          position: relative;
+          border-radius: 2px;
+          border: 1px solid #3a84ff;
+          color: #3a84ff;
+          background-color: #c7dcff;
+          z-index: 4;
         }
       }
     }
-
-    .topo-search {
-      margin-bottom: 16px;
-      padding: 0 20px;
-    }
-
-    .topo-content {
-      flex: 1;
-      padding: 0;
-      margin-bottom: 0;
-      max-height: calc(100% - 92px);
-      overflow: auto;
-
-      @mixin scroller;
-    }
   }
+
+  .topo-search {
+    margin-bottom: 16px;
+    padding: 0 20px;
+  }
+
+  .topo-content {
+    flex: 1;
+    padding: 0;
+    margin-bottom: 0;
+    max-height: calc(100% - 92px);
+    overflow: auto;
+
+    @mixin scroller;
+  }
+}
 </style>

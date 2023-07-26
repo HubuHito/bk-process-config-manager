@@ -1,42 +1,50 @@
 <template>
   <div class="check">
-    <bk-button ext-cls="check-btn-loading" size="small" v-if="loading" :loading="loading"></bk-button>
+    <bk-button
+      ext-cls="check-btn-loading"
+      size="small"
+      v-if="loading"
+      :loading="loading"
+    ></bk-button>
     <template v-else>
       <bk-checkbox
         :value="checkValue"
         :indeterminate="halfCheck"
         :disabled="!disabled"
         :class="{
-          'all-check': checkType.active === 'all'
+          'all-check': checkType.active === 'all',
         }"
-        @change="handleCheckChange">
+        @change="handleCheckChange"
+      >
       </bk-checkbox>
       <!-- <bk-popover
-          ref="popover"
-          theme="light agent-operate"
-          trigger="click"
-          placement="bottom"
-          :arrow="false"
-          offset="26, 0"
-          :on-show="handleOnShow"
-          :on-hide="handleOnHide">
-          <div class="icon-container">
-            <i class="bk-icon icon-angle-down" :class="isDropDownShow && 'active'"></i>
-          </div>
-          <template slot="content">
-            <ul class="dropdown-list">
-              <template v-for="(item, index) in checkType.list">
-                <li class="list-item" :key="index" @click="handleCheckAll(item.id)">
-                  {{ item.name }}
-                </li>
-              </template>
-            </ul>
-          </template>
-      </bk-popover> -->
+                            ref="popover"
+                            theme="light agent-operate"
+                            trigger="click"
+                            placement="bottom"
+                            :arrow="false"
+                            offset="26, 0"
+                            :on-show="handleOnShow"
+                            :on-hide="handleOnHide">
+                            <div class="icon-container">
+                              <i class="bk-icon icon-angle-down" :class="isDropDownShow && 'active'"></i>
+                            </div>
+                            <template slot="content">
+                              <ul class="dropdown-list">
+                                <template v-for="(item, index) in checkType.list">
+                                  <li class="list-item" :key="index" @click="handleCheckAll(item.id)">
+                                    {{ item.name }}
+                                  </li>
+                                </template>
+                              </ul>
+                            </template>
+                        </bk-popover> -->
     </template>
   </div>
 </template>
+
 <script>
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   name: 'ColumnCheck',
   props: {
@@ -76,121 +84,121 @@ export default {
         ],
       },
       isDropDownShow: false,
-    };
+    }
   },
   computed: {
     halfCheck() {
-      return this.indeterminate && !this.isAllChecked;
+      return this.indeterminate && !this.isAllChecked
     },
   },
   watch: {
     isAllChecked(v) {
-      this.checkValue = v;
+      this.checkValue = v
     },
   },
   methods: {
     /**
-             * 全选操作
-             * @param {String} type 全选类型：1. 本页权限 2. 跨页全选
-             */
+     * 全选操作
+     * @param {String} type 全选类型：1. 本页权限 2. 跨页全选
+     */
     handleCheckAll(type) {
-      this.checkType.active = type;
-      this.$emit('change', true, type);
-      this.$refs.popover && this.$refs.popover.instance.hide();
+      this.checkType.active = type
+      $emit(this, 'change', true, type)
+      this.$refs.popover && this.$refs.popover.instance.hide()
     },
     /**
-             * 勾选事件
-             */
+     * 勾选事件
+     */
     handleCheckChange(value) {
-      this.checkValue = value;
-      this.$emit('change', this.checkValue);
+      this.checkValue = value
+      $emit(this, 'change', this.checkValue)
     },
     handleOnShow() {
-      this.isDropDownShow = true;
+      this.isDropDownShow = true
     },
     handleOnHide() {
-      this.isDropDownShow = false;
+      this.isDropDownShow = false
     },
   },
-};
+  emits: ['change'],
+}
 </script>
+
 <style lang="postcss" scoped>
-  .check {
-    .all-check {
-      >>> .bk-checkbox {
-        background-color: #fff;
+.check {
+  .all-check {
+    :deep(.bk-checkbox) {
+      background-color: #fff;
 
-        &::after {
-          border-color: #3a84ff;
-        }
-      }
-    }
-
-    .indeterminate {
-      >>> .bk-checkbox {
-        &::after {
-          background: #3a84ff;
-        }
-      }
-    }
-
-    .icon-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      top: 3px;
-    }
-
-    .icon-angle-down {
-      font-size: 22px;
-      cursor: pointer;
-      color: #63656e;
-      transform: rotate(0deg);
-      transition: transform .3s cubic-bezier(.4, 0, .2, 1);
-
-      &:hover {
-        color: #0094ff;
-      }
-
-      &.active {
-        transform: rotate(-180deg);
-      }
-    }
-
-    .check-btn-loading {
-      padding: 0;
-      min-width: auto;
-      border: 0;
-      text-align: left;
-      background: transparent;
-
-      >>> .bk-button-loading {
-        position: static;
-        transform: translateX(0);
-
-        .bounce4 {
-          display: none;
-        }
+      &::after {
+        border-color: #3a84ff;
       }
     }
   }
 
-  .dropdown-list {
-    padding: 6px 0;
-    background-color: #fff;
-
-    .list-item {
-      padding: 0 16px;
-      line-height: 32px;
-      font-size: 12px;
-      color: #63656e;
-      cursor: pointer;
-
-      &:hover {
-        color: #3a84ff;
-        background: #eaf3ff;
+  .indeterminate {
+    :deep(.bk-checkbox) {
+      &::after {
+        background: #3a84ff;
       }
     }
   }
+
+  .icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 3px;
+  }
+
+  .icon-angle-down {
+    font-size: 22px;
+    cursor: pointer;
+    color: #63656e;
+    transform: rotate(0deg);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      color: #0094ff;
+    }
+
+    &.active {
+      transform: rotate(-180deg);
+    }
+  }
+
+  .check-btn-loading {
+    padding: 0;
+    min-width: auto;
+    border: 0;
+    text-align: left;
+    background: transparent;
+
+    :deep(.bk-button-loading) {
+      position: static;
+      transform: translateX(0);
+
+      .bounce4 {
+        display: none;
+      }
+    }
+  }
+}
+.dropdown-list {
+  padding: 6px 0;
+  background-color: #fff;
+  .list-item {
+    padding: 0 16px;
+    line-height: 32px;
+    font-size: 12px;
+    color: #63656e;
+    cursor: pointer;
+
+    &:hover {
+      color: #3a84ff;
+      background: #eaf3ff;
+    }
+  }
+}
 </style>

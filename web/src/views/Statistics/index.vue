@@ -1,5 +1,5 @@
 <template>
-  <div class="operational-statistics" v-bkloading="{ isLoading: loading }">
+  <div class="operational-statistics" v-bkloading="{ loading: loading }">
     <div class="page-head">
       <div>{{ $t('运营统计') }}</div>
       <div class="search-head">
@@ -16,7 +16,8 @@
           :placeholder="$t('选择日期范围')"
           :options="picker.options"
           @change="onPickerChange"
-          @shortcut-change="handleShortcutChange">
+          @shortcut-change="handleShortcutChange"
+        >
         </bk-date-picker>
       </div>
     </div>
@@ -27,13 +28,25 @@
             <div class="chart-item-title">{{ $t('活跃排行') }}</div>
             <div class="chart-item-filter">
               <div class="select-job">
-                <bk-select :clearable="false" v-model="formData.ranking" @change="getStaticByRanking">
-                  <bk-option v-for="item in rankingFilters" :key="item.id" :id="item.id" :name="item.name"></bk-option>
+                <bk-select
+                  :clearable="false"
+                  v-model="formData.ranking"
+                  @change="getStaticByRanking"
+                >
+                  <bk-option
+                    v-for="item in rankingFilters"
+                    :key="item.id"
+                    :value="item.id"
+                    :label="item.name"
+                  ></bk-option>
                 </bk-select>
               </div>
             </div>
           </div>
-          <div class="chart-item-bottom" :style="{ height: `${chartHeight}px` }">
+          <div
+            class="chart-item-bottom"
+            :style="{ height: `${chartHeight}px` }"
+          >
             <div class="chart-item-content">
               <Chart
                 ref="chartTrendRef"
@@ -41,8 +54,9 @@
                 :chart-data="chartData.ranking"
                 :chart-options="{
                   ...chartOption,
-                  plugins: rankingPlugins
-                }">
+                  plugins: rankingPlugins,
+                }"
+              >
               </Chart>
             </div>
           </div>
@@ -51,14 +65,25 @@
           <div class="chart-item-top">
             <div class="chart-item-title">{{ $t('统计频次') }}</div>
             <div class="chart-item-filter">
-              <bk-radio-group v-model="formData.frequency" @change="getStaticByFrequency">
-                <bk-radio class="mr20" :value="item.value" v-for="item in frequencyFilters" :key="item.value">
+              <bk-radio-group
+                v-model:value="formData.frequency"
+                @change="getStaticByFrequency"
+              >
+                <bk-radio
+                  class="mr20"
+                  :value="item.value"
+                  v-for="item in frequencyFilters"
+                  :key="item.value"
+                >
                   {{ item.label }}
                 </bk-radio>
               </bk-radio-group>
             </div>
           </div>
-          <div class="chart-item-bottom" :style="{ height: `${chartHeight}px` }">
+          <div
+            class="chart-item-bottom"
+            :style="{ height: `${chartHeight}px` }"
+          >
             <div class="chart-item-content">
               <Chart
                 ref="chartFrequencyRef"
@@ -66,8 +91,9 @@
                 :chart-data="chartData.frequency"
                 :chart-options="{
                   ...chartOption,
-                  plugins: frequencyPlugins
-                }">
+                  plugins: frequencyPlugins,
+                }"
+              >
               </Chart>
             </div>
           </div>
@@ -77,24 +103,46 @@
             <div class="chart-item-title">{{ $t('趋势统计') }}</div>
             <div class="chart-item-filter">
               <div class="select-job">
-                <bk-select :clearable="false" v-model="formData.job_object" @change="getStaticByTrend">
-                  <bk-option v-for="item in objectFilters" :key="item.id" :id="item.id" :name="item.name"></bk-option>
+                <bk-select
+                  :clearable="false"
+                  v-model="formData.job_object"
+                  @change="getStaticByTrend"
+                >
+                  <bk-option
+                    v-for="item in objectFilters"
+                    :key="item.id"
+                    :value="item.id"
+                    :label="item.name"
+                  ></bk-option>
                 </bk-select>
               </div>
               <div class="select-job ml10">
-                <bk-select :clearable="false" v-model="formData.job_action" @change="getStaticByTrend">
-                  <bk-option v-for="item in actionFilters" :key="item.id" :id="item.id" :name="item.name"></bk-option>
+                <bk-select
+                  :clearable="false"
+                  v-model="formData.job_action"
+                  @change="getStaticByTrend"
+                >
+                  <bk-option
+                    v-for="item in actionFilters"
+                    :key="item.id"
+                    :value="item.id"
+                    :label="item.name"
+                  ></bk-option>
                 </bk-select>
               </div>
             </div>
           </div>
-          <div class="chart-item-bottom" :style="{ height: `${chartHeight}px` }">
+          <div
+            class="chart-item-bottom"
+            :style="{ height: `${chartHeight}px` }"
+          >
             <div class="chart-item-content">
               <Chart
                 ref="chartTrendRef"
                 chart-type="line"
                 :chart-data="chartData.trend"
-                :chart-options="chartOption">
+                :chart-options="chartOption"
+              >
               </Chart>
             </div>
           </div>
@@ -105,9 +153,9 @@
 </template>
 
 <script>
-import Chart from './chart';
-import { mapState, mapActions } from 'vuex';
-import { formatDate } from '@/common/util';
+import Chart from './chart'
+import { mapState, mapActions } from 'vuex'
+import { formatDate } from '@/common/util'
 
 export default {
   name: 'OperationalStatistics',
@@ -212,159 +260,168 @@ export default {
         format: 'YYYY-mm-dd',
         options: {
           disabledDate(time) {
-            return time.getTime() > Date.now();
+            return time.getTime() > Date.now()
           },
         },
         shortcuts: [
           {
             text: window.i18n.t('近7天'),
             value() {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - (3600 * 1000 * 24 * 6));
-              return [start, end];
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 6)
+              return [start, end]
             },
-          }, {
+          },
+          {
             text: window.i18n.t('近15天'),
             value() {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - (3600 * 1000 * 24 * 14));
-              return [start, end];
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 14)
+              return [start, end]
             },
-          }, {
+          },
+          {
             text: window.i18n.t('近30天'),
             value() {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - (3600 * 1000 * 24 * 29));
-              return [start, end];
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 29)
+              return [start, end]
             },
           },
           {
             text: window.i18n.t('近1年'),
             value() {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - (3600 * 1000 * 24 * 364));
-              return [start, end];
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 364)
+              return [start, end]
             },
           },
         ],
       },
-    };
+    }
   },
   computed: {
     ...mapState(['bizList', 'pageHeight']),
     chartHeight() {
-      return (Math.max(this.pageHeight, 708) - 220) / 2 - 52;
+      return (Math.max(this.pageHeight, 708) - 220) / 2 - 52
     },
   },
   created() {
-    this.frequencyPlugins = this.getChartPlugin('frequency');
-    this.rankingPlugins = this.getChartPlugin('ranking');
-    const end = new Date();
-    const start = new Date();
-    start.setTime(start.getTime() - (3600 * 1000 * 24 * 7));
-    this.formData.timeRange = [start, end];
-    this.getStaticPageData();
+    this.frequencyPlugins = this.getChartPlugin('frequency')
+    this.rankingPlugins = this.getChartPlugin('ranking')
+    const end = new Date()
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+    this.formData.timeRange = [start, end]
+    this.getStaticPageData()
   },
   methods: {
-    ...mapActions('meta', ['ajaxFrequencyStatistics', 'ajaxTrendStatistics', 'ajaxJobCountStatistics']),
+    ...mapActions('meta', [
+      'ajaxFrequencyStatistics',
+      'ajaxTrendStatistics',
+      'ajaxJobCountStatistics',
+    ]),
     // 按频率
     getStaticPageData() {
-      this.getStaticByFrequency();
-      this.getStaticByTrend();
-      this.getStaticByRanking();
+      this.getStaticByFrequency()
+      this.getStaticByTrend()
+      this.getStaticByRanking()
     },
     async getStaticByFrequency() {
-      const { frequency } = this.formData;
+      const { frequency } = this.formData
       try {
-        const params = this.getDateParams();
-        params.group_by = frequency;
-        let { data = [] } = await this.ajaxFrequencyStatistics(params);
+        const params = this.getDateParams()
+        params.group_by = frequency
+        let { data = [] } = await this.ajaxFrequencyStatistics(params)
         if (data.length) {
           if (['bk_biz_id', 'job_action'].includes(frequency)) {
-            const i18nMap = this.getI18nMap(frequency);
-            data = data.map(item => ({
+            const i18nMap = this.getI18nMap(frequency)
+            data = data.map((item) => ({
               ...item,
               [frequency]: i18nMap[item[frequency]],
-            }));
+            }))
           }
-          const dateMap = {};
+          const dateMap = {}
           data.reduce((obj, item) => {
-            obj[item.date] = item;
-            return obj;
-          }, dateMap);
+            obj[item.date] = item
+            return obj
+          }, dateMap)
           // 补齐缺失的日期
-          const dateArr = this.getContinuityDate(params.start_time.slice(0, 10), params.end_time.slice(0, 10));
-          data = dateArr.map(date => ({
+          const dateArr = this.getContinuityDate(
+            params.start_time.slice(0, 10),
+            params.end_time.slice(0, 10)
+          )
+          data = dateArr.map((date) => ({
             date,
             count: dateMap[date] ? dateMap[date].count : 0,
             [frequency]: dateMap[date] ? dateMap[date][frequency] : '',
-          }));
-          const { color } = this;
-          this.$set(this.chartData, 'frequency', {
-            labels: data.map(item => item.date),
-            datasets: [
-              { data, backgroundColor: color, borderColor: color },
-            ],
-          });
+          }))
+          const { color } = this
+          this.chartData['frequency'] = {
+            labels: data.map((item) => item.date),
+            datasets: [{ data, backgroundColor: color, borderColor: color }],
+          }
         } else {
           this.chartData.frequency = {
             labels: [],
             datasets: [],
-          };
+          }
         }
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       }
     },
     // 按趋势
     async getStaticByTrend() {
       try {
-        const params = this.getDateParams();
+        const params = this.getDateParams()
         if (this.formData.job_object !== 'all') {
-          params.job_object = this.formData.job_object;
+          params.job_object = this.formData.job_object
         }
         if (this.formData.job_action !== 'all') {
-          params.job_action = this.formData.job_action;
+          params.job_action = this.formData.job_action
         }
-        let { data = [] } = await this.ajaxTrendStatistics(params);
+        let { data = [] } = await this.ajaxTrendStatistics(params)
         if (data.length) {
-          const dateMap = {};
+          const dateMap = {}
           data.reduce((obj, item) => {
-            obj[item.date] = item;
-            return obj;
-          }, dateMap);
+            obj[item.date] = item
+            return obj
+          }, dateMap)
           // 补齐缺失的日期
-          const dateArr = this.getContinuityDate(params.start_time.slice(0, 10), params.end_time.slice(0, 10));
-          data = dateArr.map(date => ({
+          const dateArr = this.getContinuityDate(
+            params.start_time.slice(0, 10),
+            params.end_time.slice(0, 10)
+          )
+          data = dateArr.map((date) => ({
             date,
             count: dateMap[date] ? dateMap[date].count : 0,
-          }));
-          const [borderColor] = this.color;
+          }))
+          const [borderColor] = this.color
           this.chartData.trend = {
-            labels: data.map(item => item.date),
-            datasets: [
-              { data: data.map(item => item.count), borderColor },
-            ],
-          };
+            labels: data.map((item) => item.date),
+            datasets: [{ data: data.map((item) => item.count), borderColor }],
+          }
         } else {
           this.chartData.trend = {
             labels: [],
             datasets: [],
-          };
+          }
         }
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       }
     },
     async getStaticByRanking() {
       try {
-        const { ranking } = this.formData;
-        const { color } = this;
-        const { start_time: startTime, end_time: endTime } = this.getDateParams();
+        const { ranking } = this.formData
+        const { color } = this
+        const { start_time: startTime, end_time: endTime } =
+          this.getDateParams()
         const params = {
           exclude_conditions: {},
           filter_conditions: {
@@ -372,121 +429,123 @@ export default {
             start_time__lte: endTime,
           },
           group_by: [ranking],
-        };
-        let { data = [] } = await this.ajaxJobCountStatistics(params);
+        }
+        let { data = [] } = await this.ajaxJobCountStatistics(params)
         if (data.length) {
           if (['bk_biz_id', 'job_action', 'status'].includes(ranking)) {
-            const i18nMap = this.getI18nMap(ranking);
-            data = data.map(item => ({
+            const i18nMap = this.getI18nMap(ranking)
+            data = data.map((item) => ({
               ...item,
               [ranking]: i18nMap[item[ranking]] || item[ranking],
-            }));
+            }))
           }
           this.chartData.ranking = {
-            labels: data.map(item => item[ranking]),
-            datasets: [
-              { data, backgroundColor: color, borderColor: color },
-            ],
-          };
+            labels: data.map((item) => item[ranking]),
+            datasets: [{ data, backgroundColor: color, borderColor: color }],
+          }
         } else {
           this.chartData.trend = {
             labels: [],
             datasets: [],
-          };
+          }
         }
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       }
     },
     handleShortcutChange(value, index) {
-      this.formData.shortcutIndex = index;
+      this.formData.shortcutIndex = index
     },
     onPickerChange(date) {
-      this.formData.timeRange = date;
-      this.getStaticPageData();
+      this.formData.timeRange = date
+      this.getStaticPageData()
     },
     getDateParams() {
-      let startTime = '';
-      let endTime = '';
+      let startTime = ''
+      let endTime = ''
       if (this.formData.shortcutIndex > -1) {
-        const currentShortcut = this.picker.shortcuts[this.formData.shortcutIndex];
+        const currentShortcut =
+          this.picker.shortcuts[this.formData.shortcutIndex]
         if (currentShortcut) {
-          const [start, end] = currentShortcut.value();
-          startTime = formatDate(start, this.picker.format);
-          endTime = formatDate(end, this.picker.format);
+          const [start, end] = currentShortcut.value()
+          startTime = formatDate(start, this.picker.format)
+          endTime = formatDate(end, this.picker.format)
         }
       } else {
-        const [start, end] = this.formData.timeRange;
-        startTime = formatDate(start, this.picker.format);
-        endTime = formatDate(end, this.picker.format);
+        const [start, end] = this.formData.timeRange
+        startTime = formatDate(start, this.picker.format)
+        endTime = formatDate(end, this.picker.format)
       }
       return {
         start_time: `${startTime} 00:00:00`,
         end_time: `${endTime} 23:59:59`,
-      };
+      }
     },
     getDateTimes(date) {
-      return Date.parse(date.split('-'));
+      return Date.parse(date.split('-'))
     },
     // 拿到完整的时间段日期
     getContinuityDate(beginDate, endDate) {
-      const continuityDateArr = [];
-      let beginTime = this.getDateTimes(beginDate);
-      const endTime = this.getDateTimes(endDate);
-      const dayTimes = 60 * 60 * 24 * 1000;
-      const dayNum = (endTime - beginTime) / dayTimes;
+      const continuityDateArr = []
+      let beginTime = this.getDateTimes(beginDate)
+      const endTime = this.getDateTimes(endDate)
+      const dayTimes = 60 * 60 * 24 * 1000
+      const dayNum = (endTime - beginTime) / dayTimes
       for (let i = 0; i <= dayNum; i++) {
         if (beginTime >= endTime) {
-          beginTime = formatDate(endTime, this.picker.format);
-          continuityDateArr.push(beginTime);
+          beginTime = formatDate(endTime, this.picker.format)
+          continuityDateArr.push(beginTime)
         } else {
-          continuityDateArr.push(formatDate(beginTime, this.picker.format));
+          continuityDateArr.push(formatDate(beginTime, this.picker.format))
         }
-        beginTime += dayTimes;
+        beginTime += dayTimes
       }
-      return continuityDateArr;
+      return continuityDateArr
     },
     getI18nMap(type) {
-      let i18nMap = {};
+      let i18nMap = {}
       switch (type) {
         case 'bk_biz_id':
           this.bizList.reduce((obj, item) => {
-            i18nMap[item.bk_biz_id] = item.name;
-            return obj;
-          }, i18nMap);
-          break;
+            i18nMap[item.bk_biz_id] = item.name
+            return obj
+          }, i18nMap)
+          break
         case 'job_action':
           this.actionFilters.reduce((obj, item) => {
-            i18nMap[item.id] = item.name;
-            return obj;
-          }, i18nMap);
-          break;
+            i18nMap[item.id] = item.name
+            return obj
+          }, i18nMap)
+          break
         case 'status':
-          i18nMap = this.statusMap;
-          break;
+          i18nMap = this.statusMap
+          break
         default:
-          i18nMap = {};
+          i18nMap = {}
       }
-      return i18nMap;
+      return i18nMap
     },
     getChartPlugin(type) {
-      let formatter = data => data[this.formData[type]] || '';
-      let display = ({ dataset }) => dataset.data.length <= 31;
+      let formatter = (data) => data[this.formData[type]] || ''
+      let display = ({ dataset }) => dataset.data.length <= 31
       const tooltip = {
         callbacks: {
           label: ({ formattedValue }) => this.$t('执行次数', [formattedValue]),
         },
-      };
-      let rotation = '-70';
+      }
+      let rotation = '-70'
       if (type === 'ranking') {
-        formatter = data => data.count || '';
-        display = ({ dataIndex, dataset }) => dataset.data[dataIndex];
-        rotation = 0;
+        formatter = (data) => data.count || ''
+        display = ({ dataIndex, dataset }) => dataset.data[dataIndex]
+        rotation = 0
       } else {
         tooltip.callbacks.label = ({ dataset, dataIndex }) => {
-          const data = dataset.data[dataIndex] || {};
-          return this.$t('不定项次数', [data[this.formData.frequency], data.count]);
-        };
+          const data = dataset.data[dataIndex] || {}
+          return this.$t('不定项次数', [
+            data[this.formData.frequency],
+            data.count,
+          ])
+        }
       }
       const datalabels = {
         anchor: 'end',
@@ -501,88 +560,87 @@ export default {
         rotation,
         formatter,
         display,
-      };
+      }
       const plugin = {
         legend: { display: false },
         tooltip,
         datalabels,
-      };
-      return plugin;
+      }
+      return plugin
     },
   },
-};
+}
 </script>
 
 <style lang="postcss" scoped>
-  .operational-statistics {
+.operational-statistics {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 60px 20px;
+  background-color: #f5f7fa;
+  overflow: hidden;
+  .search-head {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 16px;
+  }
+
+  .page-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 18px 60px 20px;
-    background-color: #f5f7fa;
-    overflow: hidden;
+    overflow: auto;
+  }
 
-    .search-head {
-      display: flex;
-      justify-content: space-between;
-      margin: 20px 0 16px;
-    }
+  .chart-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-    .page-content {
+    .chart-item {
+      padding: 10px 20px;
       flex: 1;
       display: flex;
       flex-direction: column;
-      overflow: auto;
-    }
+      background: #fff;
 
-    .chart-list {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
+      & + .chart-item {
+        margin-top: 10px;
+      }
 
-      .chart-item {
-        padding: 10px 20px;
-        flex: 1;
+      .chart-item-top {
         display: flex;
-        flex-direction: column;
-        background: #fff;
+        align-items: center;
+        margin-bottom: 15px;
+        height: 32px;
 
-        & + .chart-item {
-          margin-top: 10px;
-        }
-
-        .chart-item-top {
+        .chart-item-filter {
           display: flex;
-          align-items: center;
-          margin-bottom: 15px;
-          height: 32px;
-
-          .chart-item-filter {
-            display: flex;
-            flex: 1;
-            margin-left: 25px;
-          }
+          flex: 1;
+          margin-left: 25px;
         }
+      }
 
-        .chart-item-bottom {
-          overflow: hidden;
-        }
+      .chart-item-bottom {
+        overflow: hidden;
+      }
 
-        .chart-item-content {
+      .chart-item-content {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .select-job {
+        width: 200px;
+        display: inline-flex;
+
+        .bk-select {
           width: 100%;
-          height: 100%;
-          overflow: hidden;
-        }
-
-        .select-job {
-          width: 200px;
-          display: inline-flex;
-
-          .bk-select {
-            width: 100%;
-          }
         }
       }
     }
   }
+}
 </style>

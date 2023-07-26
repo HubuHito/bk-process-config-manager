@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import MainComponent from '../Distribute/MainComponent';
+import MainComponent from '../Distribute/MainComponent'
 
 export default {
   name: 'TemplateGenerate',
@@ -29,17 +29,17 @@ export default {
   methods: {
     backRoute() {
       if (this.$router.__from_name) {
-        this.$router.back();
+        this.$router.back()
       } else {
-        this.$store.commit('routeConfigTemplateList');
+        this.$store.commit('routeConfigTemplateList')
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>
-  .config-file-template-generate-container {
-    height: 100%;
-  }
+.config-file-template-generate-container {
+  height: 100%;
+}
 </style>

@@ -5,22 +5,28 @@
       class="text-has-tips"
       v-bk-tooltips="{
         content: column.tips,
-        placement: tipsPlacement
-      }">{{ column.label }}</span>
+        placement: tipsPlacement,
+      }"
+      >{{ column.label }}</span
+    >
     <span v-else>{{ column.label }}</span>
     <div
       class="expand-btn"
       v-bk-tooltips="{
         content: isExpand ? $t('收起配置字段') : $t('展开配置字段'),
-        placement: 'right'
+        placement: 'right',
       }"
-      @click.stop="handleToggleExpand">
-      <i :class="`gsekit-icon gsekit-icon-${ isExpand ? 'shouqi' : 'zhankai'}`"></i>
+      @click.stop="handleToggleExpand"
+    >
+      <i
+        :class="`gsekit-icon gsekit-icon-${isExpand ? 'shouqi' : 'zhankai'}`"
+      ></i>
     </div>
   </div>
 </template>
 
 <script>
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   name: 'ExpandTh',
   props: {
@@ -39,30 +45,30 @@ export default {
   },
   methods: {
     handleToggleExpand() {
-      this.$emit('click-expand', !this.column.isExpand);
+      $emit(this, 'click-expand', !this.column.isExpand)
     },
   },
-};
+  emits: ['click-expand'],
+}
 </script>
 
 <style lang="postcss" scoped>
-  .expand-th-container {
-    position: relative;
+.expand-th-container {
+  position: relative;
+  .expand-btn {
+    position: absolute;
+    left: 50%;
+    bottom: -7px;
+    display: flex;
+    justify-content: center;
+    font-size: 13px;
+    color: #c4c6cc;
+    cursor: pointer;
+    transform: translateX(-50%);
 
-    .expand-btn {
-      position: absolute;
-      left: 50%;
-      bottom: -7px;
-      display: flex;
-      justify-content: center;
-      font-size: 13px;
-      color: #c4c6cc;
-      cursor: pointer;
-      transform: translateX(-50%);
-
-      &:hover {
-        color: #3a84ff;
-      }
+    &:hover {
+      color: #3a84ff;
     }
   }
+}
 </style>

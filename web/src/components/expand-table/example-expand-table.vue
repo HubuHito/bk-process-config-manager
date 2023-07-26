@@ -9,39 +9,61 @@
       :row-class-name="setRowClassName"
       @rowCheck="handleRowCheck"
       @page-change="handlePageChange"
-      @sub-head-click="handSubHeadClick">
-      <div class="selection-tips" slot="prepend">
-        <div>{{ $t('已选') }}<span class="tips-num">{{ selectionCount }}</span>{{ $t('条') }},</div>
-        <bk-button ext-cls="tips-btn" text>
-          {{ $t('选择所有') }}<span class="tips-num">{{ pagination.count }}</span>{{ $t('条') }}
-        </bk-button>
-        <bk-button ext-cls="tips-btn" text>{{ $t('取消选择所有数据') }}</bk-button>
-      </div>
+      @sub-head-click="handSubHeadClick"
+    >
+      <template v-slot:prepend>
+        <div class="selection-tips">
+          <div>
+            {{ $t('已选') }}<span class="tips-num">{{ selectionCount }}</span
+            >{{ $t('条') }},
+          </div>
+          <bk-button ext-cls="tips-btn" text>
+            {{ $t('选择所有')
+            }}<span class="tips-num">{{ pagination.count }}</span
+            >{{ $t('条') }}
+          </bk-button>
+          <bk-button ext-cls="tips-btn" text>{{
+            $t('取消选择所有数据')
+          }}</bk-button>
+        </div>
+      </template>
       <!-- 进程类型 -->
-      <template slot="isTemplate" slot-scope="{ row }">
+      <template v-slot:isTemplate="{ row }">
         <span :class="['table-tag', { 'is-template': row.isTemplate }]">
           {{ row.isTemplate ? $t('模版') : $t('实例') }}
         </span>
       </template>
       <!-- 别名 -->
-      <template slot="alias" slot-scope="{ row }">
-        <div v-if="row.isTemplate" @click="handleGoServeTemp(row)" class="alias-content">
+      <template v-slot:alias="{ row }">
+        <div
+          v-if="row.isTemplate"
+          @click="handleGoServeTemp(row)"
+          class="alias-content"
+        >
           <bk-button text>{{ row.alias }}</bk-button>
           <i class="gsekit-icon gsekit-icon-jump-fill primary ml10"></i>
         </div>
         <span v-else>{{ row.alias }}</span>
       </template>
       <!-- 进程启动参数 -->
-      <template slot="startParams" slot-scope="{ row }">
+      <template v-slot:startParams="{ row }">
         <bk-popover v-if="row.isTemplate" placement="top" theme="light">
-          <span disabled style="white-space: nowrap;">{{ row.startParams || '--' }}</span>
-          <i18n path="跳转服务模板" slot="content">
-            <span class="text-cursor primary" @click="handleGoServeTemp(row)">{{ $t('服务模版') }}</span>
-          </i18n>
+          <span disabled style="white-space: nowrap">{{
+            row.startParams || '--'
+          }}</span>
+          <template v-slot:content>
+            <i18n path="跳转服务模板">
+              <span
+                class="text-cursor primary"
+                @click="handleGoServeTemp(row)"
+                >{{ $t('服务模版') }}</span
+              >
+            </i18n>
+          </template>
         </bk-popover>
         <span v-else>{{ row.startParams || '--' }}</span>
       </template>
-      <template slot="topo" slot-scope="{ row, $index }">
+      <template v-slot:topo="{ row, $index }">
         {{ `${$index}slot-test: ${row.topo}` }}
       </template>
     </ExpandTable>
@@ -49,8 +71,9 @@
 </template>
 
 <script>
-import ExpandTable from '@/components/expand-table/expand-table';
-import ColumnCheck from '@/components/ColumnCheck';
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
+import ExpandTable from '@/components/expand-table/expand-table'
+import ColumnCheck from '@/components/ColumnCheck'
 
 export default {
   name: 'ProcessAttribute',
@@ -289,16 +312,200 @@ export default {
         },
       ],
       tableData: [
-        { id: 1, disabled: true, isTemplate: true, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: '', start1: 'start1', start2: 'start2', start3: 'start3', start4: 'start4', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
-        { id: 2, disabled: true, isTemplate: true, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: 'start3', start4: 'start4', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
-        { id: 3, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: '', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: 'start3', start4: 'start4', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
-        { id: 4, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: 'start3', start4: 'start4', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
-        { id: 5, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: '', start4: 'start4', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
-        { id: 6, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: 'start3', start4: '', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
-        { id: 7, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: 'start3', start4: 'start4', stop1: 'stop1', stop2: '', stop3: 'stop3' },
-        { id: 8, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: 'start3', start4: 'start4', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
-        { id: 9, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: 'start3', start4: 'start4', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
-        { id: 23, alias: 'nginx', name: 'nginx', topo: '广东大区三 / centerdb / 共 20 个实例', startParams: '-c /data/nginx/conf/game.cfg', remarks: '登陆模块', control1: 'control1', control2: 'control2', control3: 'control3', control4: 'control4', start1: 'start1', start2: 'start2', start3: 'start3', start4: 'start4', stop1: 'stop1', stop2: 'stop2', stop3: 'stop3' },
+        {
+          id: 1,
+          disabled: true,
+          isTemplate: true,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: '',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
+        {
+          id: 2,
+          disabled: true,
+          isTemplate: true,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
+        {
+          id: 3,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: '',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
+        {
+          id: 4,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
+        {
+          id: 5,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: '',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
+        {
+          id: 6,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: '',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
+        {
+          id: 7,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: '',
+          stop3: 'stop3',
+        },
+        {
+          id: 8,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
+        {
+          id: 9,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
+        {
+          id: 23,
+          alias: 'nginx',
+          name: 'nginx',
+          topo: '广东大区三 / centerdb / 共 20 个实例',
+          startParams: '-c /data/nginx/conf/game.cfg',
+          remarks: '登陆模块',
+          control1: 'control1',
+          control2: 'control2',
+          control3: 'control3',
+          control4: 'control4',
+          start1: 'start1',
+          start2: 'start2',
+          start3: 'start3',
+          start4: 'start4',
+          stop1: 'stop1',
+          stop2: 'stop2',
+          stop3: 'stop3',
+        },
       ],
       pagination: {
         current: 1,
@@ -308,101 +515,104 @@ export default {
       indeterminate: false,
       isAllChecked: false,
       checkLoading: false,
-    };
+    }
   },
   computed: {
     openCheckAll() {
-      return this.checkAll && !!this.checkRender;
+      return this.checkAll && !!this.checkRender
     },
   },
   mounted() {
-    console.log(this.$attrs);
+    console.log(this.$attrs)
   },
   methods: {
     handlePageChange(page) {
-      console.log(page);
-      this.pagination.current = page;
+      console.log(page)
+      this.pagination.current = page
     },
     handleFiltersChange() {
-      this.$emit('change-filters', this.staticIncomplete);
+      $emit(this, 'change-filters', this.staticIncomplete)
     },
     handSubHeadClick(data) {
-      console.log(data);
+      console.log(data)
     },
     handleGoServeTemp(row) {
-      console.log(row);
+      console.log(row)
     },
     renderSelectionHeader() {
-      return <ColumnCheck
-        ref="customSelectionHeader"
-        indeterminate={this.indeterminate}
-        isAllChecked={this.isAllChecked}
-        loading={this.checkLoading}
-        disabled={Boolean(this.tableData.length)}
-        onChange={(value, type) => this.handleCheckAll(value, type)}>
-      </ColumnCheck>;
+      return (
+        <ColumnCheck
+          ref="customSelectionHeader"
+          indeterminate={this.indeterminate}
+          isAllChecked={this.isAllChecked}
+          loading={this.checkLoading}
+          disabled={Boolean(this.tableData.length)}
+          onChange={(value, type) => this.handleCheckAll(value, type)}
+        ></ColumnCheck>
+      )
     },
     async handleCheckAll(value, type) {
-      console.log(value, type);
+      console.log(value, type)
     },
     setRowClassName({ row }) {
-      return row.disabled ? 'disabled-row' : '';
+      return row.disabled ? 'disabled-row' : ''
     },
     tipsRenderHeader(h, { column }) {
-      return <span class="text-has-tips" v-bk-tooltips={ this.subHeadMap[column.property] }>{ column.label }</span>;
+      return (
+        <span
+          class="text-has-tips"
+          v-bk-tooltips={this.subHeadMap[column.property]}
+        >
+          {column.label}
+        </span>
+      )
     },
   },
-};
+  emits: ['change-filters'],
+}
 </script>
 
 <style lang="postcss" scoped>
-  .text-cursor {
-    cursor: pointer;
+.text-cursor {
+  cursor: pointer;
+}
+.primary {
+  color: #3a84ff;
+}
+.undone {
+  color: #ff9c01;
+}
+.selection-tips {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  font-size: 12px;
+  color: #313238;
+  background: #ebecf0;
+  .tips-num {
+    font-weight: bold;
   }
 
-  .primary {
-    color: #3a84ff;
-  }
-
-  .undone {
-    color: #ff9c01;
-  }
-
-  .selection-tips {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 32px;
+  .tips-btn {
     font-size: 12px;
-    color: #313238;
-    background: #ebecf0;
-
-    .tips-num {
-      font-weight: bold;
-    }
-
-    .tips-btn {
-      font-size: 12px;
-      margin-left: 5px;
-    }
+    margin-left: 5px;
   }
-
-  >>> .disabled-row {
-    color: #979ba5;
+}
+:deep(.disabled-row) {
+  color: #979ba5;
+}
+.table-tag {
+  display: inline-block;
+  width: 32px;
+  line-height: 18px;
+  border-radius: 2px;
+  text-align: center;
+  color: #979ba5;
+  background: #f0f1f5;
+  &.is-template {
+    color: #3a84ff;
+    background: #e1ecff;
   }
-
-  .table-tag {
-    display: inline-block;
-    width: 32px;
-    line-height: 18px;
-    border-radius: 2px;
-    text-align: center;
-    color: #979ba5;
-    background: #f0f1f5;
-
-    &.is-template {
-      color: #3a84ff;
-      background: #e1ecff;
-    }
-  }
+}
 </style>

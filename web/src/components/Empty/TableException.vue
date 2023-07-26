@@ -3,8 +3,16 @@
     <template v-if="['search-empty', '500'].includes(typeDisplay)" #default>
       <template v-if="typeDisplay === 'search-empty'">
         <p class="empty-title">{{ $t('搜索结果为空') }}</p>
-        <i18n tag="p" class="empty-desc" path="可以尝试调整关键词或清空筛选条件">
-          <bk-link theme="primary" class="empty-btn" @click="() => handleClick('clear')">
+        <i18n
+          tag="p"
+          class="empty-desc"
+          path="可以尝试调整关键词或清空筛选条件"
+        >
+          <bk-link
+            theme="primary"
+            class="empty-btn"
+            @click="() => handleClick('clear')"
+          >
             {{ $t('清空筛选条件') }}
           </bk-link>
         </i18n>
@@ -13,7 +21,11 @@
         <div class="empty">
           <p class="empty-title">{{ $t('获取数据异常') }}</p>
           <p class="empty-desc">
-            <bk-link theme="primary" class="empty-btn" @click="() => handleClick('refresh')">
+            <bk-link
+              theme="primary"
+              class="empty-btn"
+              @click="() => handleClick('refresh')"
+            >
               {{ $t('刷新') }}
             </bk-link>
           </p>
@@ -22,7 +34,9 @@
     </template>
   </bk-exception>
 </template>
+
 <script lang="ts">
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   name: 'TableException',
   props: {
@@ -42,50 +56,53 @@ export default {
   data() {
     return {
       oldType: this.type,
-    };
+    }
   },
   computed: {
     typeDisplay() {
-      return this.delay ? this.oldType : this.type;
+      return this.delay ? this.oldType : this.type
     },
   },
   watch: {
     delay: {
+      deep: true,
+
       handler(val) {
         if (!val) {
-          this.oldType = this.type;
+          this.oldType = this.type
         }
       },
+
       immediate: true,
     },
   },
   methods: {
     handleClick(clickType) {
-      this.$emit(`empty-${clickType}`);
+      $emit(this, `empty-${clickType}`)
     },
   },
-};
+  emits: [],
+}
 </script>
 
 <style lang="postcss" scoped>
-  .empty-title {
-    line-height: 22px;
-    font-size: 14px;
-    color: #63656e;
-  }
-
-  .empty-desc {
-    display: flex;
-    align-items: center;
-    margin-top: 8px;
-    line-height: 20px;
+.empty-title {
+  line-height: 22px;
+  font-size: 14px;
+  color: #63656e;
+}
+.empty-desc {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  line-height: 20px;
+  font-size: 12px;
+  color: #979ba5;
+}
+.empty-btn {
+  margin-left: 4px;
+  :deep(.bk-link-text) {
     font-size: 12px;
-    color: #979ba5;
   }
-  .empty-btn {
-    margin-left: 4px;
-    /deep/ .bk-link-text {
-      font-size: 12px;
-    }
-  }
+}
 </style>

@@ -1,20 +1,14 @@
-/**
- * @file eslint config
- * @author blueking
- */
-
 module.exports = {
   root: true,
-  extends: ['@bkui/eslint-config-bk/vue'],
-  globals: {
-    // value 为 true 允许被重写，为 false 不允许被重写
-    NODE_ENV: false,
-    LOCAL_DEV_URL: false,
-    LOCAL_DEV_PORT: false,
-    AJAX_MOCK_PARAM: false,
+  extends: ['@blueking/eslint-config-bk/tsvue3'], // vue2 这里用 @blueking/eslint-config-bk/tsvue
+  parserOptions: {
+    project: [
+      './tsconfig.json',
+    ],
   },
-  // add your custom rules hered
-  rules: {
-    'no-param-reassign': 'off',
+   // add your custom rules hered
+   rules: {
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off"
   },
 };

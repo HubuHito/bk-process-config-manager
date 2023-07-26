@@ -5,42 +5,67 @@
     :position="{ top: dialogTop }"
     width="1200"
     ext-cls="cover-draft-dialog"
-    @value-change="handleValueChange">
-    <div slot="header" class="header-container">
-      <div>{{ $t('当前已有草稿，是否覆盖？') }}</div>
-      <DiffNav :diff-count="diffCount" @previous="jumpPreviousChange" @next="jumpNextChange" />
-    </div>
+    @value-change="handleValueChange"
+  >
+    <template v-slot:header>
+      <div class="header-container">
+        <div>{{ $t('当前已有草稿，是否覆盖？') }}</div>
+        <DiffNav
+          :diff-count="diffCount"
+          @previous="jumpPreviousChange"
+          @next="jumpNextChange"
+        />
+      </div>
+    </template>
     <div class="content-container">
       <template v-if="showEditor">
         <div class="cover-dialog-title">
           <div class="cover-dialog-title-half">
-            #{{ draftVersion.config_version_id + ' ' + draftVersion.description }}
+            #{{
+              draftVersion.config_version_id + ' ' + draftVersion.description
+            }}
             <TagDraft dark />
           </div>
           <div class="cover-dialog-title-half">
-            #{{ coverVersion.config_version_id + ' ' + coverVersion.description }}
+            #{{
+              coverVersion.config_version_id + ' ' + coverVersion.description
+            }}
             <TagAvailable v-if="coverVersion.is_active" dark />
           </div>
         </div>
-        <DiffEditor ref="diffEditorRef" style="height: calc(100% - 52px);"
-                    :old-data="oldData" :new-data="newData" :diff-count.sync="diffCount" />
+        <DiffEditor
+          ref="diffEditorRef"
+          style="height: calc(100% - 52px)"
+          :old-data="oldData"
+          :new-data="newData"
+          v-model:diff-count="diffCount"
+        />
       </template>
     </div>
-    <div slot="footer" class="footer-container">
-      <bk-button v-test="'cover'" class="confirm-button" theme="primary" :loading="loading" @click="handleConfirm">
-        {{ $t('确定覆盖') }}
-      </bk-button>
-      <bk-button @click="handleCancel">{{ $t('取消') }}</bk-button>
-    </div>
+    <template v-slot:footer>
+      <div class="footer-container">
+        <bk-button
+          v-test="'cover'"
+          class="confirm-button"
+          theme="primary"
+          :loading="loading"
+          @click="handleConfirm"
+        >
+          {{ $t('确定覆盖') }}
+        </bk-button>
+        <bk-button @click="handleCancel">{{ $t('取消') }}</bk-button>
+      </div>
+    </template>
   </bk-dialog>
 </template>
 
 <script>
-import TagDraft from '../TagDraft';
-import TagAvailable from '../TagAvailable';
-import DiffNav from '@/components/DiffNav';
-import DiffEditor from '@/components/DiffEditor';
-import dialogTopMixin from '@/mixins/dialogTop';
+import { $on, $off, $once, $emit } from '../../../../../utils/gogocodeTransfer'
+import TagDraft from '../TagDraft'
+import TagAvailable from '../TagAvailable'
+import DiffNav from '@/components/DiffNav'
+import DiffEditor from '@/components/DiffEditor'
+import dialogTopMixin from '@/mixins/dialogTop'
 
 export default {
   components: {
@@ -79,123 +104,122 @@ export default {
         content: '',
         language: 'python',
       },
-    };
+    }
   },
   watch: {
     show(val) {
       if (val) {
-        const draftVersion = this.versionList.find(item => item.is_draft);
-        this.draftVersion = draftVersion;
+        const draftVersion = this.versionList.find((item) => item.is_draft)
+        this.draftVersion = draftVersion
         this.oldData = {
           content: draftVersion.content,
           language: draftVersion.file_format,
-        };
+        }
         this.newData = {
           content: this.coverVersion.content,
           language: this.coverVersion.file_format,
-        };
+        }
         setTimeout(() => {
-          this.showEditor = true;
-        });
+          this.showEditor = true
+        })
       } else {
-        this.showEditor = false;
+        this.showEditor = false
       }
     },
   },
   methods: {
     handleValueChange(val) {
-      this.$emit('update:show', val);
+      $emit(this, 'update:show', val)
     },
     jumpNextChange() {
-      this.$refs.diffEditorRef.diffNavigator.next();
+      this.$refs.diffEditorRef.diffNavigator.next()
     },
     jumpPreviousChange() {
-      this.$refs.diffEditorRef.diffNavigator.previous();
+      this.$refs.diffEditorRef.diffNavigator.previous()
     },
     async handleConfirm() {
       try {
-        this.loading = true;
-        const versionId = this.draftVersion.config_version_id;
-        const res = await this.$store.dispatch('configVersion/ajaxUpdateConfigVersion', {
-          versionId,
-          data: {
-            description: this.coverVersion.description,
-            content: this.coverVersion.content,
-            file_format: this.coverVersion.file_format,
-            is_active: false,
-            is_draft: true, // 覆盖草稿
-          },
-        });
-        this.messageSuccess(this.$t('成功覆盖已有草稿'));
-        this.$emit('coverSuccess', versionId, res.data);
+        this.loading = true
+        const versionId = this.draftVersion.config_version_id
+        const res = await this.$store.dispatch(
+          'configVersion/ajaxUpdateConfigVersion',
+          {
+            versionId,
+            data: {
+              description: this.coverVersion.description,
+              content: this.coverVersion.content,
+              file_format: this.coverVersion.file_format,
+              is_active: false,
+              is_draft: true, // 覆盖草稿
+            },
+          }
+        )
+        this.messageSuccess(this.$t('成功覆盖已有草稿'))
+        $emit(this, 'coverSuccess', versionId, res.data)
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     handleCancel() {
-      this.$emit('close');
+      $emit(this, 'close')
     },
   },
-};
+  emits: ['update:show', 'coverSuccess', 'close'],
+}
 </script>
 
-<style scoped lang="postcss">
-  @import '../../../../../css/variable.css';
-
-  .header-container {
+<style lang="postcss" scoped>
+@import '../../../../../css/variable.css';
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding-right: 20px;
+  margin: -28px 0 1px;
+  font-size: 20px;
+  color: $newBlackColor1;
+}
+.content-container {
+  height: 500px;
+  .cover-dialog-title {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 60px;
-    padding-right: 20px;
-    margin: -28px 0 1px;
-    font-size: 20px;
-    color: $newBlackColor1;
-  }
+    height: 52px;
+    font-size: 12px;
+    line-height: 16px;
+    color: #c4c6cc;
+    background: #323232;
 
-  .content-container {
-    height: 500px;
-
-    .cover-dialog-title {
+    .cover-dialog-title-half {
       display: flex;
-      height: 52px;
-      font-size: 12px;
-      line-height: 16px;
-      color: #c4c6cc;
-      background: #323232;
+      align-items: center;
+      width: calc(50% - 15px);
+      padding-left: 18px;
 
-      .cover-dialog-title-half {
-        display: flex;
-        align-items: center;
-        width: calc(50% - 15px);
-        padding-left: 18px;
-
-        &:first-child {
-          border-right: 1px solid $newBlackColor2;
-        }
+      &:first-child {
+        border-right: 1px solid $newBlackColor2;
       }
     }
   }
-
-  .footer-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-    .confirm-button {
-      min-width: 120px;
-      margin-right: 10px;
-    }
+}
+.footer-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  .confirm-button {
+    min-width: 120px;
+    margin-right: 10px;
   }
+}
 </style>
 
 <style lang="postcss">
-  .bk-dialog-wrapper.cover-draft-dialog {
-    .bk-dialog-header,
-    .bk-dialog-body {
-      padding: 0 24px;
-    }
+.bk-dialog-wrapper.cover-draft-dialog {
+  .bk-dialog-header,
+  .bk-dialog-body {
+    padding: 0 24px;
   }
+}
 </style>

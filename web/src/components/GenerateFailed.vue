@@ -1,8 +1,14 @@
 <template>
   <div class="generate-fail">
-    <bk-popover ext-cls="failed-tips" placement="bottom" theme="light" :max-width="500" :always="false">
+    <bk-popover
+      ext-cls="failed-tips"
+      placement="bottom"
+      theme="light"
+      :max-width="500"
+      :always="false"
+    >
       <StatusView :type="statusType" :text="text" />
-      <template slot="content">
+      <template v-slot:content>
         <div class="failed-message">
           <div class="message-text">{{ '失败信息：' }}</div>
           <!-- eslint-disable-next-line vue/no-v-html -->
@@ -22,6 +28,7 @@
     </bk-popover>
   </div>
 </template>
+
 <script>
 export default {
   props: {
@@ -32,7 +39,7 @@ export default {
     text: {
       type: String,
       default() {
-        return this.$t('执行失败');
+        return this.$t('执行失败')
       },
     },
     failedReason: {
@@ -42,19 +49,19 @@ export default {
     solutions: {
       type: Array,
       default() {
-        return [];
+        return []
       },
     },
   },
-};
+}
 </script>
-<style lang="postcss" scoped>
-  .generate-fail {
-    cursor: default;
 
-    /deep/ .loading-text {
-      line-height: 18px;
-      border-bottom: 1px dashed #c4c6cc;
-    }
+<style lang="postcss" scoped>
+.generate-fail {
+  cursor: default;
+  :deep(.loading-text) {
+    line-height: 18px;
+    border-bottom: 1px dashed #c4c6cc;
   }
+}
 </style>

@@ -3,14 +3,16 @@
     :class="['auth-box', extCls, { 'auth-box-disabled': !authorized }]"
     :is="tag"
     v-cursor="{
-      active: !authorized
+      active: !authorized,
     }"
-    @click.stop="handleAuthApplication">
+    @click.stop="handleAuthApplication"
+  >
     <slot :disabled="!authorized" class="diabled-auth"></slot>
   </component>
 </template>
 
 <script>
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   name: 'AuthTag',
   props: {
@@ -49,35 +51,35 @@ export default {
   computed: {
     // 是否已授权
     isAuthorized() {
-      return this.auth.permission;
+      return this.auth.permission
     },
   },
   methods: {
     handleAuthApplication() {
       if (!this.authorized) {
-        window.bus.$emit('show-permission-modal', {
+        $emit(window.bus, 'show-permission-modal', {
           trigger: 'click',
           params: {
             action: this.action,
             type: this.type,
             id: this.id,
           },
-        });
+        })
       }
       if (this.authorized || this.autoEmit) {
-        this.$emit('click', this.authorized);
+        $emit(this, 'click', this.authorized)
       }
     },
   },
-};
+  emits: ['show-permission-modal', 'click'],
+}
 </script>
 
 <style lang="postcss" scoped>
-  .auth-box {
-    display: inline-block;
-  }
-
-  .auth-box-disabled {
-    color: #dcdee5;
-  }
+.auth-box {
+  display: inline-block;
+}
+.auth-box-disabled {
+  color: #dcdee5;
+}
 </style>

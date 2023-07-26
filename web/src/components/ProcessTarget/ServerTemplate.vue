@@ -4,15 +4,20 @@
       <li
         v-for="item in templateList"
         :key="item.id"
-        @click="handleClick(item)">
-        <div :class="['template-list-item', { 'active': item.active }]" v-show="item.visible">
+        @click="handleClick(item)"
+      >
+        <div
+          :class="['template-list-item', { active: item.active }]"
+          v-show="item.visible"
+        >
           <i class="item-icon">{{ $t('模') }}</i>
-          <span v-bk-overflow-tips>{{item.name}}</span>
+          <span v-bk-overflow-tips>{{ item.name }}</span>
           <i
             v-if="item.showSync"
             class="gsekit-icon gsekit-icon-swither-small sync-icon"
             v-bk-tooltips.top="$t('未同步')"
-            @click.stop="goSyncTemplate(item)">
+            @click.stop="goSyncTemplate(item)"
+          >
           </i>
         </div>
       </li>
@@ -21,6 +26,7 @@
 </template>
 
 <script>
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   name: 'ServerTemplate',
   props: {
@@ -36,104 +42,107 @@ export default {
   computed: {
     templateList() {
       return this.searchWord
-        ? this.list.filter(item => item.name.includes(this.searchWord)) : this.list;
+        ? this.list.filter((item) => item.name.includes(this.searchWord))
+        : this.list
     },
   },
   methods: {
     handleClick(val) {
-      this.setAtive(val);
-      this.$emit('click', val);
+      this.setAtive(val)
+      $emit(this, 'click', val)
     },
     cancelActive() {
       this.templateList.forEach((item) => {
-        item.active = false;
-      });
+        item.active = false
+      })
     },
     setAtive(child) {
       this.templateList.forEach((item) => {
-        item.active = item.id === child.id;
-      });
+        item.active = item.id === child.id
+      })
     },
     goSyncTemplate(item) {
-      console.log(item);
-      const cmdbUrl = window.PROJECT_CONFIG.CMDB_URL;
-      const { bizId } = this.$store.state;
-      window.open(`${cmdbUrl}/#/business/${bizId}/service/operational/template/${item.id}?tab=instance`);
+      console.log(item)
+      const cmdbUrl = window.PROJECT_CONFIG.CMDB_URL
+      const { bizId } = this.$store.state
+      window.open(
+        `${cmdbUrl}/#/business/${bizId}/service/operational/template/${item.id}?tab=instance`
+      )
     },
   },
-};
+  emits: ['click'],
+}
 </script>
 
 <style lang="postcss" scoped>
-  .server-template {
+.server-template {
+  width: 100%;
+  .template-list-item {
+    position: relative;
+    height: 36px;
     width: 100%;
+    color: #63656e;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 20px;
 
-    .template-list-item {
-      position: relative;
-      height: 36px;
-      width: 100%;
-      color: #63656e;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      padding: 0 20px;
+    span {
+      word-break: keep-all;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-      span {
-        word-break: keep-all;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+    .item-icon {
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 20px;
+      font-style: normal;
+      font-size: 12px;
+      background: #97aed6;
+      color: #fff;
+      flex-shrink: 0;
+      margin-right: 7px;
+    }
 
-      .item-icon {
-        height: 20px;
-        width: 20px;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 20px;
-        font-style: normal;
-        font-size: 12px;
-        background: #97aed6;
-        color: #fff;
-        flex-shrink: 0;
-        margin-right: 7px;
-      }
-
-      .sync-icon {
-        position: absolute;
-        top: 7px;
-        right: 20px;
-        font-size: 22px;
-        color: #c4c6cc;
-
-        &:hover {
-          color: #3a84ff;
-        }
-      }
+    .sync-icon {
+      position: absolute;
+      top: 7px;
+      right: 20px;
+      font-size: 22px;
+      color: #c4c6cc;
 
       &:hover {
-        background-color: #e1ecff;
-        transition: background-color .2s;
+        color: #3a84ff;
       }
     }
 
-    .active {
-      color: #3a84ff;
-      background: #e1ecff;
-
-      .item-icon {
-        background: #3a84ff;
-      }
-    }
-
-    .not-server-template {
-      height: 100%;
-      width: 100%;
-      color: #63656e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    &:hover {
+      background-color: #e1ecff;
+      transition: background-color 0.2s;
     }
   }
+
+  .active {
+    color: #3a84ff;
+    background: #e1ecff;
+
+    .item-icon {
+      background: #3a84ff;
+    }
+  }
+
+  .not-server-template {
+    height: 100%;
+    width: 100%;
+    color: #63656e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 </style>

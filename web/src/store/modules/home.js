@@ -1,5 +1,5 @@
-import http from '@/api';
-import queryString from 'query-string';
+import http from '@/api'
+import queryString from 'query-string'
 
 export default {
   namespaced: true,
@@ -7,8 +7,10 @@ export default {
   mutations: {},
   actions: {
     example(context, params, config = {}) {
-      const mockUrl = `?${AJAX_MOCK_PARAM}=home&invoke=example&${queryString.stringify(params)}`;
-      return http.get(mockUrl, params, config);
+      const mockUrl = `?${AJAX_MOCK_PARAM}=home&invoke=example&${queryString.stringify(
+        params
+      )}`
+      return http.get(mockUrl, params, config)
     },
   },
-};
+}

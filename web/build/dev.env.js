@@ -20,7 +20,7 @@ const NODE_ENV = JSON.stringify('development')
 
 export default merge(prodEnv, {
     NODE_ENV: NODE_ENV,
-    LOCAL_DEV_URL: JSON.stringify('http://dev.paas.ee225.bktencent.com'), // 配置 host 规避浏览器跨域警告，获取cookie
+    LOCAL_DEV_URL: JSON.stringify('http://dev.stag-dot-gsekit2.bkapps-sz.oa.com'), // 配置 host 规避浏览器跨域警告，获取cookie
     LOCAL_DEV_PORT: JSON.stringify('8080'),
     AJAX_MOCK_PARAM: JSON.stringify('mock-file')
 })

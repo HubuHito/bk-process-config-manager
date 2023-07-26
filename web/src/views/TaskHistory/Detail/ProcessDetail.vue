@@ -44,44 +44,41 @@ export default {
       default: () => ({}),
     },
   },
-};
+}
 </script>
 
 <style lang="postcss" scoped>
-  .detail-list {
+.detail-list {
+  width: 100%;
+  padding-left: 23px;
+  .row {
     width: 100%;
-    padding-left: 23px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
 
-    .row {
-      width: 100%;
-      height: 30px;
+    .couple {
+      width: 260px;
+      padding-right: 10px;
       display: flex;
       align-items: center;
-      font-size: 12px;
 
-      .couple {
-        width: 260px;
-        padding-right: 10px;
-        display: flex;
-        align-items: center;
-
-        .couple-label {
-          flex-shrink: 0;
-          color: #b2b5bd;
-          position: relative;
-        }
-
-        span {
-          flex-shrink: 1;
-          color: #63656e;
-          margin-left: 2px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
+      .couple-label {
+        flex-shrink: 0;
+        color: #b2b5bd;
+        position: relative;
       }
 
+      span {
+        flex-shrink: 1;
+        color: #63656e;
+        margin-left: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
-
+}
 </style>

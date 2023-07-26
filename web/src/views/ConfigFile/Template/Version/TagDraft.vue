@@ -24,7 +24,7 @@ export default {
         background: this.dark ? '#293D66' : '#E1ECFF',
         'border-radius': '2px',
       },
-    };
+    }
   },
-};
+}
 </script>

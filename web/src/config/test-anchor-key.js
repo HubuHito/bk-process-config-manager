@@ -5,7 +5,7 @@ export const moduleMap = {
   configFileTemplateVersionDetail: 'version',
   taskHistoryList: 'history',
   taskHistoryDetail: 'taskDetail',
-};
+}
 
 export const testAnchorMap = {
   form: {
@@ -111,4 +111,4 @@ export const testAnchorMap = {
     retryAll: 'btn_retryFailAll',
     tableTabItem: 'tab_tableTabItem',
   },
-};
+}

@@ -1,14 +1,15 @@
-import Vue from 'vue';
+import { $on, $off, $once, $emit } from '../utils/gogocodeTransfer'
+import * as Vue from 'vue'
 
 const EmptyMixin = {
   methods: {
     emptySearchClear() {
-      this.$emit('empty-clear');
+      $emit(this, 'empty-clear')
     },
     emptyRefresh() {
-      this.$emit('empty-refresh');
+      $emit(this, 'empty-refresh')
     },
   },
-};
+}
 
-Vue.mixin(EmptyMixin);
+window.$vueApp.mixin(EmptyMixin)

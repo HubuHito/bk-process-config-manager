@@ -7,6 +7,7 @@
     </div>
   </section>
 </template>
+
 <script>
 export default {
   name: 'ProcessHeader',
@@ -20,20 +21,19 @@ export default {
       default: '',
     },
   },
-};
+}
 </script>
+
 <style lang="postcss" scoped>
-  /deep/ .bk-tooltip-ref {
-    line-height: 24px;
+:deep(.bk-tooltip-ref) {
+  line-height: 24px;
+}
+.process-header {
+  cursor: pointer;
+  span {
+    border-bottom: 1px dashed #c4c6cc;
+    padding-bottom: 3px;
+    min-width: 60px;
   }
-
-  .process-header {
-    cursor: pointer;
-
-    span {
-      border-bottom: 1px dashed #c4c6cc;
-      padding-bottom: 3px;
-      min-width: 60px;
-    }
-  }
+}
 </style>

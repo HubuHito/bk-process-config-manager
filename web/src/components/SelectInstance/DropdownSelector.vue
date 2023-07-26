@@ -1,20 +1,21 @@
 <template>
   <div class="dropdown-selector-container">
-    <template v-for="item in fieldsInfo">
+    <template v-for="item in fieldsInfo" :key="item.type">
       <PowerSelect
         class="king-select"
         v-test.range="'kingSelect'"
-        :key="item.type"
         :value="selectedData[item.value]"
         :list="originData[item.list]"
         :name="item.name"
-        @selected="handleSelected(item.type, $event)" />
+        @selected="handleSelected(item.type, $event)"
+      />
     </template>
   </div>
 </template>
 
 <script>
-import PowerSelect from './PowerSelect';
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
+import PowerSelect from './PowerSelect'
 
 export default {
   components: {
@@ -34,10 +35,11 @@ export default {
           bk_service_list: [],
           bk_process_name_list: [],
           bk_process_id_list: [],
-        };
+        }
       },
     },
   },
+  emits: ['selected'],
   data() {
     return {
       selectedData: {
@@ -47,7 +49,7 @@ export default {
         bk_process_names: [],
         bk_process_ids: [],
       },
-    };
+    }
   },
   methods: {
     /**
@@ -65,66 +67,67 @@ export default {
             bk_service_ids: [],
             bk_process_names: [],
             bk_process_ids: [],
-          };
-          break;
+          }
+          break
         case 'module': // 选择模块
           Object.assign(this.selectedData, {
             bk_module_ids: ids,
             bk_service_ids: [],
             bk_process_names: [],
             bk_process_ids: [],
-          });
-          break;
+          })
+          break
         case 'service': // 选择服务实例
           Object.assign(this.selectedData, {
             bk_service_ids: ids,
             bk_process_names: [],
             bk_process_ids: [],
-          });
-          break;
+          })
+          break
         case 'processName': // 选择进程别名
-          this.selectedData.bk_process_names = ids;
-          break;
+          this.selectedData.bk_process_names = ids
+          break
         case 'processId': // 选择实例ID
-          this.selectedData.bk_process_ids = ids;
-          break;
+          this.selectedData.bk_process_ids = ids
+          break
       }
-      const finalSelectedData = this.filterAllSymbol(this.selectedData);
-      const finalIds = ids[0] === '*'
-        ? []
-        : type === 'module'
+      const finalSelectedData = this.filterAllSymbol(this.selectedData)
+      const finalIds =
+        ids[0] === '*'
+          ? []
+          : type === 'module'
           ? this.restoreIdForRepeatName(ids)
-          : ids;
-      this.$emit('selected', type, finalIds, finalSelectedData);
+          : ids
+      $emit(this, 'selected', type, finalIds, finalSelectedData)
     },
     // 过滤掉下拉里面的 * 号
     filterAllSymbol(data) {
-      const result = {};
+      const result = {}
       for (const [key, value] of Object.entries(data)) {
         if (value.includes('*')) {
-          result[key] = [];
+          result[key] = []
         } else {
           if (key === 'bk_module_ids') {
-            result[key] = this.restoreIdForRepeatName(value);
+            result[key] = this.restoreIdForRepeatName(value)
           } else {
-            result[key] = value;
+            result[key] = value
           }
         }
       }
-      return result;
+      return result
     },
     // 将模块重复名字的拼接 id 转成正常 id，'1,2,3' => 1, 2, 3
     restoreIdForRepeatName(list) {
-      const result = [];
+      const result = []
       list.forEach((item) => {
         if (typeof item === 'string') {
-          const ids = item.split(',');
-          ids.forEach(id => result.push(Number(id)));
+          const ids = item.split(',')
+          ids.forEach((id) => result.push(Number(id)))
         } else {
-          result.push(item);
+          result.push(item)
         }
-      });
-      return result;
+      })
+      return result
     },
     // 对外暴露的方法，环境改变了或点击清除按钮，清除已选择的数据
     clearSelectedData() {
@@ -134,8 +137,8 @@ export default {
         bk_service_ids: [],
         bk_process_names: [],
         bk_process_ids: [],
-      };
-      this.$emit('selected', null, null, this.selectedData);
+      }
+      $emit(this, 'selected', null, null, this.selectedData)
     },
     /**
      * 对外暴露的方法，回填表达式
@@ -144,25 +147,23 @@ export default {
      * @param {Boolean} options.silent - no emit event when set value
      */
     setValue(scope) {
-      const value = JSON.parse(JSON.stringify(scope));
-      this.selectedData = value;
+      const value = JSON.parse(JSON.stringify(scope))
+      this.selectedData = value
     },
   },
-};
+}
 </script>
 
-<style scoped lang="postcss">
-  @import '../../css/variable.css';
-
-  .dropdown-selector-container {
-    display: flex;
-    overflow: hidden;
-    width: 850px;
-
-    .king-select {
-      background-color: #fff;
-      width: calc(100% / 5 - 10px);
-      margin-right: 10px;
-    }
+<style lang="postcss" scoped>
+@import '../../css/variable.css';
+.dropdown-selector-container {
+  display: flex;
+  overflow: hidden;
+  width: 850px;
+  .king-select {
+    background-color: #fff;
+    width: calc(100% / 5 - 10px);
+    margin-right: 10px;
   }
+}
 </style>

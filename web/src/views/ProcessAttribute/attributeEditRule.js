@@ -48,42 +48,50 @@ export default {
       trigger: 'blur',
     },
   ],
-  timeout: [{
-    validator(val) {
-      if (!val || val === '0' || /-/.test(val)) {
-        return true;
-      }
+  timeout: [
+    {
+      validator(val) {
+        if (!val || val === '0' || /-/.test(val)) {
+          return true
+        }
+      },
+      message: window.i18n.t('请输入正整数'),
+      trigger: 'blur',
     },
-    message: window.i18n.t('请输入正整数'),
-    trigger: 'blur',
-  }],
-  bk_start_check_secs: [{
-    validator(val) {
-      if (!val || val === '0' || /-/.test(val)) {
-        return true;
-      }
+  ],
+  bk_start_check_secs: [
+    {
+      validator(val) {
+        if (!val || val === '0' || /-/.test(val)) {
+          return true
+        }
+      },
+      message: window.i18n.t('请输入正整数'),
+      trigger: 'blur',
     },
-    message: window.i18n.t('请输入正整数'),
-    trigger: 'blur',
-  }],
-  priority: [{
-    validator(val) {
-      if (!/^-?\d+$/.test(val)) {
-        return true;
-      }
+  ],
+  priority: [
+    {
+      validator(val) {
+        if (!/^-?\d+$/.test(val)) {
+          return true
+        }
+      },
+      required: true,
+      message: window.i18n.t('请输入整数'),
+      trigger: 'blur',
     },
-    required: true,
-    message: window.i18n.t('请输入整数'),
-    trigger: 'blur',
-  }],
-  proc_num: [{
-    validator(val) {
-      console.log(/-/.test(val), val);
-      if (!val || val === '0' || /-/.test(val)) {
-        return true;
-      }
+  ],
+  proc_num: [
+    {
+      validator(val) {
+        console.log(/-/.test(val), val)
+        if (!val || val === '0' || /-/.test(val)) {
+          return true
+        }
+      },
+      message: window.i18n.t('请输入正整数'),
+      trigger: 'blur',
     },
-    message: window.i18n.t('请输入正整数'),
-    trigger: 'blur',
-  }],
-};
+  ],
+}

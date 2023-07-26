@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import ConfigDistribute from '@/components/ConfigDistribute';
+import ConfigDistribute from '@/components/ConfigDistribute'
 
 export default {
   name: 'TemplateDistribute',
@@ -29,23 +29,22 @@ export default {
   methods: {
     backRoute() {
       if (this.$router.__from_name) {
-        this.$router.back();
+        this.$router.back()
       } else {
-        this.$store.commit('routeConfigTemplateList');
+        this.$store.commit('routeConfigTemplateList')
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>
-  .config-file-template-distribute-container {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-
-    .template-title {
-      flex-shrink: 0;
-    }
+.config-file-template-distribute-container {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  .template-title {
+    flex-shrink: 0;
   }
+}
 </style>

@@ -2,7 +2,7 @@
   <bk-select
     ref="authBizSelect"
     ext-popover-cls="auth-extension"
-    :value="selectValue"
+    :model-value="selectValue"
     :placeholder="placeholder"
     :loading="loading"
     :ext-cls="extCls"
@@ -11,26 +11,31 @@
     :clearable="clearable"
     :readonly="readonly"
     :disabled="disabled"
-    :popover-options="{ 'boundary': 'window' }"
+    :popover-options="{ boundary: 'window' }"
     :popover-min-width="popoverMinWidth"
-    @selected="handleSelected"
     @toggle="handleToggle"
     @change="handleChange"
-    @clear="handleClear">
-    <template v-for="item in optionList">
+    @clear="handleClear"
+  >
+    <template v-for="item in optionList" :key="item[id]">
       <bk-option
-        :key="item[id]"
-        :id="item[id]"
-        :name="item[name]"
+        :value="item[id]"
+        :label="item[name]"
         :class="{ 'is-auth-disabled': !item.view_business }"
-        :disabled="item.disabled">
-        <div class="bk-option-content-default" :title="item[name]">
+        :disabled="item.disabled"
+      >
+        <div
+          class="bk-option-content-default"
+          :title="item[name]"
+          @click="handleSelected(item[id])"
+        >
           <span class="bk-option-name">
             {{ item[name] }}
           </span>
           <i
             class="select-item-icon bk-option-icon bk-icon icon-check-1"
-            v-if="multiple && selectValue.includes(item[id])">
+            v-if="multiple && selectValue.includes(item[id])"
+          >
           </i>
           <AuthTag
             v-if="!item.view_business"
@@ -42,18 +47,23 @@
             :title="item[name]"
             :id="item.bk_biz_id"
             :authorized="item.view_business"
-            @click="handleAuthClick(item)">
+            @click="handleAuthClick(item)"
+          >
           </AuthTag>
         </div>
       </bk-option>
     </template>
-    <div slot="extension" class="auth-extension-content" @click="handleExtension">
-      <i class="bk-icon icon-plus-circle mr5"></i>{{ $t('新增') }}
-    </div>
+    <template #extension>
+      <div class="auth-extension-content" @click="handleExtension">
+        <i class="bk-icon icon-plus-circle mr5"></i>{{ $t('新增') }}
+      </div>
+    </template>
   </bk-select>
 </template>
+
 <script>
-import { mapActions } from 'vuex';
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'AuthSelect',
@@ -133,23 +143,28 @@ export default {
     return {
       loading: false, // select框加载
       selectValue: this.value,
-    };
+    }
   },
   computed: {
     selectedItems() {
       if (this.selectValue instanceof Array) {
-        return this.optionList.filter(item => this.selectValue.includes(item[this.id]) && item[this.action]);
+        return this.optionList.filter(
+          (item) =>
+            this.selectValue.includes(item[this.id]) && item[this.action]
+        )
       }
-      return this.optionList.filter(item => this.selectValue === item[this.id] && item[this.action]);
+      return this.optionList.filter(
+        (item) => this.selectValue === item[this.id] && item[this.action]
+      )
     },
   },
   watch: {
     value(v) {
-      this.selectValue = v;
+      this.selectValue = v
     },
   },
   created() {
-    this.handleInit();
+    this.handleInit()
   },
   methods: {
     ...mapActions('iam', ['ajaxGetAuthApplyInfo']),
@@ -169,59 +184,72 @@ export default {
       // }
     },
     handleSelected(value, options) {
-      this.$emit('selected', value, options, this.selectedItems);
+      $emit(this, 'selected', value, options, this.selectedItems)
     },
     handleToggle(toggle) {
-      this.$emit('toggle', toggle, this.selectedItems);
+      $emit(this, 'toggle', toggle, this.selectedItems)
     },
     handleChange(newValue, oldValue) {
-      this.selectValue = newValue;
-      this.$emit('update', newValue);
-      this.$emit('change', newValue, oldValue, this.selectedItems);
+      this.selectValue = newValue
+      // $emit(this, 'update', newValue);
+      $emit(this, 'update:value', newValue)
+      $emit(this, 'change', newValue, oldValue, this.selectedItems)
     },
     handleClear(oldValue) {
-      this.$emit('clear', oldValue, this.selectedItems);
+      $emit(this, 'clear', oldValue, this.selectedItems)
     },
     handleAuthClick(option) {
-      this.handleSelectClose();
-      this.$emit('selected-auth', option);
+      this.handleSelectClose()
+      $emit(this, 'selected-auth', option)
     },
     handleSelectClose() {
-      this.$refs.authBizSelect.close();
+      this.$refs.authBizSelect.close()
     },
     async handleExtension() {
-      window.open(`${window.PROJECT_CONFIG.CMDB_URL}/#/resource/business`, '_blank');
+      window.open(
+        `${window.PROJECT_CONFIG.CMDB_URL}/#/resource/business`,
+        '_blank'
+      )
     },
     show() {
-      this.$refs.authBizSelect && this.$refs.authBizSelect.show();
+      this.$refs.authBizSelect && this.$refs.authBizSelect.show()
     },
   },
-};
+  emits: [
+    'selected',
+    'toggle',
+    'update',
+    'change',
+    'clear',
+    'selected-auth',
+    'update:value',
+  ],
+}
 </script>
+
 <style lang="postcss" scoped>
-  >>> .bk-select-loading {
-    top: 6px;
-  }
+:deep(.bk-select-loading) {
+  top: 6px;
+}
+.select {
+  &-item {
+    display: flex;
 
-  .select {
-    &-item {
-      display: flex;
+    &-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-right: 4px;
+    }
 
-      &-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        margin-right: 4px;
-      }
+    &-id {
+      color: #c4c6cc;
+      margin-right: 20px;
+    }
 
-      &-id {
-        color: #c4c6cc;
-        margin-right: 20px;
-      }
-
-      >>> .bk-icon {
-        top: 3px;
-      }
+    :deep(.bk-icon) {
+      top: 3px;
     }
   }
+}
 </style>
