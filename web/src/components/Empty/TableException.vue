@@ -53,6 +53,7 @@ export default {
       default: 'part',
     },
   },
+  emits: [],
   data() {
     return {
       oldType: this.type,
@@ -81,7 +82,6 @@ export default {
       $emit(this, `empty-${clickType}`)
     },
   },
-  emits: [],
 }
 </script>
 

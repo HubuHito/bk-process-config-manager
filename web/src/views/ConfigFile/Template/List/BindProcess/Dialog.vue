@@ -8,7 +8,7 @@
     header-position="left"
     @value-change="handleValueChange"
   >
-    <template v-slot:header>
+    <template #header>
       <div class="bk-dialog-header-inner">
         {{ $t('关联进程') }}
         <span
@@ -32,7 +32,7 @@
       v-test.form="'confirm'"
       :template-id="templateItem.config_template_id"
     />
-    <template v-slot:footer>
+    <template #footer>
       <div class="footer-wrapper">
         <bk-button theme="primary" :loading="saveLoading" @click="handleSave">
           {{ $t('保存') }}
@@ -65,6 +65,7 @@ export default {
       default: false,
     },
   },
+  emits: ['update:showDialog', 'bindSuccess', 'shouldRefreshList'],
   data() {
     return {
       dialogHeight: 618, // 弹窗高度
@@ -122,6 +123,5 @@ export default {
       $emit(this, 'update:showDialog', false)
     },
   },
-  emits: ['update:showDialog', 'bindSuccess', 'shouldRefreshList'],
 }
 </script>

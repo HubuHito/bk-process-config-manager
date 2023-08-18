@@ -56,6 +56,7 @@ export default {
       default: '',
     },
   },
+  emits: ['onSearch', 'clickSetSelect', 'clickAllSetSelect'],
   data() {
     return {}
   },
@@ -73,7 +74,6 @@ export default {
       $emit(this, 'clickSetSelect', val)
     },
   },
-  emits: ['onSearch', 'clickSetSelect', 'clickAllSetSelect'],
 }
 </script>
 

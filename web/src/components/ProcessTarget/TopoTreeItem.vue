@@ -106,6 +106,7 @@ export default {
       default: window.i18n.t('暂无服务实例'),
     },
   },
+  emits: ['click'],
   data() {
     return {
       nodeTypeMap: {
@@ -123,7 +124,6 @@ export default {
       $emit(this, 'click', node)
     },
   },
-  emits: ['click'],
 }
 </script>
 

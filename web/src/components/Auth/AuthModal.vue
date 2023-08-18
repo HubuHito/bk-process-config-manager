@@ -59,7 +59,7 @@
         </table>
       </div>
     </div>
-    <template v-slot:footer>
+    <template #footer>
       <div class="permission-footer">
         <div class="button-group">
           <bk-button

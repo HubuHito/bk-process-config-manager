@@ -48,6 +48,7 @@ export default {
       default: false,
     },
   },
+  emits: ['show-permission-modal', 'click'],
   computed: {
     // 是否已授权
     isAuthorized() {
@@ -71,7 +72,6 @@ export default {
       }
     },
   },
-  emits: ['show-permission-modal', 'click'],
 }
 </script>
 

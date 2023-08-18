@@ -14,24 +14,24 @@
   >
   </bk-select>
   <!--<bk-select :value="value"
-                      :placeholder="name"
-                      :clearable="false"
-                      :popover-min-width="160"
-                      multiple
-                      searchable
-                      @selected="handleChange">
-                      <bk-option id="*" :name="$t('全部') + name + '（*）'"></bk-option>
-                      <template v-for="item in list">
-                        <bk-option :key="item.id" :id="item.id" :name="item.name">
-                          <div class="bk-option-content-default king-option-container">
-                            <i class="bk-option-icon bk-icon icon-check-1" v-if="value.includes(item.id)"></i>
-                            <div v-bk-overflow-tips="{ placement: 'right', content: item.name }" class="bk-option-name">
-                              {{ item.name }}
-                            </div>
-                          </div>
-                        </bk-option>
-                      </template>
-                    </bk-select>-->
+                                :placeholder="name"
+                                :clearable="false"
+                                :popover-min-width="160"
+                                multiple
+                                searchable
+                                @selected="handleChange">
+                                <bk-option id="*" :name="$t('全部') + name + '（*）'"></bk-option>
+                                <template v-for="item in list">
+                                  <bk-option :key="item.id" :id="item.id" :name="item.name">
+                                    <div class="bk-option-content-default king-option-container">
+                                      <i class="bk-option-icon bk-icon icon-check-1" v-if="value.includes(item.id)"></i>
+                                      <div v-bk-overflow-tips="{ placement: 'right', content: item.name }" class="bk-option-name">
+                                        {{ item.name }}
+                                      </div>
+                                    </div>
+                                  </bk-option>
+                                </template>
+                              </bk-select>-->
 </template>
 
 <script>
@@ -51,6 +51,7 @@ export default {
       default: '',
     },
   },
+  emits: ['change', 'selected', 'update:value'],
   methods: {
     handleChange(val) {
       this.handleSelected(val)
@@ -60,6 +61,5 @@ export default {
       $emit(this, 'selected', value, option)
     },
   },
-  emits: ['change', 'selected', 'update:value'],
 }
 </script>

@@ -23,11 +23,12 @@
       </bk-date-picker>
     </div>
     <bk-table
+      :pagination="pagination"
+      remote-pagination
       :max-height="$store.state.pageHeight - 187"
       ext-cls="king-table"
       :data="tableData"
       v-bkloading="{ loading: isLoading }"
-      :pagination="pagination"
       :row-class-name="handlerRowClassName"
       @sort-change="handleSortChange"
       @row-click="handleRowClick"
@@ -35,52 +36,57 @@
       @page-limit-change="handlePageLimitChange"
     >
       <bk-table-column prop="id" :label="$t('ID')" width="90">
-        <template v-slot="props">
+        <template #default="props">
           <span class="button-text" v-test="'viewTask'">{{
             props.row.id
           }}</span>
         </template>
       </bk-table-column>
+
       <bk-table-column
         prop="job_object"
         :label="$t('任务对象')"
         :min-width="columnMinWidth['job_object']"
         :render-header="renderFilterHeader"
       >
-        <template v-slot="props">
+        <template #default="props">
           <span>{{ jobObject[props.row.job_object] }}</span>
         </template></bk-table-column
       >
+
       <bk-table-column
         prop="job_action"
         :label="$t('动作')"
         :min-width="columnMinWidth['job_action']"
         :render-header="renderFilterHeader"
       >
-        <template v-slot="props">
+        <template #default="props">
           <span>{{ jobAction[props.row.job_action] }}</span>
         </template></bk-table-column
       >
+
       <bk-table-column
         prop="job_env"
         :label="$t('环境类型')"
         :min-width="columnMinWidth['job_env']"
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <span>{{ setEnv[row?.expression_scope?.bk_set_env] || '--' }}</span>
         </template></bk-table-column
       >
+
       <bk-table-column
         prop="expression"
         :label="$t('操作范围')"
         :min-width="columnMinWidth['expression']"
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips>
             {{ row.expression }}
           </div>
         </template>
       </bk-table-column>
+
       <bk-table-column
         prop="created_by"
         :label="$t('执行账户')"
@@ -88,42 +94,46 @@
         :min-width="columnMinWidth['created_by']"
         :render-header="renderFilterHeader"
       />
+
       <bk-table-column
         prop="start_time"
         :label="$t('开始时间')"
         sortable="custom"
         :min-width="columnMinWidth['start_time']"
       >
-        <template v-slot="props">
+        <template #default="props">
           <div v-bk-overflow-tips>{{ props.row.start_time || '--' }}</div>
         </template>
       </bk-table-column>
+
       <bk-table-column
         prop="end_time"
         :label="$t('结束时间')"
         sortable="custom"
         :min-width="columnMinWidth['end_time']"
       >
-        <template v-slot="props">
+        <template #default="props">
           <div v-bk-overflow-tips>{{ props.row.end_time || '--' }}</div>
         </template>
       </bk-table-column>
+
       <bk-table-column
         prop="timeout"
         :label="$t('执行耗时')"
         :min-width="columnMinWidth['timeout']"
       >
-        <template v-slot="props">
+        <template #default="props">
           <span>{{ props.row.timeout || '--' }}</span>
         </template>
       </bk-table-column>
+
       <bk-table-column
         prop="status"
         :label="$t('执行状态')"
         :render-header="renderFilterHeader"
         :min-width="columnMinWidth['status']"
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <!-- 执行状态 -->
           <StatusView
             v-if="row.status === 'succeeded'"
@@ -143,11 +153,12 @@
           <StatusView v-else type="loading" :text="$t('等待中')" />
         </template>
       </bk-table-column>
+
       <bk-table-column
         :label="$t('操作')"
         :min-width="columnMinWidth['operate']"
       >
-        <template v-slot="props">
+        <template #default="props">
           <div @click.stop>
             <bk-button
               v-test="'taskRetry'"
@@ -161,7 +172,8 @@
           </div>
         </template>
       </bk-table-column>
-      <template v-slot:empty>
+
+      <template #empty>
         <TableException
           :delay="isLoading"
           :type="tableEmptyType"
@@ -201,6 +213,7 @@ export default {
       },
     },
   },
+  emits: ['getTaskDeatail'],
   data() {
     return {
       filterData: [
@@ -522,7 +535,6 @@ export default {
       this.handleSearchSelectChange(this.searchSelectValue)
     },
   },
-  emits: ['getTaskDeatail'],
 }
 </script>
 

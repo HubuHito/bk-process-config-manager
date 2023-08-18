@@ -74,6 +74,7 @@ export default {
       default: true,
     },
   },
+  emits: ['confirm', 'reset'],
   data() {
     return {
       instance: null,
@@ -181,7 +182,6 @@ export default {
       $emit(this, 'reset', this.property)
     },
   },
-  emits: ['confirm', 'reset'],
 }
 </script>
 

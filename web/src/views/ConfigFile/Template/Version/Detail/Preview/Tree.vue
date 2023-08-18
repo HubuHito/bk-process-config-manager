@@ -75,6 +75,7 @@ export default {
       required: true,
     },
   },
+  emits: ['checked'],
   data() {
     return {
       nodeTypeMap: [this.$t('集'), this.$t('模'), this.$t('实'), this.$t('进')],
@@ -161,7 +162,6 @@ export default {
       $emit(this, 'checked', topoNode)
     },
   },
-  emits: ['checked'],
 }
 </script>
 

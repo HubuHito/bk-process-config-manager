@@ -26,49 +26,49 @@
       :data="tableLoadedList"
     >
       <bk-table-column :label="$t('集群')">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.bk_set_name }}</span>
           </div>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t('模块')">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.bk_module_name }}</span>
           </div>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t('服务实例')">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.bk_service_name }}</span>
           </div>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t('进程别名')">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.bk_process_name }}</span>
           </div>
         </template>
       </bk-table-column>
       <bk-table-column label="process_id">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.bk_process_id }}</span>
           </div>
         </template>
       </bk-table-column>
       <bk-table-column label="inst_id">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.inst_id }}</span>
           </div>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t('内网IP')">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.bk_host_innerip }}</span>
           </div>
@@ -76,7 +76,7 @@
       </bk-table-column>
       <template v-if="curStep === 2">
         <bk-table-column :label="$t('状态')" prop="taskStatus">
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <StatusView
               v-if="
                 row.taskStatus === 'pending' || row.taskStatus === 'running'
@@ -98,7 +98,7 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t('操作')" width="170px">
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <bk-button
               theme="primary"
               text
@@ -129,7 +129,7 @@
       :width="1200"
       @hidden="handleCloseSlider"
     >
-      <template v-slot:header>
+      <template #header>
         <div class="config-contrast-header">
           <span>{{ $t('配置对比') }}</span>
           <span class="divide-line">{{ '-' }}</span>
@@ -148,7 +148,7 @@
             :old-data="sliderData.oldData"
             :new-data="sliderData.newData"
           >
-            <template v-slot:leftTitle>
+            <template #leftTitle>
               <div class="status-flag">{{ $t('实时') }}</div>
               <div class="create-time">
                 {{
@@ -158,7 +158,7 @@
                 }}
               </div>
             </template>
-            <template v-slot:rightTitle>
+            <template #rightTitle>
               <div class="status-flag">{{ $t('预生成') }}</div>
               <div class="create-time">
                 {{
@@ -220,6 +220,7 @@ export default {
       required: true,
     },
   },
+  emits: ['pageAdd', 'updateStatus'],
   data() {
     return {
       formatDate,
@@ -406,7 +407,6 @@ export default {
       $emit(this, 'updateStatus', { key, value })
     },
   },
-  emits: ['pageAdd', 'updateStatus'],
 }
 </script>
 

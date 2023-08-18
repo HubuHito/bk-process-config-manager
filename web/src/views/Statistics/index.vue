@@ -361,7 +361,7 @@ export default {
             [frequency]: dateMap[date] ? dateMap[date][frequency] : '',
           }))
           const { color } = this
-          this.chartData['frequency'] = {
+          this.chartData.frequency = {
             labels: data.map((item) => item.date),
             datasets: [{ data, backgroundColor: color, borderColor: color }],
           }

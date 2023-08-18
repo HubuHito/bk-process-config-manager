@@ -9,7 +9,7 @@
     header-position="left"
     @value-change="handleValueChange"
   >
-    <template v-slot:header>
+    <template #header>
       <div class="bk-dialog-header-inner">
         <template v-if="isFirstStep">
           {{ $t('新建配置文件模板') }}
@@ -35,7 +35,7 @@
       <BasicInfo ref="basicInfo" v-show="isFirstStep" />
       <ProcessSelect ref="processSelect" v-show="!isFirstStep" />
     </template>
-    <template v-slot:footer>
+    <template #footer>
       <div class="footer-wrapper">
         <bk-button
           v-show="isFirstStep"
@@ -92,6 +92,7 @@ export default {
       default: false,
     },
   },
+  emits: ['update:showCreate', 'created'],
   data() {
     return {
       dialogHeight: 618, // 弹窗高度
@@ -181,6 +182,5 @@ export default {
       })
     },
   },
-  emits: ['update:showCreate', 'created'],
 }
 </script>

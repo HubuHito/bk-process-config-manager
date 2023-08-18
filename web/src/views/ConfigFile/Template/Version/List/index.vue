@@ -40,14 +40,14 @@
         @row-click="handleRowClick"
       >
         <bk-table-column :label="$t('版本ID')" min-width="150">
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <bk-button v-test="'viewVersion'" theme="primary" text>{{
               row.config_version_id
             }}</bk-button>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t('版本描述')" min-width="300">
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <div class="version-description">
               <span
                 v-bk-overflow-tips
@@ -70,7 +70,7 @@
           :filter-method="commonFilterMethod"
           :filter-multiple="true"
         >
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <div :class="{ 'lighten-text': !row.is_draft && !row.is_active }">
               {{ row.updated_by }}
             </div>
@@ -83,14 +83,14 @@
           :sort-method="sortByDate('updated_at')"
           v-bk-overflow-tips
         >
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <div :class="{ 'lighten-text': !row.is_draft && !row.is_active }">
               {{ formatDate(row.updated_at) }}
             </div>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t('操作')" min-width="200">
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <div class="button-container">
               <span class="button-text">{{
                 row.is_draft ? $t('编辑') : $t('查看')
@@ -129,7 +129,7 @@
             </div>
           </template>
         </bk-table-column>
-        <template v-slot:empty>
+        <template #empty>
           <bk-exception class="empty-box-container" type="empty" scene="part">
             <template
               v-if="versionList.length && (searchKeyword || tableLoading)"

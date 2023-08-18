@@ -7,9 +7,8 @@
       animation="slide-toggle"
       :placement="placement"
       :offset="0"
-      :distance="12"
-      :on-show="handleDropdownShow"
-      :on-hide="handleDropdownHide"
+      @after-show="handleDropdownShow"
+      @after-hidden="handleDropdownHide"
     >
       <div
         ref="triggerRef"
@@ -27,6 +26,7 @@
         </span>
         <span class="bk-icon icon-angle-down"></span>
       </div>
+
       <template #content>
         <div
           ref="contentRef"

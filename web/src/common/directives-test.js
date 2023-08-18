@@ -22,8 +22,10 @@ export default class TestAnchorDirective {
   static install(Vue) {
     window.$vueApp.directive('test', {
       beforeMount(el, { value, modifiers }, { context }) {
-        let moduleName = moduleNames.find((key) => modifiers[key])
-        // || camelize(context.$route.name); todo
+        // vue3 todo
+        let moduleName =
+          moduleNames.find((key) => modifiers[key]) ||
+          camelize(context?.$route?.name || '')
         moduleName = moduleMap[moduleName] || moduleName
         const anchorModule = testAnchorMap[moduleName]
         if (anchorModule?.[value]) {

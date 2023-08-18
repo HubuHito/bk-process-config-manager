@@ -101,6 +101,7 @@ export default {
       default: 300,
     },
   },
+  emits: ['tab-change', 'temp-selected', 'tree-selected', 'format-tree'],
   data() {
     return {
       tabList: [
@@ -167,7 +168,6 @@ export default {
       this.$refs.topoTree.setTopoActive(null, uuid)
     },
   },
-  emits: ['tab-change', 'temp-selected', 'tree-selected', 'format-tree'],
 }
 </script>
 

@@ -7,7 +7,7 @@
     ext-cls="cover-draft-dialog"
     @value-change="handleValueChange"
   >
-    <template v-slot:header>
+    <template #header>
       <div class="header-container">
         <div>{{ $t('当前已有草稿，是否覆盖？') }}</div>
         <DiffNav
@@ -42,7 +42,7 @@
         />
       </template>
     </div>
-    <template v-slot:footer>
+    <template #footer>
       <div class="footer-container">
         <bk-button
           v-test="'cover'"
@@ -89,6 +89,7 @@ export default {
       default: null,
     },
   },
+  emits: ['update:show', 'coverSuccess', 'close'],
   data() {
     return {
       dialogHeight: 620, // 弹窗高度
@@ -166,7 +167,6 @@ export default {
       $emit(this, 'close')
     },
   },
-  emits: ['update:show', 'coverSuccess', 'close'],
 }
 </script>
 

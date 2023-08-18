@@ -41,8 +41,8 @@
         v-if="username"
         trigger="click"
         theme="profile-popover light"
-        :on-show="() => (isPopoverActive = true)"
-        :on-hide="() => (isPopoverActive = false)"
+        @after-show="() => (isPopoverActive = true)"
+        @after-hidden="() => (isPopoverActive = false)"
       >
         <div class="login-username" :class="isPopoverActive && 'active'">
           {{ username }}<span class="bk-icon icon-down-shape"></span>

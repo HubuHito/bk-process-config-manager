@@ -1,7 +1,7 @@
 <template>
   <div class="button-content">
     <AuthTag action="manage_process" :authorized="authMap.manage_process">
-      <template v-slot="{ disabled }">
+      <template #default="{ disabled }">
         <bk-popover
           :disabled="disabled || !isAllowStart"
           :content="
@@ -36,7 +36,7 @@
       </template>
     </AuthTag>
     <AuthTag action="operate_config" :authorized="authMap.operate_config">
-      <template v-slot="{ disabled }">
+      <template #default="{ disabled }">
         <bk-popover
           :disabled="disabled || !isAllowIssued"
           :content="
@@ -75,7 +75,6 @@
       theme="dot-menu light"
       trigger="click"
       :arrow="false"
-      :distance="2"
     >
       <bk-button
         v-test.common="'more'"
@@ -84,7 +83,8 @@
       >
         {{ $t('更多') }}
       </bk-button>
-      <template v-slot:content>
+
+      <template #content>
         <ul class="dot-menu-list">
           <li
             class="dot-menu-item"
@@ -116,12 +116,12 @@
         :disabled="isDataLoading"
         trigger="click"
         :arrow="false"
-        :distance="2"
       >
         <div class="icon-btn">
           <i class="bk-icon icon-angle-down" v-test="'syncMore'"></i>
         </div>
-        <template v-slot:content>
+
+        <template #content>
           <ul class="dot-menu-list">
             <li
               class="dot-menu-item"

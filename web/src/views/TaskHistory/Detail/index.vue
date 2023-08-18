@@ -65,7 +65,7 @@
             @show="dropdownShow"
             @hide="dropdownHide"
           >
-            <template v-slot:dropdown-trigger>
+            <template #dropdown-trigger>
               <bk-button
                 class="copy-dropdown-btn"
                 v-test.common="'more'"
@@ -82,7 +82,7 @@
                 </span>
               </bk-button>
             </template>
-            <template v-slot:dropdown-content>
+            <template #dropdown-content>
               <ul class="bk-dropdown-list">
                 <li
                   v-for="(copyType, index) in copyTypeList"
@@ -151,12 +151,13 @@
       </section>
       <section class="detail-table">
         <bk-table
+          :pagination="pagination"
+          remote-pagination
           v-bkloading="{ loading: isTableLoading }"
           auto-scroll-to-top
           ext-cls="king-table"
           :max-height="$store.state.pageHeight - 345"
           :data="taskList"
-          :pagination="pagination"
           @page-change="handlePageChange"
           @page-limit-change="handlePageLimitChange"
         >
@@ -166,87 +167,96 @@
             :render-header="renderFilterHeader"
             show-overflow-tooltip
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{ row.bk_set_name || '--' }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column
             :label="$t('模块')"
             prop="template_name"
             :render-header="renderFilterHeader"
             show-overflow-tooltip
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{ row.bk_module_name || '--' }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column
             :label="$t('服务实例')"
             min-width="180"
             prop="server_instance"
             show-overflow-tooltip
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{ row.name || '--' }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column
             :label="$t('进程别名')"
             prop="process_name"
             show-overflow-tooltip
             :render-header="renderFilterHeader"
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{ row.bk_process_name || '--' }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column
             label="process_id"
             prop="bk_process_id"
             show-overflow-tooltip
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{ row.bk_process_id || '--' }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column label="inst_id" prop="inst_id" width="70">
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{ row.extra_data.inst_id || '--' }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column :label="$t('进程优先级')" prop="priority">
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{
                 row.priority || row.priority === 0 ? row.priority : '--'
               }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column
             :label="$t('内网IP')"
             prop="bk_host_innerip"
             width="125"
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{ row.bk_host_innerip || '--' }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column
             :label="$t('执行耗时')"
             prop="timeout"
             width="100"
             show-overflow-tooltip
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <span>{{ row.timeout || '--' }}</span>
             </template>
           </bk-table-column>
+
           <bk-table-column
             :label="$t('执行状态')"
             width="140"
             prop="status"
             :render-header="renderFilterHeader"
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <!-- 执行状态 -->
               <div class="status-info">
                 <StatusView
@@ -273,13 +283,15 @@
               </div>
             </template>
           </bk-table-column>
+
           <!-- <bk-table-column :label="$t('操作')" :min-width="jobInfo.job_object !== 'process' ? 145 : 100"> -->
+
           <bk-table-column
             v-if="showOperateColumn"
             :label="$t('操作')"
             :min-width="100"
           >
-            <template v-slot="{ row }">
+            <template #default="{ row }">
               <div @click.stop>
                 <bk-button
                   v-if="showDiffBtn"
@@ -314,38 +326,39 @@
                   <!-- </template> -->
                   <!-- 暂时隐藏单行重试 -->
                   <!-- <bk-popover
-                                    :disabled="row.status !== 'failed' || row.extra_data.retryable"
-                                    ext-cls="failed-tips"
-                                    placement="bottom"
-                                    theme="light"
-                                    :max-width="500">
-                                    <bk-button
-                                        :disabled="row.status !== 'failed' || !row.extra_data.retryable"
-                                        theme="primary"
-                                        text
-                                        @click="onRetry(row)">
-                                        {{ $t('重试') }}</bk-button>
-                                    <template slot="content">
-                                        <div class="failed-message">
-                                            <div class="message-text">{{ '失败信息：' }}</div>
-                                            <div v-html="row.extra_data.failed_reason || '--'"></div>
-                                        </div>
-                                        <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
-                                            <div class="message-text">{{ '解决方案：' }}</div>
-                                            <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
-                                                <div class="solute-item">
-                                                <span class="solute-item-order">{{ index + 1 + '.' }}</span>
-                                                <div class="solute-item-content" v-html="soluteItem.html"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </template>
-                                  </bk-popover> -->
+                                              :disabled="row.status !== 'failed' || row.extra_data.retryable"
+                                              ext-cls="failed-tips"
+                                              placement="bottom"
+                                              theme="light"
+                                              :max-width="500">
+                                              <bk-button
+                                                  :disabled="row.status !== 'failed' || !row.extra_data.retryable"
+                                                  theme="primary"
+                                                  text
+                                                  @click="onRetry(row)">
+                                                  {{ $t('重试') }}</bk-button>
+                                              <template slot="content">
+                                                  <div class="failed-message">
+                                                      <div class="message-text">{{ '失败信息：' }}</div>
+                                                      <div v-html="row.extra_data.failed_reason || '--'"></div>
+                                                  </div>
+                                                  <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
+                                                      <div class="message-text">{{ '解决方案：' }}</div>
+                                                      <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
+                                                          <div class="solute-item">
+                                                          <span class="solute-item-order">{{ index + 1 + '.' }}</span>
+                                                          <div class="solute-item-content" v-html="soluteItem.html"></div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </template>
+                                            </bk-popover> -->
                 </template>
               </div>
             </template>
           </bk-table-column>
-          <template v-slot:empty>
+
+          <template #empty>
             <TableException
               :delay="isTableLoading"
               :type="tableEmptyType"
@@ -364,7 +377,7 @@
       :width="1200"
       @hidden="handleCloseSlider"
     >
-      <template v-slot:header>
+      <template #header>
         <div class="config-contrast-header">
           <span>{{ $t('配置对比') }}</span>
           <span class="divide-line">{{ '-' }}</span>
@@ -388,7 +401,7 @@
             :old-data="sliderData.oldData"
             :new-data="sliderData.newData"
           >
-            <template v-slot:leftTitle>
+            <template #leftTitle>
               <div class="status-flag">{{ $t('最后下发') }}</div>
               <div class="create-time">
                 {{
@@ -398,7 +411,7 @@
                 }}
               </div>
             </template>
-            <template v-slot:rightTitle>
+            <template #rightTitle>
               <div class="status-flag">{{ $t('现网配置') }}</div>
               <div class="create-time">
                 {{

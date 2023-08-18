@@ -2,13 +2,15 @@
 import './public-path'
 import * as Vue from 'vue'
 
+import '@icon-cool/bk-icon-magic_box'
+
 import App from '@/App'
 import router from '@/router'
 import store from '@/store'
 import i18n from '@/language/i18n'
 import { bus } from '@/common/bus'
 // 全量引入 bkui-vue
-import bkui, { InfoBox, Message, Notify } from 'bkui-vue'
+import bkui, { InfoBox, Message, Notify } from 'bkui-vue/dist/index.esm.source'
 // 全量引入 bkui-vue 样式
 import 'bkui-vue/dist/style.css'
 

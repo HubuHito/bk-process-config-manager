@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <template v-slot:footer>
+    <template #footer>
       <div class="footer-wrapper">
         <bk-button
           theme="primary"
@@ -59,6 +59,7 @@ export default {
       required: true,
     },
   },
+  emits: ['update:show', 'confirm'],
   data() {
     return {
       isError: false,
@@ -88,7 +89,6 @@ export default {
       $emit(this, 'update:show', false)
     },
   },
-  emits: ['update:show', 'confirm'],
 }
 </script>
 

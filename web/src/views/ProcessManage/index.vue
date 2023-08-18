@@ -4,27 +4,27 @@
       <router-view v-if="isProcessStatusPage"></router-view>
     </div>
     <!-- <bk-navigation
-                        class="hack-king-navigation"
-                        navigation-type="top-bottom"
-                        head-height="0"
-                        :default-open="isNavigationOpen"
-                        @toggle-click="handleToggle">
-                        <template slot="menu">
-                          <bk-navigation-menu :default-active="activeNav">
-                            <bk-navigation-menu-item
-                              icon="gsekit-icon gsekit-icon-status-fill" id="processStatus" @click="onProcessStatus">
-                              {{ $t('进程状态') }}
-                            </bk-navigation-menu-item>
-                            <bk-navigation-menu-item
-                              icon="gsekit-icon gsekit-icon-process-manager-fill" id="processManage" @click="onProcessMessage">
-                              {{ $t('进程管理') }}
-                            </bk-navigation-menu-item>
-                          </bk-navigation-menu>
-                        </template>
-                        <div class="navigation-content">
-                          <router-view v-if="isProcessStatusPage"></router-view>
-                        </div>
-                      </bk-navigation> -->
+                                  class="hack-king-navigation"
+                                  navigation-type="top-bottom"
+                                  head-height="0"
+                                  :default-open="isNavigationOpen"
+                                  @toggle-click="handleToggle">
+                                  <template slot="menu">
+                                    <bk-navigation-menu :default-active="activeNav">
+                                      <bk-navigation-menu-item
+                                        icon="gsekit-icon gsekit-icon-status-fill" id="processStatus" @click="onProcessStatus">
+                                        {{ $t('进程状态') }}
+                                      </bk-navigation-menu-item>
+                                      <bk-navigation-menu-item
+                                        icon="gsekit-icon gsekit-icon-process-manager-fill" id="processManage" @click="onProcessMessage">
+                                        {{ $t('进程管理') }}
+                                      </bk-navigation-menu-item>
+                                    </bk-navigation-menu>
+                                  </template>
+                                  <div class="navigation-content">
+                                    <router-view v-if="isProcessStatusPage"></router-view>
+                                  </div>
+                                </bk-navigation> -->
   </div>
 </template>
 
@@ -32,6 +32,7 @@
 import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   name: 'ProcessPage',
+  emits: ['navigation-toggle'],
   data() {
     return {
       isNavigationOpen: localStorage.getItem('isNavigationOpen') === '1',
@@ -75,7 +76,6 @@ export default {
       this.$store.commit('routeProcessManageManage')
     },
   },
-  emits: ['navigation-toggle'],
 }
 </script>
 

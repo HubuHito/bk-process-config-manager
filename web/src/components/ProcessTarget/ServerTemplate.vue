@@ -39,6 +39,7 @@ export default {
       default: '',
     },
   },
+  emits: ['click'],
   computed: {
     templateList() {
       return this.searchWord
@@ -70,7 +71,6 @@ export default {
       )
     },
   },
-  emits: ['click'],
 }
 </script>
 

@@ -12,13 +12,12 @@
       ref="cascadeDropdown"
       trigger="click"
       :z-index="2"
-      :distance="15"
       :offset="-1"
       placement="bottom-start"
       theme="light bk-cascade-dropdown"
       animation="slide-toggle"
-      :on-show="handleDropdownShow"
-      :on-hide="handleDropdownHide"
+      @after-show="handleDropdownShow"
+      @after-hidden="handleDropdownHide"
     >
       <div
         :class="['bk-cascade-name', { 'placeholder-text': !selectedName }]"
@@ -26,7 +25,8 @@
       >
         <span>{{ selectedName || name }}</span>
       </div>
-      <template v-slot:content>
+
+      <template #content>
         <div class="bk-cascade-dropdown-content">
           <div class="bk-cascade-panel">
             <ul class="bk-cascade-panel-ul">
@@ -80,6 +80,7 @@ export default {
       default: '集群',
     },
   },
+  emits: ['change', 'update:value'],
   data() {
     return {
       allSearchData: [], // 所有数据
@@ -239,7 +240,6 @@ export default {
       return source === target
     },
   },
-  emits: ['change', 'update:value'],
 }
 </script>
 

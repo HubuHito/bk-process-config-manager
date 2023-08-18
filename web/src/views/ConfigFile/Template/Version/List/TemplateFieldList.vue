@@ -94,6 +94,7 @@ export default {
       },
     },
   },
+  emits: ['change'],
   data() {
     return {
       showBindProcess: false,
@@ -111,7 +112,6 @@ export default {
       })
     },
   },
-  emits: ['change'],
 }
 </script>
 

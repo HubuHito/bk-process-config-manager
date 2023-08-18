@@ -104,6 +104,7 @@ export default {
       required: true,
     },
   },
+  emits: ['update:instanceProcess', 'update:templateProcess', 'checked'],
   data() {
     return {}
   },
@@ -243,7 +244,6 @@ export default {
       $emit(this, 'checked', topoNode)
     },
   },
-  emits: ['update:instanceProcess', 'update:templateProcess', 'checked'],
 }
 </script>
 

@@ -8,10 +8,10 @@
     </div>
     <div class="right-panel-main">
       <!-- <div class="bk-button-group">
-                          <bk-button class="king-button" @click="toggleTab('global')" :class="activeTab === 'global' && 'is-selected'">
-                            {{ $t('内置变量') }}
-                          </bk-button>
-                        </div> -->
+                                    <bk-button class="king-button" @click="toggleTab('global')" :class="activeTab === 'global' && 'is-selected'">
+                                      {{ $t('内置变量') }}
+                                    </bk-button>
+                                  </div> -->
       <bk-input
         v-test="'variableSearch'"
         v-model:value="keyword"
@@ -63,6 +63,7 @@
 
 export default {
   name: 'HelpVariable',
+  emits: ['close'],
   data() {
     return {
       keyword: '',
@@ -184,7 +185,6 @@ export default {
       return el
     },
   },
-  emits: ['close'],
 }
 </script>
 

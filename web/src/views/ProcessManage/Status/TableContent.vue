@@ -1,27 +1,26 @@
 <template>
   <div class="bk-custom-table">
     <bk-table
+      :pagination="pagination"
+      remote-pagination
       ref="statusTable"
       :data="tableData"
-      :size="setting.size"
+      :settings="{ size: setting.size, fields: [], checked: [] }"
       :max-height="$store.state.pageHeight - (isSelectedAllPages ? 271 : 235)"
       row-key="bk_process_id"
-      :pagination="pagination"
       @column-sort="handleSortChange"
       @row-click="toggleExpansion"
       @page-value-change="handlePageChange"
       @page-limit-change="handlePageLimitChange"
     >
-      <template #expandRow="row">
-        <div class="process-status" v-if="row?.proc_inst_infos?.length">
+      <template #expandRow="{ row }">
+        <div class="process-status" v-if="row.proc_inst_infos.length">
           <div
             class="col-status-item"
             v-for="(instInfo, index) in row.proc_inst_infos"
             :key="instInfo.id"
           >
-            <div class="item-instance-text">
-              {{ $t('实例') + (index + 1) }}
-            </div>
+            <div class="item-instance-text">{{ $t('实例') + (index + 1) }}</div>
             <div class="item-template-name">
               <bk-popover :content="$t('主机下唯一标识')">
                 <span>{{ 'LocalInstID：' }}</span>
@@ -57,17 +56,19 @@
             </div>
           </div>
         </div>
+
         <div class="process-status" v-else>
           <span class="no-other-instance">{{ $t('暂无其他实例') }}</span>
         </div>
       </template>
+
       <bk-table-column
         key="selection"
         width="65"
         :resizable="false"
         :render-header="renderSelectionHeader"
       >
-        <template v-slot="props">
+        <template #default="props">
           <div @click.stop>
             <bk-checkbox
               v-test.common="'rowSelect'"
@@ -79,6 +80,7 @@
           </div>
         </template>
       </bk-table-column>
+
       <template v-for="item in setting.selectedFields">
         <bk-table-column
           v-if="
@@ -89,25 +91,25 @@
           :min-width="columnMinWidth[item.id]"
           :sortable="item.sortable ? 'custom' : ''"
         >
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <div v-bk-overflow-tips>
               <!-- 配置文件数 -->
               <!-- <div v-if="item.id === 'config_templates'" @click.stop>
-                                <template v-if="row.templateCount">
-                                  <bk-popover placement="right">
-                                    <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
-                                    <div slot="content">
-                                      <div v-for="file in row.config_templates" :key="file.config_template_id">
-                                        <span>{{ file.template_name }}</span>
-                                        {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
-                                      </div>
-                                    </div>
-                                  </bk-popover>
-                                </template>
-                                <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
-                              </div>
-                              其他
-                              <template v-else> -->
+                                          <template v-if="row.templateCount">
+                                            <bk-popover placement="right">
+                                              <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
+                                              <div slot="content">
+                                                <div v-for="file in row.config_templates" :key="file.config_template_id">
+                                                  <span>{{ file.template_name }}</span>
+                                                  {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
+                                                </div>
+                                              </div>
+                                            </bk-popover>
+                                          </template>
+                                          <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
+                                        </div>
+                                        其他
+                                        <template v-else> -->
               <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
               <!-- </template> -->
             </div>
@@ -122,7 +124,7 @@
           sortable="custom"
           :render-header="renderProcessHeader"
         >
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
           </template>
         </bk-table-column>
@@ -134,7 +136,7 @@
           :min-width="columnMinWidth[item.id]"
           :render-header="renderFilterHeader"
         >
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <StatusView
               v-if="row.process_status === 0"
               type="origin"
@@ -163,7 +165,7 @@
           :min-width="columnMinWidth[item.id]"
           :render-header="renderFilterHeader"
         >
-          <template v-slot="{ row }">
+          <template #default="{ row }">
             <span
               :class="[
                 'hosting-status',
@@ -183,14 +185,15 @@
           </template>
         </bk-table-column>
       </template>
+
       <bk-table-column :label="$t('操作')" width="170" class="operat-headr">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div class="table-operation-container" @click.stop>
             <AuthTag
               action="manage_process"
               :authorized="authMap.manage_process"
             >
-              <template v-slot="{ disabled }">
+              <template #default="{ disabled }">
                 <bk-popover
                   :disabled="row.process_status !== 1"
                   :content="$t('进程运行中，无需启动')"
@@ -227,7 +230,7 @@
               action="operate_config"
               :authorized="authMap.operate_config"
             >
-              <template v-slot="{ disabled }">
+              <template #default="{ disabled }">
                 <bk-popover
                   :disabled="Boolean(row.templateCount)"
                   :content="$t('没有绑定配置文件，无法进行配置下发')"
@@ -249,12 +252,12 @@
               theme="dot-menu light"
               trigger="click"
               :arrow="false"
-              :distance="0"
             >
               <div class="dot-menu-trigger">
                 <span class="bk-icon icon-more" v-test.common="'more'"></span>
               </div>
-              <template v-slot:content>
+
+              <template #content>
                 <ul class="dot-menu-list">
                   <AuthTag
                     tag="li"
@@ -278,6 +281,7 @@
           </div>
         </template>
       </bk-table-column>
+
       <bk-table-column type="setting">
         <bk-table-setting-content
           :size="setting.size"
@@ -287,7 +291,8 @@
         >
         </bk-table-setting-content>
       </bk-table-column>
-      <template v-slot:empty>
+
+      <template #empty>
         <TableException
           :delay="loading"
           :type="tableEmptyType"
@@ -486,7 +491,6 @@ export default {
       }
     },
     handleSortChange({ prop, order }) {
-      // todo
       $emit(this, 'handleSortChange', { prop, order })
     },
     // 自定筛选表头
@@ -648,6 +652,9 @@ export default {
         this.expandRow = [row.bk_process_id]
       }
       this.$refs.statusTable?.setRowExpand(row)
+    },
+    onBeforeExpandChange({ row }) {
+      this.toggleExpansion(row)
     },
     computedColumnWidth() {
       const widthMap = {}

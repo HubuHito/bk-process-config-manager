@@ -6,7 +6,7 @@
       :width="630"
       @hidden="onCloseSide"
     >
-      <template v-slot:header>
+      <template #header>
         <div>{{ $t('配置文件详情') }}</div>
       </template>
       <template>
@@ -59,6 +59,7 @@ export default {
       default: null,
     },
   },
+  emits: ['onCloseSide'],
   data() {
     return {
       configFileDetail: {},
@@ -104,7 +105,6 @@ export default {
       this.getConfigInstanceInfo(val)
     },
   },
-  emits: ['onCloseSide'],
 }
 </script>
 

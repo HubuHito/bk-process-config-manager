@@ -116,11 +116,11 @@
                   </bk-popover>
                 </div>
                 <!-- <div
-                                    :class="['text-content', { 'disabled': row.disabled }]"
-                                    v-else
-                                    @click="handleEditfocus(head.prop, row, $index)">
-                                    <span>{{ emptyCell(row[head.prop]) }}</span>
-                                  </div> -->
+                                              :class="['text-content', { 'disabled': row.disabled }]"
+                                              v-else
+                                              @click="handleEditfocus(head.prop, row, $index)">
+                                              <span>{{ emptyCell(row[head.prop]) }}</span>
+                                            </div> -->
               </template>
             </bk-table-column>
             <!-- Column - 常规 -->

@@ -58,12 +58,12 @@ export default {
       default: '',
     },
   },
+  emits: ['click'],
   methods: {
     handleClick() {
       $emit(this, 'click')
     },
   },
-  emits: ['click'],
 }
 </script>
 

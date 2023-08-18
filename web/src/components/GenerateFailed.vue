@@ -8,7 +8,7 @@
       :always="false"
     >
       <StatusView :type="statusType" :text="text" />
-      <template v-slot:content>
+      <template #content>
         <div class="failed-message">
           <div class="message-text">{{ '失败信息：' }}</div>
           <!-- eslint-disable-next-line vue/no-v-html -->

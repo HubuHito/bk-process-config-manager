@@ -62,6 +62,7 @@ export default {
       default: null,
     },
   },
+  emits: ['format-tree', 'selected', 'click', 'toggle-check', 'toggle-expand'],
   data() {
     return {
       nodeList: [],
@@ -277,6 +278,5 @@ export default {
       return id
     },
   },
-  emits: ['format-tree', 'selected', 'click', 'toggle-check', 'toggle-expand'],
 }
 </script>

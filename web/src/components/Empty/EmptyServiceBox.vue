@@ -10,15 +10,15 @@
       </div>
       <h3 class="empty-title">{{ displayTitle }}</h3>
       <!-- <p class="empty-desc">
-                          <section>{{ descPath }}</section>
-                          <i18n :path="displayDescSlot">
-                            <bk-button text theme="primary" class="reset-icon-btn" @click="handleClick">
-                              <span class="flex-content">
-                                {{ $t('配置平台') }}<i class="gsekit-icon gsekit-icon-jump-fill"></i>
-                              </span>
-                            </bk-button>
-                          </i18n>
-                        </p> -->
+                                    <section>{{ descPath }}</section>
+                                    <i18n :path="displayDescSlot">
+                                      <bk-button text theme="primary" class="reset-icon-btn" @click="handleClick">
+                                        <span class="flex-content">
+                                          {{ $t('配置平台') }}<i class="gsekit-icon gsekit-icon-jump-fill"></i>
+                                        </span>
+                                      </bk-button>
+                                    </i18n>
+                                  </p> -->
     </div>
     <div class="flex-bottom"></div>
   </div>
@@ -54,6 +54,7 @@ export default {
       default: '',
     },
   },
+  emits: ['click-link'],
   computed: {
     displayTitle() {
       return (
@@ -95,7 +96,6 @@ export default {
       }
     },
   },
-  emits: ['click-link'],
 }
 </script>
 

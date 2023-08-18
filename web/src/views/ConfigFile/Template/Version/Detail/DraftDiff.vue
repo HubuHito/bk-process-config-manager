@@ -17,7 +17,7 @@
           ext-popover-cls="dark"
           :clearable="false"
         >
-          <template v-slot:trigger>
+          <template #trigger>
             <div class="bk-select-name">
               <span
                 v-bk-overflow-tips="{ distance: 20 }"
@@ -109,6 +109,7 @@ export default {
       },
     },
   },
+  emits: ['coverSuccess'],
   data() {
     const filterVersionList = this.versionList.filter((item) => !item.is_draft)
     const compareVersion = filterVersionList[0]
@@ -173,7 +174,6 @@ export default {
       }
     },
   },
-  emits: ['coverSuccess'],
 }
 </script>
 

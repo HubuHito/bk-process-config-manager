@@ -26,6 +26,7 @@ export default {
       default: 'LF',
     },
   },
+  emits: ['change'],
   data() {
     return {
       codeEditor: null,
@@ -125,7 +126,6 @@ export default {
       }
     },
   },
-  emits: ['change'],
 }
 </script>
 

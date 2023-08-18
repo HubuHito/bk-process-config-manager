@@ -24,6 +24,7 @@
 <script>
 import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
+  emits: ['selected'],
   data() {
     return {
       isActive: false,
@@ -84,7 +85,6 @@ export default {
       }
     },
   },
-  emits: ['selected'],
 }
 </script>
 

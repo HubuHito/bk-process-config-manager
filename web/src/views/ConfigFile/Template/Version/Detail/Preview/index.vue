@@ -73,6 +73,7 @@ export default {
       default: '',
     },
   },
+  emits: ['close', 'update:previewContentCache', 'markers'],
   data() {
     return {
       codeContent: '',
@@ -232,7 +233,6 @@ export default {
       }
     },
   },
-  emits: ['close', 'update:previewContentCache', 'markers'],
 }
 </script>
 

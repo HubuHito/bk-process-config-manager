@@ -156,11 +156,11 @@
 </template>
 
 <script>
-import { $on, $off, $once, $emit } from '../../../utils/gogocodeTransfer';
-import CodeEditor from '@/components/CodeEditor';
-import DiffEditor from '@/components/DiffEditor';
-import DiffNav from '@/components/DiffNav';
-import { modifyFormatDate } from '@/common/util';
+import { $on, $off, $once, $emit } from '../../../utils/gogocodeTransfer'
+import CodeEditor from '@/components/CodeEditor'
+import DiffEditor from '@/components/DiffEditor'
+import DiffNav from '@/components/DiffNav'
+import { modifyFormatDate } from '@/common/util'
 
 export default {
   components: {
@@ -212,7 +212,7 @@ export default {
       isDataLoading: false,
       isReleaseLoading: false,
       diffCount: 0,
-    };
+    }
   },
   watch: {
     processDetail: {
@@ -220,12 +220,13 @@ export default {
 
       handler(val) {
         this.templateList = val.config_templates.map((item) => {
-          item.showName =            item.template_name + this.$t('（') + item.file_name + this.$t('）');
-          return item;
-        });
-        this.templateId = this.templateList[0].config_template_id;
+          item.showName =
+            item.template_name + this.$t('（') + item.file_name + this.$t('）')
+          return item
+        })
+        this.templateId = this.templateList[0].config_template_id
         // 获取进程相关配置信息
-        this.getConfigInfo();
+        this.getConfigInfo()
       },
 
       immediate: true,
@@ -235,50 +236,52 @@ export default {
     // 获取进程相关配置信息
     async getConfigInfo() {
       try {
-        this.isDataLoading = true;
+        this.isDataLoading = true
         const res = await this.$store.dispatch(
           'configInstance/ajaxGetLatestConfigInstance',
           {
             templateId: this.templateId,
             processId: this.processDetail.bk_process_id,
-          },
-        );
-        const selectInfo = this.templateList.find(item => item.config_template_id === this.templateId);
-        this.configInfo = res.data || {};
+          }
+        )
+        const selectInfo = this.templateList.find(
+          (item) => item.config_template_id === this.templateId
+        )
+        this.configInfo = res.data || {}
         if (this.isContrast) {
-          this.isContrast = false;
+          this.isContrast = false
           this.$nextTick(() => {
-            this.isContrast = true;
-          });
+            this.isContrast = true
+          })
         }
-        this.configInfo.file_name = selectInfo.file_name;
-        this.generatedConfig = this.configInfo.generated_config || {};
-        this.releasedConfig = this.configInfo.released_config || {};
+        this.configInfo.file_name = selectInfo.file_name
+        this.generatedConfig = this.configInfo.generated_config || {}
+        this.releasedConfig = this.configInfo.released_config || {}
         if (!Object.keys(this.generatedConfig).length) {
-          this.setSyncGenerateConfig();
+          this.setSyncGenerateConfig()
         }
       } catch (error) {
-        console.warn(error);
-        this.isDataLoading = false;
+        console.warn(error)
+        this.isDataLoading = false
       } finally {
-        this.isDataLoading = false;
-        this.isGenerateLoading = false;
+        this.isDataLoading = false
+        this.isGenerateLoading = false
       }
     },
     // 配置模板下拉改变
     handleSelectChange(val) {
-      this.templateId = val;
-      this.isContrast = false;
-      this.getConfigInfo();
+      this.templateId = val
+      this.isContrast = false
+      this.getConfigInfo()
     },
     // 关闭侧滑
     onCloseSidesLider() {
-      $emit(this, 'closeSideSlider');
+      $emit(this, 'closeSideSlider')
     },
     // 配置下发
     async onConfigDistribute() {
       try {
-        this.isReleaseLoading = true;
+        this.isReleaseLoading = true
         const res = await this.$store.dispatch(
           'configTemplate/ajaxSetReleaseConfig',
           {
@@ -287,29 +290,29 @@ export default {
               [this.isDropdownMode ? 'scope' : 'expression_scope']:
                 this.selectedScope,
             },
-          },
-        );
-        this.$store.commit('routeTaskHistoryDetail', res.data.job_id);
+          }
+        )
+        this.$store.commit('routeTaskHistoryDetail', res.data.job_id)
       } catch (error) {
-        console.warn(error);
-        this.isReleaseLoading = false;
+        console.warn(error)
+        this.isReleaseLoading = false
       } finally {
-        this.isReleaseLoading = false;
+        this.isReleaseLoading = false
       }
     },
     // 配置对比
     onConfigContrast() {
-      this.isContrast = !this.isContrast;
+      this.isContrast = !this.isContrast
     },
     // 取消
     onCancel() {
-      $emit(this, 'closeSideSlider');
+      $emit(this, 'closeSideSlider')
     },
     // 同步配置生成
     async setSyncGenerateConfig(isClickBtn) {
       try {
-        this.isDataLoading = true;
-        this.isGenerateLoading = true;
+        this.isDataLoading = true
+        this.isGenerateLoading = true
         const res = await this.$store.dispatch(
           'configTemplate/ajaxSyncGenerateConfig',
           {
@@ -317,41 +320,41 @@ export default {
               bk_process_id: this.processDetail.bk_process_id,
             },
             templateId: this.templateId,
-          },
-        );
-        const matchTaskItem = res.data[0] || {};
+          }
+        )
+        const matchTaskItem = res.data[0] || {}
         if (matchTaskItem.status === 'succeeded') {
           // 重新获取配置信息  提示执行成功信息
-          await this.getConfigInfo();
-          if (!isClickBtn) return true;
+          await this.getConfigInfo()
+          if (!isClickBtn) return true
           this.$bkMessage({
             message: this.$t('配置生成成功'),
             theme: 'success',
-          });
+          })
         } else {
           // 关闭loading  提示执行失败信息
-          this.isDataLoading = false;
-          this.isGenerateLoading = false;
-          if (!isClickBtn) return true;
+          this.isDataLoading = false
+          this.isGenerateLoading = false
+          if (!isClickBtn) return true
           this.$bkMessage({
             message: this.$t('配置生成失败'),
             theme: 'error',
-          });
+          })
         }
       } catch (error) {
-        console.warn(error);
-        this.isGenerateLoading = false;
-        this.isDataLoading = false;
+        console.warn(error)
+        this.isGenerateLoading = false
+        this.isDataLoading = false
       }
     },
     jumpNextChange() {
-      this.$refs.diffEditorRef.diffNavigator.next();
+      this.$refs.diffEditorRef.diffNavigator.next()
     },
     jumpPreviousChange() {
-      this.$refs.diffEditorRef.diffNavigator.previous();
+      this.$refs.diffEditorRef.diffNavigator.previous()
     },
   },
-};
+}
 </script>
 
 <style lang="postcss" scoped>

@@ -7,7 +7,7 @@
         action="create_config_template"
         :authorized="authMap.create_config_template"
       >
-        <template v-slot="{ disabled }">
+        <template #default="{ disabled }">
           <bk-button
             class="king-button"
             theme="primary"
@@ -31,12 +31,13 @@
       ></bk-input>
     </div>
     <bk-table
+      :pagination="pagination"
+      remote-pagination
       v-bkloading="{ loading: templateLoading, zIndex: 0 }"
       class="king-table"
       auto-scroll-to-top
       :max-height="$store.state.pageHeight - 190"
       :data="templateList"
-      :pagination="pagination"
       @sort-change="handleSortChange"
       @page-change="handlePageChange"
       @page-limit-change="handlePageLimitChange"
@@ -46,7 +47,7 @@
         prop="template_name"
         sortable="custom"
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div class="template-name-column">
             <AuthTag
               v-bk-overflow-tips
@@ -67,26 +68,29 @@
           </div>
         </template>
       </bk-table-column>
+
       <bk-table-column :label="$t('文件名')" prop="file_name" sortable="custom">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.file_name }}</span>
           </div>
         </template>
       </bk-table-column>
+
       <bk-table-column
         :label="$t('文件所处路径')"
         prop="abs_path"
         sortable="custom"
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span>{{ row.abs_path }}</span>
           </div>
         </template>
       </bk-table-column>
+
       <bk-table-column :label="$t('关联进程数')">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <bk-popover v-if="row.is_bound" placement="right">
             <div
               class="button-text"
@@ -96,7 +100,7 @@
             >
               {{ row.relation_count.TEMPLATE + row.relation_count.INSTANCE }}
             </div>
-            <template v-slot:content>
+            <template #content>
               <div>
                 <div>{{ '模板进程：' + row.relation_count.TEMPLATE }}</div>
                 <div>{{ '实例进程：' + row.relation_count.INSTANCE }}</div>
@@ -115,6 +119,7 @@
           </div>
         </template>
       </bk-table-column>
+
       <bk-table-column
         :label="$t('更新人')"
         prop="updated_by"
@@ -122,25 +127,27 @@
         :filter-method="commonFilterMethod"
         :filter-multiple="true"
       ></bk-table-column>
+
       <bk-table-column
         :label="$t('更新时间')"
         prop="updated_at"
         sortable="custom"
         show-overflow-tooltip
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           {{ formatDate(row.updated_at) }}
         </template>
       </bk-table-column>
+
       <bk-table-column :label="$t('操作')" :width="operateColWidth">
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <div class="table-operation-container">
             <AuthTag
               class="bk-button-text"
               action="operate_config"
               :authorized="authMap.operate_config"
             >
-              <template v-slot="{ disabled }">
+              <template #default="{ disabled }">
                 <div
                   v-bk-tooltips="{
                     content: !row.has_version
@@ -174,7 +181,7 @@
               action="operate_config"
               :authorized="authMap.operate_config"
             >
-              <template v-slot="{ disabled }">
+              <template #default="{ disabled }">
                 <div
                   v-bk-tooltips="{
                     content: $t('未下发配置，无法进行配置检查'),
@@ -199,12 +206,12 @@
               trigger="click"
               :arrow="false"
               offset="15"
-              :distance="0"
             >
               <div class="dot-menu-trigger">
                 <span class="bk-icon icon-more" v-test.common="'more'"></span>
               </div>
-              <template v-slot:content>
+
+              <template #content>
                 <ul class="dot-menu-list">
                   <AuthTag
                     tag="li"
@@ -217,7 +224,7 @@
                     :authorized="authMap.operate_config"
                     @click="row.has_version && operateGenerate(row)"
                   >
-                    <template v-slot="{ disabled }">
+                    <template #default="{ disabled }">
                       <div
                         style="padding: 0 16px"
                         v-bk-tooltips="{
@@ -246,7 +253,8 @@
           </div>
         </template>
       </bk-table-column>
-      <template v-slot:empty>
+
+      <template #empty>
         <TableException
           :delay="templateLoading"
           :type="tableEmptyType"

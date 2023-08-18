@@ -17,7 +17,7 @@
       style="width: 430px"
       :clearable="false"
     >
-      <template v-slot:trigger>
+      <template #trigger>
         <div class="bk-select-name">
           {{ selectedVersionName }}
           <TagAvailable v-if="isActiveVersion" />
@@ -58,6 +58,7 @@ export default {
       required: true,
     },
   },
+  emits: ['update:showDialog', 'created', 'newVersion'],
   data() {
     return {
       selectedVersionId: '',
@@ -118,6 +119,5 @@ export default {
       }
     },
   },
-  emits: ['update:showDialog', 'created', 'newVersion'],
 }
 </script>

@@ -43,12 +43,12 @@ export default {
       default: 'top',
     },
   },
+  emits: ['click-expand'],
   methods: {
     handleToggleExpand() {
       $emit(this, 'click-expand', !this.column.isExpand)
     },
   },
-  emits: ['click-expand'],
 }
 </script>
 

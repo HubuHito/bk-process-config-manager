@@ -79,7 +79,7 @@
           v-bk-overflow-tips
         ></bk-table-column>
         <bk-table-column prop="value" :label="$t('变量')">
-          <template v-slot="{ row, $index }">
+          <template #default="{ row, $index }">
             <bk-popover
               :ref="`valuePopover${$index}`"
               trigger="click"
@@ -108,6 +108,7 @@ export default {
       default: () => [],
     },
   },
+  emits: ['cancel-edit'],
   data() {
     return {
       loading: false,
@@ -196,13 +197,12 @@ export default {
       this.propList.forEach((item) => {
         form[item.id] = ''
       })
-      this['propForm'] = form
+      this.propForm = form
     },
     setRowStyle() {
       return { cursor: 'pointer' }
     },
   },
-  emits: ['cancel-edit'],
 }
 </script>
 
