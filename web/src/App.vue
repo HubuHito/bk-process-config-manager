@@ -316,8 +316,9 @@ export default {
     }
   }
 }
-.tippy-tooltip.dot-menu-theme[data-size='small'] {
-  padding: 0;
+.bk-popover.dot-menu {
+  padding: 0 !important;
+  background-color: #fff !important;
   .dot-menu-list {
     margin: 0;
     padding: 5px 0;
@@ -351,10 +352,6 @@ export default {
     & > .auth-box {
       display: block;
     }
-  }
-
-  .tippy-content {
-    background-color: #fff !important;
   }
 }
 .tippy-popper {

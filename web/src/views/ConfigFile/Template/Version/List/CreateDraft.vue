@@ -1,9 +1,9 @@
 <template>
   <bk-dialog
-    :value="showDialog"
+    :isShow="showDialog"
     :title="$t('新建版本')"
     :loading="isLoading"
-    :mask-close="false"
+    :quick-close="false"
     width="480"
     ext-cls="create-version-dialog"
     header-position="left"

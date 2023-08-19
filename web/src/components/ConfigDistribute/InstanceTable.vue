@@ -88,7 +88,10 @@
         @change="handleVersionsChange"
       >
         <template v-for="item in usedVersionList" :key="item.config_version_id">
-          <bk-checkbox class="king-checkbox" :value="item.config_version_id">
+          <bk-checkbox
+            class="king-checkbox"
+            :model-value="item.config_version_id"
+          >
             <div v-bk-tooltips="getVersionTippy(item)">
               #{{ item.config_version_id }} {{ item.description }}
               <span class="percent"

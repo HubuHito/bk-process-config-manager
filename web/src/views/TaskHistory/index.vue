@@ -21,7 +21,7 @@ export default {
     const jobObject = {
       configfile: '配置文件',
       process: '进程',
-    }
+    };
     const jobAction = {
       generate: this.$t('生成'),
       start: this.$t('启动'),
@@ -33,12 +33,12 @@ export default {
       force_stop: this.$t('强制停止'),
       set_auto: this.$t('托管'),
       unset_auto: this.$t('取消托管'),
-    }
+    };
     const setEnv = {
       1: this.$t('测试'),
       2: this.$t('体验'),
       3: this.$t('正式'),
-    }
+    };
     return {
       jobObject,
       jobAction,
@@ -46,58 +46,58 @@ export default {
       selectedConfig: null,
       timer: null,
       isHistoryListPage: true,
-    }
+    };
   },
   watch: {
     '$store.state.bizId'() {
-      const { jobId } = this.$route.params
+      const { jobId } = this.$route.params;
       if (jobId) {
-        this.$store.commit('routeTaskHistoryList')
+        this.$store.commit('routeTaskHistoryList');
       }
       if (this.$route.name === 'task-history-list') {
-        this.isHistoryListPage = false
+        this.isHistoryListPage = false;
         this.$nextTick(() => {
-          this.isHistoryListPage = true
-        })
+          this.isHistoryListPage = true;
+        });
       }
     },
   },
   beforeUnmount() {
-    clearTimeout(this.timer)
+    clearTimeout(this.timer);
   },
   created() {
-    this.init()
+    this.init();
   },
   methods: {
     init() {
-      const { jobId } = this.$route.params
+      const { jobId } = this.$route.params;
       if (jobId) {
-        this.getSelectedConfig()
+        this.getSelectedConfig();
       }
     },
     async getSelectedConfig() {
-      const { jobId } = this.$route.params
-      if (!jobId) return
-      const res = await this.$store.dispatch('job/ajaxGetJobDetail', { jobId })
-      this.selectedConfig = res.data
+      const { jobId } = this.$route.params;
+      if (!jobId) return;
+      const res = await this.$store.dispatch('job/ajaxGetJobDetail', { jobId });
+      this.selectedConfig = res.data;
       if (res.data.is_ready) {
-        clearTimeout(this.timer)
+        clearTimeout(this.timer);
       } else {
         this.timer = setTimeout(() => {
-          this.getSelectedConfig()
-        }, 2000)
+          this.getSelectedConfig();
+        }, 2000);
       }
     },
     getTaskDeatail(row) {
-      this.selectedConfig = row
+      this.selectedConfig = row;
       if (!this.selectedConfig.is_ready) {
         this.$nextTick(() => {
-          this.getSelectedConfig()
-        })
+          this.getSelectedConfig();
+        });
       }
     },
   },
-}
+};
 </script>
 
 <style scoped>

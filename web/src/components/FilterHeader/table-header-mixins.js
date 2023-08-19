@@ -34,20 +34,20 @@ export default {
   },
   methods: {
     // 自定筛选表头
-    renderFilterHeader(h, data) {
-      const filterList = this.headerData[data.column.property] || []
+    renderFilterHeader(prop, label) {
+      const filterList = this.headerData[prop] || []
       this.setChecked(filterList)
-      const title = data.column.label || ''
-      const property = data.column.property || ''
-      // return (
-      //   <FilterHeader
-      //     name={title}
-      //     property={property}
-      //     filterList={filterList}
-      //     onConfirm={(prop, list) => this.handleFilterHeaderConfirm(prop, list)}
-      //     onReset={(prop) => this.handleFilterHeaderReset(prop)}
-      //   ></FilterHeader>
-      // )
+      const title = label || ''
+      const property = prop || ''
+      return (
+        <FilterHeader
+          name={title}
+          property={property}
+          filterList={filterList}
+          onConfirm={(prop, list) => this.handleFilterHeaderConfirm(prop, list)}
+          onReset={(prop) => this.handleFilterHeaderReset(prop)}
+        ></FilterHeader>
+      )
     },
     setChecked(data) {
       data.forEach((item) => {

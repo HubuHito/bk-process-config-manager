@@ -28,7 +28,7 @@
           }"
           v-if="parent.isExpandable && !parent.isExpand"
           align="center"
-          :render-header="headRenderStatus"
+          :label="headRenderStatus"
         >
           <template #default="{ row }">
             <img class="status-img" :src="getGroupStatus(row, parent.child)" />
@@ -38,11 +38,11 @@
           <template v-for="head in parent.child">
             <!-- Column - 跨页全选 -->
             <template v-if="head.type === 'selection'">
-              <bk-table-column v-if="openCheckAll" :render-header="checkRender">
+              <bk-table-column v-if="openCheckAll" :label="checkRender">
                 <template #default="{ row }">
                   <div @click.stop>
                     <bk-checkbox
-                      :value="row.rowSelect"
+                      :model-value="row.rowSelect"
                       :disabled="row.disabled"
                       @change="handleRowCheck(row)"
                     >
@@ -116,11 +116,11 @@
                   </bk-popover>
                 </div>
                 <!-- <div
-                                              :class="['text-content', { 'disabled': row.disabled }]"
-                                              v-else
-                                              @click="handleEditfocus(head.prop, row, $index)">
-                                              <span>{{ emptyCell(row[head.prop]) }}</span>
-                                            </div> -->
+                                                              :class="['text-content', { 'disabled': row.disabled }]"
+                                                              v-else
+                                                              @click="handleEditfocus(head.prop, row, $index)">
+                                                              <span>{{ emptyCell(row[head.prop]) }}</span>
+                                                            </div> -->
               </template>
             </bk-table-column>
             <!-- Column - 常规 -->

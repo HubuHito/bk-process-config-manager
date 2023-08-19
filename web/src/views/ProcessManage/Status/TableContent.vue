@@ -1,17 +1,24 @@
 <template>
   <div class="bk-custom-table">
+    <!-- key 解决vue3table重复渲染问题 -->
     <bk-table
       :pagination="pagination"
       remote-pagination
       ref="statusTable"
       :data="tableData"
-      :settings="{ size: setting.size, fields: [], checked: [] }"
+      :settings="{
+        size: setting.size,
+        fields: setting.fields,
+        checked: setting.selectedFields.map((item) => item.field),
+      }"
       :max-height="$store.state.pageHeight - (isSelectedAllPages ? 271 : 235)"
       row-key="bk_process_id"
+      :key="setting.selectedFields.map((item) => item.field).join(',')"
       @column-sort="handleSortChange"
       @row-click="toggleExpansion"
       @page-value-change="handlePageChange"
       @page-limit-change="handlePageLimitChange"
+      @setting-change="handleSettingChange"
     >
       <template #expandRow="{ row }">
         <div class="process-status" v-if="row.proc_inst_infos.length">
@@ -66,13 +73,13 @@
         key="selection"
         width="65"
         :resizable="false"
-        :render-header="renderSelectionHeader"
+        :label="renderSelectionHeader"
       >
         <template #default="props">
           <div @click.stop>
             <bk-checkbox
               v-test.common="'rowSelect'"
-              :value="props.row.isSelect"
+              :model-value="props.row.isSelect"
               :disabled="props.row.disable"
               @change="handleRowCheck(props.row)"
             >
@@ -81,7 +88,7 @@
         </template>
       </bk-table-column>
 
-      <template v-for="item in setting.selectedFields">
+      <template v-for="item in setting.selectedFields" :key="item.id">
         <bk-table-column
           v-if="
             !['process_status', 'is_auto', 'bk_process_id'].includes(item.id)
@@ -95,21 +102,21 @@
             <div v-bk-overflow-tips>
               <!-- 配置文件数 -->
               <!-- <div v-if="item.id === 'config_templates'" @click.stop>
-                                          <template v-if="row.templateCount">
-                                            <bk-popover placement="right">
-                                              <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
-                                              <div slot="content">
-                                                <div v-for="file in row.config_templates" :key="file.config_template_id">
-                                                  <span>{{ file.template_name }}</span>
-                                                  {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
-                                                </div>
-                                              </div>
-                                            </bk-popover>
-                                          </template>
-                                          <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
-                                        </div>
-                                        其他
-                                        <template v-else> -->
+                                                      <template v-if="row.templateCount">
+                                                        <bk-popover placement="right">
+                                                          <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
+                                                          <div slot="content">
+                                                            <div v-for="file in row.config_templates" :key="file.config_template_id">
+                                                              <span>{{ file.template_name }}</span>
+                                                              {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
+                                                            </div>
+                                                          </div>
+                                                        </bk-popover>
+                                                      </template>
+                                                      <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
+                                                    </div>
+                                                    其他
+                                                    <template v-else> -->
               <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
               <!-- </template> -->
             </div>
@@ -118,11 +125,10 @@
         <!-- process_id -->
         <bk-table-column
           v-if="item.id === 'bk_process_id'"
-          :label="item.label"
           :prop="item.id"
           :min-width="columnMinWidth[item.id]"
           sortable="custom"
-          :render-header="renderProcessHeader"
+          :label="() => renderProcessHeader(item.label)"
         >
           <template #default="{ row }">
             <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
@@ -131,10 +137,9 @@
         <!-- 进程状态 -->
         <bk-table-column
           v-if="item.id === 'process_status'"
-          :label="item.label"
           :prop="item.id"
           :min-width="columnMinWidth[item.id]"
-          :render-header="renderFilterHeader"
+          :label="(col) => renderFilterHeader(col, item.label)"
         >
           <template #default="{ row }">
             <StatusView
@@ -160,10 +165,9 @@
         <!-- 托管状态 -->
         <bk-table-column
           v-if="item.id === 'is_auto'"
-          :label="item.label"
           :prop="item.id"
           :min-width="columnMinWidth[item.id]"
-          :render-header="renderFilterHeader"
+          :label="(col) => renderFilterHeader(col, item.label)"
         >
           <template #default="{ row }">
             <span
@@ -282,15 +286,7 @@
         </template>
       </bk-table-column>
 
-      <bk-table-column type="setting">
-        <bk-table-setting-content
-          :size="setting.size"
-          :fields="setting.fields"
-          :selected="setting.selectedFields"
-          @setting-change="handleSettingChange"
-        >
-        </bk-table-setting-content>
-      </bk-table-column>
+      <!-- 删除TableSetting配置 -->
 
       <template #empty>
         <TableException
@@ -303,7 +299,7 @@
   </div>
 </template>
 
-<script>
+<script lang="tsx">
 import { $on, $off, $once, $emit } from '../../../utils/gogocodeTransfer'
 import { mapState } from 'vuex'
 import ColumnCheck from '@/components/ColumnCheck'
@@ -360,48 +356,57 @@ export default {
     const fields = [
       {
         id: 'bk_set_name',
+        field: 'bk_set_name',
         label: this.$t('集群'),
         sortable: true,
       },
       {
         id: 'bk_module_name',
+        field: 'bk_module_name',
         label: this.$t('模块'),
         sortable: true,
       },
       {
         id: 'bk_service_name',
+        field: 'bk_service_name',
         label: this.$t('服务实例'),
         sortable: true,
       },
       {
         id: 'bk_process_name',
+        field: 'bk_process_name',
         label: this.$t('进程别名'),
         disabled: true,
         sortable: true,
       },
       {
         id: 'bk_process_id',
+        field: 'bk_process_id',
         label: 'process_id',
         sortable: true,
       },
       {
         id: 'bk_host_innerip',
+        field: 'bk_host_innerip',
         label: this.$t('内网IP'),
         sortable: true,
       },
       {
         id: 'process_status',
+        field: 'process_status',
         label: this.$t('进程状态'),
         disabled: true,
         sortable: true,
       },
       {
         id: 'is_auto',
+        field: 'is_auto',
         label: this.$t('托管状态'),
         sortable: true,
       },
       {
         id: 'bk_cloud_name',
+        field: 'bk_cloud_name',
         label: this.$t('云区域'),
         sortable: true,
         // }, {
@@ -494,30 +499,28 @@ export default {
       $emit(this, 'handleSortChange', { prop, order })
     },
     // 自定筛选表头
-    renderFilterHeader(h, data) {
-      const filterList = this.headerData[data.column.property] || []
+    renderFilterHeader(column, label = '') {
+      const filterList = this.headerData[column.prop] || []
       this.setChecked(filterList)
-      const title = data.column.label || ''
-      const property = data.column.property || ''
-      // todo
-      // return (
-      //   <FilterHeader
-      //     name={title}
-      //     property={property}
-      //     filterList={filterList}
-      //     onConfirm={(prop, list) => this.handleFilterHeaderConfirm(prop, list)}
-      //     onReset={(prop) => this.handleFilterHeaderReset(prop)}
-      //   ></FilterHeader>
-      // )
+      const title = label || ''
+      const property = column.prop || ''
+      return (
+        <FilterHeader
+          name={title}
+          property={property}
+          filterList={filterList}
+          onConfirm={(prop, list) => this.handleFilterHeaderConfirm(prop, list)}
+          onReset={(prop) => this.handleFilterHeaderReset(prop)}
+        ></FilterHeader>
+      )
     },
     // 自定义进程表头
-    renderProcessHeader(h, data) {
-      const title = data.column.label || ''
+    renderProcessHeader(label = '') {
+      const title = label
       const tips = this.$t(
         '配置平台统一为每一个进程实例单独分配了全局唯一的ID，此ID非旧版“实例ID”且不可更改'
       )
-      // todo
-      // return <ProcessHeader name={title} tips={tips}></ProcessHeader>
+      return <ProcessHeader name={title} tips={tips}></ProcessHeader>
     },
     setChecked(data) {
       data.forEach((item) => {
@@ -540,17 +543,16 @@ export default {
      * 自定义selection表头
      */
     renderSelectionHeader() {
-      // todo
-      // return (
-      //   <ColumnCheck
-      //     ref="customSelectionHeader"
-      //     indeterminate={this.indeterminate}
-      //     isAllChecked={this.isAllChecked}
-      //     loading={this.checkLoading}
-      //     disabled={Boolean(this.tableData.length)}
-      //     onChange={(value) => this.handleCheckAll(value)}
-      //   ></ColumnCheck>
-      // )
+      return (
+        <ColumnCheck
+          ref="customSelectionHeader"
+          indeterminate={this.indeterminate}
+          isAllChecked={this.isAllChecked}
+          loading={this.checkLoading}
+          disabled={Boolean(this.tableData.length)}
+          onChange={(value) => this.handleCheckAll(value)}
+        ></ColumnCheck>
+      )
     },
     /**
      * 表头勾选事件
@@ -578,15 +580,16 @@ export default {
       row.isSelect = !row.isSelect
       $emit(this, 'handleRowCheck', row)
     },
-    // 表格功能选项
-    handleSettingChange({ fields, size }) {
+    handleSettingChange({ checked, size }) {
+      const fields = checked
       this.setting.size = size
-      this.setting.selectedFields = fields
-      const fieldIds = fields.map((m) => m.id)
+      this.setting.selectedFields = this.setting.fields.filter((item) =>
+        fields.includes(item.field)
+      )
       window.localStorage.setItem(
         'settingCache',
         JSON.stringify({
-          fields: fieldIds,
+          fields: fields,
           size,
         })
       )

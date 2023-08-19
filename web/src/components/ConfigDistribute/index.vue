@@ -31,7 +31,7 @@
         <bk-select
           class="king-select"
           v-test.release="'tempSelect'"
-          searchable
+          filterable
           multiple
           display-tag
           show-select-all

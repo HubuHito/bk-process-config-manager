@@ -4,10 +4,10 @@
     ext-cls="permission-dialog"
     :z-index="2010"
     :draggable="false"
-    :mask-close="false"
+    :quick-close="false"
     :header-position="'left'"
     :title="''"
-    :value="isModalShow"
+    :isShow="isModalShow"
     @cancel="onCloseDialog"
     @after-leave="handleDialogLeave"
   >

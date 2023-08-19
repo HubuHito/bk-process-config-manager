@@ -27,7 +27,7 @@
             <bk-checkbox
               class="check-box"
               v-if="isMultipleChoice"
-              :value="item.checked"
+              :model-value="item.checked"
             ></bk-checkbox>
             <span class="item-name">{{ item.name }}</span>
           </li>
@@ -54,6 +54,7 @@
 
 <script>
 import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
+import { $bkPopover } from 'bkui-vue'
 export default {
   name: 'FilterHeader',
   props: {
@@ -123,7 +124,7 @@ export default {
     },
   },
   beforeUnmount() {
-    this.instance && this.instance.destroy()
+    this.instance?.close()
     this.instance = null
   },
   methods: {
@@ -134,7 +135,8 @@ export default {
       if (!this.filterList.length) return
       // const target = e.target.tagName === 'SPAN' ? e.target : e.target.parentNode
       if (!this.instance) {
-        this.instance = this.$bkPopover(e.target, {
+        this.instance = $bkPopover({
+          target: e.target,
           content: this.$refs.labelMenu,
           trigger: 'click',
           arrow: false,
@@ -145,16 +147,18 @@ export default {
           sticky: true,
           duration: [275, 0],
           interactive: true,
-          onHidden: () => {
+          onAfterHidden: () => {
             this.list.forEach((item) => {
               item.checked = this.selectIds.includes(item.id)
             })
-            this.instance && this.instance.destroy()
+            this.instance?.close()
             this.instance = null
           },
         })
       }
-      this.instance && this.instance.show(100)
+      setTimeout(() => {
+        this.instance?.show()
+      }, 200)
     },
     handleSelectLabel(item) {
       item.checked = !item.checked
@@ -171,14 +175,14 @@ export default {
       } else {
         $emit(this, 'reset', this.property)
       }
-      this.instance && this.instance.hide(100)
+      this.instance?.hide()
     },
     handleResetSelected() {
       this.selectIds = []
       this.list.forEach((item) => {
         item.checked = false
       })
-      this.instance && this.instance.hide(100)
+      this.instance?.hide()
       $emit(this, 'reset', this.property)
     },
   },

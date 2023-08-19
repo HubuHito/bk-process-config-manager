@@ -45,9 +45,8 @@
 
       <bk-table-column
         prop="job_object"
-        :label="$t('任务对象')"
         :min-width="columnMinWidth['job_object']"
-        :render-header="renderFilterHeader"
+        :label="() => renderFilterHeader('job_object', $t('任务对象'))"
       >
         <template #default="props">
           <span>{{ jobObject[props.row.job_object] }}</span>
@@ -56,9 +55,8 @@
 
       <bk-table-column
         prop="job_action"
-        :label="$t('动作')"
         :min-width="columnMinWidth['job_action']"
-        :render-header="renderFilterHeader"
+        :label="() => renderFilterHeader('job_action', $t('动作'))"
       >
         <template #default="props">
           <span>{{ jobAction[props.row.job_action] }}</span>
@@ -89,10 +87,9 @@
 
       <bk-table-column
         prop="created_by"
-        :label="$t('执行账户')"
         show-overflow-tooltip
         :min-width="columnMinWidth['created_by']"
-        :render-header="renderFilterHeader"
+        :label="() => renderFilterHeader('created_by', $t('执行账户'))"
       />
 
       <bk-table-column
@@ -129,8 +126,7 @@
 
       <bk-table-column
         prop="status"
-        :label="$t('执行状态')"
-        :render-header="renderFilterHeader"
+        :label="() => renderFilterHeader('status', $t('执行状态'))"
         :min-width="columnMinWidth['status']"
       >
         <template #default="{ row }">
@@ -184,11 +180,11 @@
   </div>
 </template>
 
-<script>
-import { $on, $off, $once, $emit } from '../../../utils/gogocodeTransfer'
-import { performTime, modifyFormatDate, formatDate } from '@/common/util'
-import tableHeaderMixins from '@/components/FilterHeader/table-header-mixins'
-import { debounce } from 'lodash'
+<script lang="tsx">
+import { $on, $off, $once, $emit } from '../../../utils/gogocodeTransfer';
+import { performTime, modifyFormatDate, formatDate } from '@/common/util';
+import tableHeaderMixins from '@/components/FilterHeader/table-header-mixins';
+import { debounce } from 'lodash';
 
 export default {
   name: 'HistoryList',
@@ -197,19 +193,19 @@ export default {
     jobObject: {
       type: Object,
       default() {
-        return {}
+        return {};
       },
     },
     jobAction: {
       type: Object,
       default() {
-        return {}
+        return {};
       },
     },
     setEnv: {
       type: Object,
       default() {
-        return {}
+        return {};
       },
     },
   },
@@ -318,224 +314,219 @@ export default {
         },
       ],
       columnMinWidth: {},
-    }
+    };
   },
   computed: {
     tableEmptyType() {
-      return this.initDateTimeRange.some((date) => !!date) ||
-        this.searchSelectValue.length
+      return this.initDateTimeRange.some(date => !!date)
+        || this.searchSelectValue.length
         ? 'search-empty'
-        : 'empty'
+        : 'empty';
     },
   },
   beforeUnmount() {
-    clearTimeout(this.historyListTimer)
+    clearTimeout(this.historyListTimer);
   },
   created() {
-    this.computedColumnWidth()
-    this.getTaskHistoryList = debounce(this.getTaskHistoryListSource, 300)
-    const highlightIds = sessionStorage.getItem('taskHistoryHighlightIds')
+    this.computedColumnWidth();
+    this.getTaskHistoryList = debounce(this.getTaskHistoryListSource, 300);
+    const highlightIds = sessionStorage.getItem('taskHistoryHighlightIds');
     if (highlightIds) {
-      this.selectedIdList = highlightIds.split(',').map((item) => Number(item))
-      sessionStorage.removeItem('taskHistoryHighlightIds')
+      this.selectedIdList = highlightIds.split(',').map(item => Number(item));
+      sessionStorage.removeItem('taskHistoryHighlightIds');
     }
-    this.getTaskHistoryList()
-    this.getHistoryFilterList()
+    this.getTaskHistoryList();
+    this.getHistoryFilterList();
   },
   methods: {
     // 获取配置文件列表
     async getTaskHistoryListSource() {
       try {
-        this.isLoading = true
-        const query = this.getSearchParams()
+        this.isLoading = true;
+        const query = this.getSearchParams();
         const res = await this.$store.dispatch('job/ajaxGetJobList', {
           page: this.pagination.current,
           pagesize: this.pagination.limit,
           ordering: this.ordering,
           query,
-        })
-        this.pagination.count = res.data.count
-        const runningList = []
+        });
+        this.pagination.count = res.data.count;
+        const runningList = [];
         // 过滤列表添加执行账户条件
-        const updatePersonFilters = new Set()
+        const updatePersonFilters = new Set();
         res.data.list.forEach((item) => {
-          updatePersonFilters.add(item.created_by)
+          updatePersonFilters.add(item.created_by);
           // 处理开始时间
-          item.start_time = modifyFormatDate(item.start_time)
+          item.start_time = modifyFormatDate(item.start_time);
           // 处理结束时间
-          item.end_time = modifyFormatDate(item.end_time)
+          item.end_time = modifyFormatDate(item.end_time);
           // 计算执行耗时
-          item.timeout = performTime(item.start_time, item.end_time)
+          item.timeout = performTime(item.start_time, item.end_time);
           // 获取正在执行中的历史id
           if (!['succeeded', 'failed'].includes(item.status)) {
-            runningList.push(item.id)
+            runningList.push(item.id);
           }
-        })
-        const perAccount = [...updatePersonFilters].map((item) => ({
+        });
+        const perAccount = [...updatePersonFilters].map(item => ({
           name: item,
           id: item,
-        }))
-        this.tableData = res.data.list
+        }));
+        this.tableData = res.data.list;
         this.filterData.forEach((item) => {
           if (item.id === 'created_by') {
-            item.children = perAccount
+            item.children = perAccount;
           }
-        })
+        });
         if (runningList.length) {
           // 轮询历史列表
-          this.runningList = runningList
-          this.setPollHistoryList()
+          this.runningList = runningList;
+          this.setPollHistoryList();
         }
       } catch (error) {
-        console.warn(error)
+        console.warn(error);
       } finally {
-        this.isLoading = false
+        this.isLoading = false;
       }
     },
     // 轮询历史列表
     setPollHistoryList() {
       try {
-        this.historyListTimer && clearTimeout(this.historyListTimer)
+        this.historyListTimer && clearTimeout(this.historyListTimer);
         this.historyListTimer = setTimeout(async () => {
-          const query = this.getSearchParams()
+          const query = this.getSearchParams();
           const res = await this.$store.dispatch('job/ajaxGetJobList', {
             pagesize: this.pagination.limit,
             query,
-          })
-          const runningList = []
+          });
+          const runningList = [];
           res.data.list.forEach((requestJob) => {
-            const jobItem = this.tableData.find(
-              (job) => job.id === requestJob.id
-            )
-            jobItem.status = requestJob.status
+            const jobItem = this.tableData.find(job => job.id === requestJob.id);
+            jobItem.status = requestJob.status;
             if (!['succeeded', 'failed'].includes(requestJob.status)) {
-              runningList.push(requestJob.id)
+              runningList.push(requestJob.id);
             }
-          })
+          });
           if (runningList.length) {
             // 轮询历史列表
-            this.runningList = runningList
-            this.setPollHistoryList()
+            this.runningList = runningList;
+            this.setPollHistoryList();
           }
-        }, 5000)
+        }, 5000);
       } catch (error) {
-        console.warn(error)
+        console.warn(error);
       }
     },
     // 生成搜索参数
     getSearchParams() {
-      const params = {}
-      const dateTime = this.initDateTimeRange
+      const params = {};
+      const dateTime = this.initDateTimeRange;
       if (dateTime[0]) {
-        params.start_time__gte = formatDate(dateTime[0])
+        params.start_time__gte = formatDate(dateTime[0]);
       }
       if (dateTime[1]) {
-        params.start_time__lte = formatDate(dateTime[1])
+        params.start_time__lte = formatDate(dateTime[1]);
       }
       if (this.searchSelectValue.length) {
         this.searchSelectValue.forEach((item) => {
-          params[item.id] = item.values.map((val) => val.id)
-        })
+          params[item.id] = item.values.map(val => val.id);
+        });
       }
       if (this.runningList.length) {
-        params.id = this.runningList
+        params.id = this.runningList;
       }
       // 获取时间
-      return params
+      return params;
     },
     // 获取用户列表 任务历史过滤选项
     async getHistoryFilterList() {
       try {
-        const filterList = await this.$store.dispatch(
-          'meta/ajaxGetHistoryFilterList'
-        )
+        const filterList = await this.$store.dispatch('meta/ajaxGetHistoryFilterList');
         this.filterData.forEach((item) => {
-          const type = `${item.id}_choices`
-          if (!filterList.data[type]) return
-          const chidlren = filterList.data[type].map((val) => ({
+          const type = `${item.id}_choices`;
+          if (!filterList.data[type]) return;
+          const chidlren = filterList.data[type].map(val => ({
             name: val.name,
             id: val.id,
-          }))
-          item.children.push(...chidlren)
-        })
-        this.searchSelectData = this.filterData
+          }));
+          item.children.push(...chidlren);
+        });
+        this.searchSelectData = this.filterData;
       } catch (error) {
-        console.warn(error)
+        console.warn(error);
       }
     },
     handlerRowClassName({ row }) {
       if (this.selectedIdList.includes(row.id)) {
-        return 'select-row'
+        return 'select-row';
       }
     },
     handleSortChange({ prop, order }) {
       if (order === 'ascending') {
-        this.ordering = prop
+        this.ordering = prop;
       } else if (order === 'descending') {
-        this.ordering = `-${prop}`
+        this.ordering = `-${prop}`;
       } else {
-        this.ordering = ''
+        this.ordering = '';
       }
-      clearTimeout(this.historyListTimer)
-      this.runningList = []
-      this.getTaskHistoryList()
+      clearTimeout(this.historyListTimer);
+      this.runningList = [];
+      this.getTaskHistoryList();
     },
-    // 整行点击
-    handleRowClick(row) {
-      $emit(this, 'getTaskDeatail', row)
-      this.$store.commit('routeTaskHistoryDetail', row.id)
+    handleRowClick(event, row) {
+      $emit(this, 'getTaskDeatail', row);
+      this.$store.commit('routeTaskHistoryDetail', row.id);
     },
     onDataPickerPick() {
-      this.getTaskHistoryList()
+      this.getTaskHistoryList();
     },
     handleClearDate() {
-      this.initDateTimeRange = ['', '']
-      this.getTaskHistoryList()
+      this.initDateTimeRange = ['', ''];
+      this.getTaskHistoryList();
     },
     async onRetyr(row) {
       try {
-        this.runningList.push(row.id)
-        row.status = 'loading'
+        this.runningList.push(row.id);
+        row.status = 'loading';
         await this.$store.dispatch('job/ajaxRetryJob', {
           jobId: row.id,
           data: {
             job_task_id_list: [],
           },
-        })
-        this.setPollHistoryList()
+        });
+        this.setPollHistoryList();
       } catch (error) {
-        console.warn(error)
+        console.warn(error);
       }
     },
     handlePageLimitChange(limit) {
-      clearTimeout(this.historyListTimer)
-      this.runningList = []
-      this.pagination.current = 1
-      this.pagination.limit = limit
-      this.getTaskHistoryList()
+      clearTimeout(this.historyListTimer);
+      this.runningList = [];
+      this.pagination.current = 1;
+      this.pagination.limit = limit;
+      this.getTaskHistoryList();
     },
     handlePageChange(page) {
-      clearTimeout(this.historyListTimer)
-      this.runningList = []
-      this.pagination.current = page
-      this.getTaskHistoryList()
+      clearTimeout(this.historyListTimer);
+      this.runningList = [];
+      this.pagination.current = page;
+      this.getTaskHistoryList();
     },
     computedColumnWidth() {
-      const widthMap = {}
+      const widthMap = {};
       this.columnList.reduce((obj, item) => {
-        obj[item.id] = this.$textTool.getHeadWidth(item.label, item)
-        return obj
-      }, widthMap)
-      this.columnMinWidth = widthMap
+        obj[item.id] = this.$textTool.getHeadWidth(item.label, item);
+        return obj;
+      }, widthMap);
+      this.columnMinWidth = widthMap;
     },
     emptySearchClear() {
-      this.isLoading = true
-      this.handleClearDate()
-      this.searchSelectValue = []
-      this.handleSearchSelectChange(this.searchSelectValue)
+      this.isLoading = true;
+      this.handleClearDate();
+      this.searchSelectValue = [];
+      this.handleSearchSelectChange(this.searchSelectValue);
     },
   },
-}
+};
 </script>
 
 <style lang="postcss" scoped>

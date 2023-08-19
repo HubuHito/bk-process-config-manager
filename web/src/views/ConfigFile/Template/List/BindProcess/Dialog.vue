@@ -1,7 +1,7 @@
 <template>
   <bk-dialog
-    :value="showDialog"
-    :mask-close="false"
+    :isShow="showDialog"
+    :quick-close="false"
     :position="{ top: dialogTop }"
     width="1000"
     ext-cls="create-template-dialog"

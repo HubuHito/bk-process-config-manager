@@ -3,7 +3,7 @@
     <div class="edit-content">
       <div class="edit-title">
         <i18n path="编辑范围Num"
-          ><span class="num">{{ selections.length }}</span></i18n
+        ><span class="num">{{ selections.length }}</span></i18n
         >
       </div>
       <bk-form
@@ -50,13 +50,13 @@
             theme="primary"
             @click.stop.prevent="validateForm"
             :loading="isChecking"
-            >{{ $t('确定') }}</bk-button
+          >{{ $t('确定') }}</bk-button
           >
           <bk-button
             ext-cls="ml5"
             theme="default"
             @click.stop.prevent="cancelEdit"
-            >{{ $t('取消') }}</bk-button
+          >{{ $t('取消') }}</bk-button
           >
         </bk-form-item>
       </bk-form>
@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer';
 export default {
   name: 'ProcessSliderEdit',
   props: {
@@ -127,83 +127,83 @@ export default {
           message: this.$t('必填项'),
           trigger: 'change',
           validator(val) {
-            return val.length
+            return val.length;
           },
         },
       ],
-    }
+    };
   },
   computed: {
     labelMap() {
       return this.propList
-        .map((item) => ({ [item.id]: item.name }))
-        .reduce((obj, item) => Object.assign(obj, item), {})
+        .map(item => ({ [item.id]: item.name }))
+        .reduce((obj, item) => Object.assign(obj, item), {});
     },
   },
   created() {
-    this.setPropForm()
-    this.getVariableList()
+    this.setPropForm();
+    this.getVariableList();
   },
   methods: {
     validateForm() {
-      this.isChecking = true
+      this.isChecking = true;
       this.$refs.processEditForm.validate().then(
         () => {
-          this.isChecking = false
+          this.isChecking = false;
         },
         (validator) => {
-          this.isChecking = false
-          console.warn(validator)
-        }
-      )
+          this.isChecking = false;
+          console.warn(validator);
+        },
+      );
     },
     cancelEdit() {
-      $emit(this, 'cancel-edit')
+      $emit(this, 'cancel-edit');
     },
     getVariableList() {
-      this.loading = true
-      const num = 100
-      const data = []
+      this.loading = true;
+      const num = 100;
+      const data = [];
       setTimeout(() => {
         for (let i = 1; i <= num; i++) {
-          data.push({ name: `variable_${i}`, value: `$\{value_${i}}` })
+          data.push({ name: `variable_${i}`, value: `$\{value_${i}}` });
         }
-        this.tableData = data
-        this.loading = false
-      }, 1000)
+        this.tableData = data;
+        this.loading = false;
+      }, 1000);
     },
-    handleClickRow(row, event, column, rowIndex) {
-      const input = document.createElement('input')
-      input.setAttribute('value', row.value)
-      document.body.appendChild(input)
-      input.select()
-      const res = document.execCommand('copy')
-      document.body.removeChild(input)
+    handleClickRow(event, row, rowIndex) {
+      const input = document.createElement('input');
+      input.setAttribute('value', row.value);
+      document.body.appendChild(input);
+      input.select();
+      const res = document.execCommand('copy');
+      document.body.removeChild(input);
       if (res) {
-        const popover = this.$refs[`valuePopover${rowIndex}`]
-        popover.showHandler()
+        const popover = this.$refs[`valuePopover${rowIndex}`];
+        popover.showHandler();
         setTimeout(() => {
-          popover.hideHandler()
-        }, 1000)
+          popover.hideHandler();
+        }, 1000);
       }
     },
     handleEditDelete(index) {
-      this.propForm.selected.splice(index, 1)
+      this.propForm.selected.splice(index, 1);
     },
     setPropForm() {
       const form = {
         selected: [],
-      }
+      };
       this.propList.forEach((item) => {
-        form[item.id] = ''
-      })
-      this.propForm = form
+        form[item.id] = '';
+      });
+      this.propForm = form;
     },
     setRowStyle() {
-      return { cursor: 'pointer' }
+      return { cursor: 'pointer' };
     },
   },
-}
+};
 </script>
 
 <style lang="postcss" scoped>

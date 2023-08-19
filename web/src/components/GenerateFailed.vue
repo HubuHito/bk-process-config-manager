@@ -39,7 +39,7 @@ export default {
     text: {
       type: String,
       default() {
-        return this.$t('执行失败')
+        return '执行失败';
       },
     },
     failedReason: {
@@ -49,11 +49,11 @@ export default {
     solutions: {
       type: Array,
       default() {
-        return []
+        return [];
       },
     },
   },
-}
+};
 </script>
 
 <style lang="postcss" scoped>

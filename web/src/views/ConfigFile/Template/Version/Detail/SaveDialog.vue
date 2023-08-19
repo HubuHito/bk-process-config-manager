@@ -1,8 +1,8 @@
 <template>
   <bk-dialog
-    :value="show"
+    :isShow="show"
     :title="$t('保存确认')"
-    :mask-close="false"
+    :quick-close="false"
     width="480"
     header-position="left"
     @value-change="handleValueChange"

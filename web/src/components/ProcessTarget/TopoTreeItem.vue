@@ -34,7 +34,7 @@
         <!-- 可勾选 -->
         <template v-if="node.topoProcess">
           <!-- 勾选进程 -->
-          <bk-checkbox v-model:value="node.topoChecked" class="king-checkbox">
+          <bk-checkbox v-model="node.topoChecked" class="king-checkbox">
             <div class="text-content" v-bk-overflow-tips>
               {{ node.topoName }}
             </div>

@@ -7,7 +7,7 @@
           <template v-if="topoNode.topoProcess">
             <!-- 勾选进程 -->
             <bk-checkbox
-              v-model:value="topoNode.topoChecked"
+              v-model="topoNode.topoChecked"
               class="king-checkbox"
               :style="{ 'padding-left': 26 * topoNode.topoLevel + 22 + 'px' }"
               @change="handleCheckNode(topoNode)"

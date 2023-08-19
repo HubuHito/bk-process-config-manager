@@ -101,7 +101,7 @@
         v-model:isShow="dialogInfo.visible"
         :render-directive="'if'"
         width="450"
-        :mask-close="false"
+        :quick-close="false"
         @confirm="handleDialogConFirm"
         @cancel="handleDialogCancel"
         :title="dialogInfo.title + $t('进程')"
@@ -447,7 +447,13 @@ export default {
       this.isSelectedAllPages = val
       this.processIdList = []
     },
-    handleRowCheck() {
+    handleRowCheck(row) {
+      const index = this.tableData.findIndex(
+        (item) => item.bk_process_id === row.bk_process_id
+      )
+      if (index > -1) {
+        this.tableData[index].isSelect = row.isSelect
+      }
       const processIdList = []
       this.tableData.forEach((item) => {
         if (item.isSelect) {
@@ -522,8 +528,8 @@ export default {
       } else {
         this.selectedScope.bk_process_id = String(row.bk_process_id)
       }
-      this.isShow = true
       this.processDetail = row
+      this.isShow = true
     },
     // 关闭侧滑面板
     closeSideSlider() {
