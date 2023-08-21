@@ -43,13 +43,13 @@
       @empty-clear="emptySearchClear"
     >
       <!-- <div class="selection-tips" v-if="selections.length" slot="prepend">
-                                                    <div>
-                                                      {{ $t('已选') }}
-                                                      <span class="tips-num">{{ selections.length }}</span>
-                                                      {{ $t('条') }},
-                                                    </div>
-                                                    <bk-button ext-cls="tips-btn" text @click="handleCancelSelect">{{ $t('取消选择所有数据') }}</bk-button>
-                                                  </div> -->
+                                                        <div>
+                                                          {{ $t('已选') }}
+                                                          <span class="tips-num">{{ selections.length }}</span>
+                                                          {{ $t('条') }},
+                                                        </div>
+                                                        <bk-button ext-cls="tips-btn" text @click="handleCancelSelect">{{ $t('取消选择所有数据') }}</bk-button>
+                                                      </div> -->
       <template #empty>
         <EmptyServiceBox
           v-if="!tableData.length && !isSearch"
@@ -89,14 +89,14 @@
       </template>
       <!-- 进程启动参数 -->
       <!-- <template slot="startParams" slot-scope="{ row }">
-                                                    <bk-popover v-if="row.isTemplate" placement="top" theme="light">
-                                                      <span disabled style="white-space: nowrap;">{{ row['bk_start_param_regex'] }}</span>
-                                                      <span slot="content">
-                                                        模版进程信息，请前往 <span class="text-cursor primary"> 服务模版 </span>编辑
-                                                      </span>
-                                                    </bk-popover>
-                                                    <span v-else>{{ row['bk_start_param_regex'] || '--' }}</span>
-                                                  </template> -->
+                                                        <bk-popover v-if="row.isTemplate" placement="top" theme="light">
+                                                          <span disabled style="white-space: nowrap;">{{ row['bk_start_param_regex'] }}</span>
+                                                          <span slot="content">
+                                                            模版进程信息，请前往 <span class="text-cursor primary"> 服务模版 </span>编辑
+                                                          </span>
+                                                        </bk-popover>
+                                                        <span v-else>{{ row['bk_start_param_regex'] || '--' }}</span>
+                                                      </template> -->
       <template #topo="{ row }">
         {{ row.topoPath }}
       </template>

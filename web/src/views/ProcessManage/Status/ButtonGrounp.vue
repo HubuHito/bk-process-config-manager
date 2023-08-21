@@ -197,7 +197,7 @@ export default {
     },
     switchSynchronousText() {
       $emit(this, 'synchronousProcess', 'config')
-      this.$refs.synchronousPopover.hideHandler()
+      this.$refs.synchronousPopover.hide()
     },
   },
   emits: ['operateProcess', 'synchronousProcess', 'operateConfigDistribute'],

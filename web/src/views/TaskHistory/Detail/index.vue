@@ -302,14 +302,14 @@
                   <bk-popover
                     :disabled="
                       !!row.instancesConfig ||
-                        ['running', 'pending'].includes(row.status)
+                      ['running', 'pending'].includes(row.status)
                     "
                     :content="$t('没有绑定配置实例，暂无法查看')"
                   >
                     <bk-button
                       :disabled="
                         !row.instancesConfig ||
-                          ['running', 'pending'].includes(row.status)
+                        ['running', 'pending'].includes(row.status)
                       "
                       theme="primary"
                       text
@@ -322,33 +322,33 @@
                   <!-- </template> -->
                   <!-- 暂时隐藏单行重试 -->
                   <!-- <bk-popover
-                                                              :disabled="row.status !== 'failed' || row.extra_data.retryable"
-                                                              ext-cls="failed-tips"
-                                                              placement="bottom"
-                                                              theme="light"
-                                                              :max-width="500">
-                                                              <bk-button
-                                                                  :disabled="row.status !== 'failed' || !row.extra_data.retryable"
-                                                                  theme="primary"
-                                                                  text
-                                                                  @click="onRetry(row)">
-                                                                  {{ $t('重试') }}</bk-button>
-                                                              <template slot="content">
-                                                                  <div class="failed-message">
-                                                                      <div class="message-text">{{ '失败信息：' }}</div>
-                                                                      <div v-html="row.extra_data.failed_reason || '--'"></div>
-                                                                  </div>
-                                                                  <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
-                                                                      <div class="message-text">{{ '解决方案：' }}</div>
-                                                                      <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
-                                                                          <div class="solute-item">
-                                                                          <span class="solute-item-order">{{ index + 1 + '.' }}</span>
-                                                                          <div class="solute-item-content" v-html="soluteItem.html"></div>
+                                                                  :disabled="row.status !== 'failed' || row.extra_data.retryable"
+                                                                  ext-cls="failed-tips"
+                                                                  placement="bottom"
+                                                                  theme="light"
+                                                                  :max-width="500">
+                                                                  <bk-button
+                                                                      :disabled="row.status !== 'failed' || !row.extra_data.retryable"
+                                                                      theme="primary"
+                                                                      text
+                                                                      @click="onRetry(row)">
+                                                                      {{ $t('重试') }}</bk-button>
+                                                                  <template slot="content">
+                                                                      <div class="failed-message">
+                                                                          <div class="message-text">{{ '失败信息：' }}</div>
+                                                                          <div v-html="row.extra_data.failed_reason || '--'"></div>
+                                                                      </div>
+                                                                      <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
+                                                                          <div class="message-text">{{ '解决方案：' }}</div>
+                                                                          <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
+                                                                              <div class="solute-item">
+                                                                              <span class="solute-item-order">{{ index + 1 + '.' }}</span>
+                                                                              <div class="solute-item-content" v-html="soluteItem.html"></div>
+                                                                              </div>
                                                                           </div>
                                                                       </div>
-                                                                  </div>
-                                                              </template>
-                                                            </bk-popover> -->
+                                                                  </template>
+                                                                </bk-popover> -->
                 </template>
               </div>
             </template>
@@ -380,9 +380,9 @@
           <span class="template-name">
             {{
               sliderData.instancesConfig.name +
-                '(' +
-                sliderData.instancesConfig.label +
-                ')'
+              '(' +
+              sliderData.instancesConfig.label +
+              ')'
             }}
           </span>
         </div>
@@ -402,8 +402,8 @@
               <div class="create-time">
                 {{
                   $t('下发时间') +
-                    $t('：') +
-                    (formatDate(sliderData.oldData.time) || '--')
+                  $t('：') +
+                  (formatDate(sliderData.oldData.time) || '--')
                 }}
               </div>
             </template>
@@ -412,8 +412,8 @@
               <div class="create-time">
                 {{
                   $t('检查时间') +
-                    $t('：') +
-                    (formatDate(sliderData.newData.time) || '--')
+                  $t('：') +
+                  (formatDate(sliderData.newData.time) || '--')
                 }}
               </div>
             </template>
@@ -425,17 +425,17 @@
 </template>
 
 <script lang="tsx">
-import DetailList from './DetailList';
-import tableHeaderMixins from '@/components/FilterHeader/table-header-mixins';
-import ViewConfig from '@/components/ViewConfig';
+import DetailList from './DetailList'
+import tableHeaderMixins from '@/components/FilterHeader/table-header-mixins'
+import ViewConfig from '@/components/ViewConfig'
 import {
   performTime,
   modifyFormatDate,
   copyText,
   formatDate,
-} from '@/common/util';
-import GenerateFailed from '@/components/GenerateFailed';
-import SidesliderDiff from '@/components/SidesliderDiff';
+} from '@/common/util'
+import GenerateFailed from '@/components/GenerateFailed'
+import SidesliderDiff from '@/components/SidesliderDiff'
 
 export default {
   name: 'HistoryDetail',
@@ -454,13 +454,13 @@ export default {
     jobObject: {
       type: Object,
       default() {
-        return {};
+        return {}
       },
     },
     jobAction: {
       type: Object,
       default() {
-        return {};
+        return {}
       },
     },
   },
@@ -470,7 +470,7 @@ export default {
       failed: this.$t('执行失败'),
       running: this.$t('正在执行'),
       pending: this.$t('等待中'),
-    };
+    }
     return {
       statusTabList: [],
       selectedTabCode: null,
@@ -506,17 +506,17 @@ export default {
       },
       templateId: null, // 记录上一次拉取版本信息的id, 不做重复拉取
       formatDate,
-    };
+    }
   },
   computed: {
     showOperateColumn() {
-      return this.jobInfo.job_object !== 'process';
+      return this.jobInfo.job_object !== 'process'
     },
     showDiffBtn() {
-      return this.selectedTabCode === 4103007;
+      return this.selectedTabCode === 4103007
     },
     tableEmptyType() {
-      return this.searchSelectValue.length ? 'search-empty' : 'empty';
+      return this.searchSelectValue.length ? 'search-empty' : 'empty'
     },
   },
   watch: {
@@ -524,24 +524,24 @@ export default {
       deep: true,
 
       handler(val) {
-        if (!val) return;
-        const info = this.setInfoDataType(val);
+        if (!val) return
+        const info = this.setInfoDataType(val)
         if (info.is_ready && !info.extra_data.failed_reason) {
           // 任务详情统计
-          this.getJobTaskStatistics();
+          this.getJobTaskStatistics()
           // 获取过滤数据
-          this.getFilterCondition();
+          this.getFilterCondition()
         }
         // 任务类型
-        this.jobInfo = info;
-        this.isTableLoading = true;
+        this.jobInfo = info
+        this.isTableLoading = true
       },
 
       immediate: true,
     },
   },
   beforeUnmount() {
-    clearTimeout(this.timer);
+    clearTimeout(this.timer)
   },
   methods: {
     // 任务详情统计（按错误码）
@@ -549,108 +549,108 @@ export default {
       try {
         const res = await this.$store.dispatch('job/ajaxGetJobTaskStatistics', {
           jobId: this.$route.params.jobId,
-        });
-        this.statusTabList = res.data || [];
-        const errCodeList = this.statusTabList.map(item => item.err_code);
+        })
+        this.statusTabList = res.data || []
+        const errCodeList = this.statusTabList.map((item) => item.err_code)
         if (!errCodeList.includes(this.selectedTabCode)) {
-          this.selectedTabCode = res.data[0].err_code;
+          this.selectedTabCode = res.data[0].err_code
         }
         // 获取任务历史详情列表
-        this.getTaskHistoryDetail();
+        this.getTaskHistoryDetail()
       } catch (error) {
-        console.warn(error);
+        console.warn(error)
       }
     },
     // 获取任务历史详情列表
     async getTaskHistoryDetail() {
       try {
-        const data = this.getSearchParams();
+        const data = this.getSearchParams()
         const res = await this.$store.dispatch('job/ajaxGetJobTaskList', {
           jobId: this.$route.params.jobId,
           data,
-        });
-        const { list, count } = res.data;
+        })
+        const { list, count } = res.data
         // 任务详情列表计算执行耗时
         list.forEach((item) => {
           // 将表格所需字段从内部挪到外部
-          const processInfo = item.extra_data.process_info;
-          item.bk_set_name = processInfo.set.bk_set_name;
-          item.bk_module_name = processInfo.module.bk_module_name;
-          item.name = processInfo.service_instance.name;
-          item.bk_process_name = processInfo.process.bk_process_name;
-          item.bk_host_innerip = processInfo.host.bk_host_innerip;
-          item.priority = processInfo.process.priority;
+          const processInfo = item.extra_data.process_info
+          item.bk_set_name = processInfo.set.bk_set_name
+          item.bk_module_name = processInfo.module.bk_module_name
+          item.name = processInfo.service_instance.name
+          item.bk_process_name = processInfo.process.bk_process_name
+          item.bk_host_innerip = processInfo.host.bk_host_innerip
+          item.priority = processInfo.process.priority
           if (this.executedList.includes(item.status)) {
-            item.timeout = performTime(item.start_time, item.end_time);
+            item.timeout = performTime(item.start_time, item.end_time)
           }
           // 处理配置实例信息
-          const instancesConfig = item.extra_data.config_instances;
+          const instancesConfig = item.extra_data.config_instances
           if (instancesConfig && instancesConfig.length) {
-            item.instancesConfig = [];
+            item.instancesConfig = []
             instancesConfig.forEach((configItem) => {
               item.instancesConfig.push({
                 name: configItem.template_name,
                 label: configItem.file_name,
                 id: configItem.id,
-              });
-            });
+              })
+            })
           }
-        });
-        this.taskList = list;
-        this.pagination.count = count;
+        })
+        this.taskList = list
+        this.pagination.count = count
         // 任务状态是否查询
         if (['pending', 'running'].includes(this.jobInfo.status)) {
-          this.getJobStatus();
+          this.getJobStatus()
         } else {
-          this.retryLoading = false;
+          this.retryLoading = false
         }
       } catch (error) {
-        console.warn(error);
+        console.warn(error)
       } finally {
-        this.isTableLoading = false;
+        this.isTableLoading = false
       }
     },
     setInfoDataType(info) {
       // 处理开始时间
-      info.start_time = modifyFormatDate(info.start_time);
+      info.start_time = modifyFormatDate(info.start_time)
       // 处理结束时间
-      info.end_time = modifyFormatDate(info.end_time);
+      info.end_time = modifyFormatDate(info.end_time)
       // 任务详情计算执行耗时
-      info.timeout = performTime(info.start_time, info.end_time);
+      info.timeout = performTime(info.start_time, info.end_time)
       // 环境类型
-      const setEnv = info.expression_scope.bk_set_env;
-      let setEevName = '';
+      const setEnv = info.expression_scope.bk_set_env
+      let setEevName = ''
       switch (setEnv) {
         case '1':
-          setEevName = this.$t('测试');
-          break;
+          setEevName = this.$t('测试')
+          break
         case '2':
-          setEevName = this.$t('体验');
-          break;
+          setEevName = this.$t('体验')
+          break
         case '3':
-          setEevName = this.$t('正式');
-          break;
+          setEevName = this.$t('正式')
+          break
       }
-      info.setEevName = setEevName;
-      return info;
+      info.setEevName = setEevName
+      return info
     },
     async getSelectedConfig() {
-      const { jobId } = this.$route.params;
-      if (!jobId) return;
-      const res = await this.$store.dispatch('job/ajaxGetJobDetail', { jobId });
-      const info = this.setInfoDataType(res.data);
-      this.jobInfo = info;
+      const { jobId } = this.$route.params
+      if (!jobId) return
+      const res = await this.$store.dispatch('job/ajaxGetJobDetail', { jobId })
+      const info = this.setInfoDataType(res.data)
+      this.jobInfo = info
     },
     // 任务状态查询
     getJobStatus() {
       try {
-        clearTimeout(this.timer);
+        clearTimeout(this.timer)
         this.timer = setTimeout(async () => {
-          this.getSelectedConfig();
-          this.getJobTaskStatistics();
-        }, 3000);
+          this.getSelectedConfig()
+          this.getJobTaskStatistics()
+        }, 3000)
       } catch (error) {
-        console.warn(error);
+        console.warn(error)
       }
     },
     // 获取过滤数据
@@ -660,37 +660,37 @@ export default {
           'meta/ajaxGetTaskFilterCondition',
           {
             jobId: this.$route.params.jobId,
-          },
-        );
-        const filterData = [];
+          }
+        )
+        const filterData = []
         for (const [key, value] of Object.entries(res.data)) {
           const params = {
             children: value,
             multiable: true,
-          };
+          }
           switch (key) {
             case 'module':
-              params.id = 'template_name';
-              params.name = this.$t('模块');
-              break;
+              params.id = 'template_name'
+              params.name = this.$t('模块')
+              break
             case 'process':
-              params.id = 'process_name';
-              params.name = this.$t('进程别名');
-              break;
+              params.id = 'process_name'
+              params.name = this.$t('进程别名')
+              break
             case 'set':
-              params.id = 'set_name';
-              params.name = this.$t('集群');
-              break;
+              params.id = 'set_name'
+              params.name = this.$t('集群')
+              break
             case 'status_choices':
-              params.id = 'status';
-              params.name = this.$t('状态');
+              params.id = 'status'
+              params.name = this.$t('状态')
           }
-          filterData.push(params);
+          filterData.push(params)
         }
-        this.filterData = filterData;
-        this.searchSelectData = filterData;
+        this.filterData = filterData
+        this.searchSelectData = filterData
       } catch (error) {
-        console.warn(error);
+        console.warn(error)
       }
     },
     // 生成搜索参数
@@ -699,83 +699,83 @@ export default {
         page: this.pagination.current,
         pagesize: this.pagination.limit,
         err_code: this.selectedTabCode,
-      };
+      }
       if (this.searchSelectValue.length) {
         this.searchSelectValue.forEach((item) => {
           switch (item.id) {
             case 'set_name':
-              params.bk_set_ids = item.values.map(val => val.id);
-              break;
+              params.bk_set_ids = item.values.map((val) => val.id)
+              break
             case 'template_name':
-              params.bk_module_ids = item.values.map(val => val.id);
-              break;
+              params.bk_module_ids = item.values.map((val) => val.id)
+              break
             case 'process_name':
-              params.bk_process_names = item.values.map(val => val.id);
-              break;
+              params.bk_process_names = item.values.map((val) => val.id)
+              break
             case 'status':
-              params.statuses = item.values.map(val => val.id);
+              params.statuses = item.values.map((val) => val.id)
           }
-        });
+        })
       }
-      return params;
+      return params
     },
     onCheckConfig(row) {
-      this.instancesConfig = row.instancesConfig;
+      this.instancesConfig = row.instancesConfig
     },
     onCloseSide() {
-      this.instancesConfig = null;
+      this.instancesConfig = null
     },
     // tab栏切换
     handleTabChange(item) {
-      this.pagination.current = 1;
-      this.selectedTabCode = item.err_code;
-      this.isTableLoading = true;
-      this.getTaskHistoryDetail();
+      this.pagination.current = 1
+      this.selectedTabCode = item.err_code
+      this.isTableLoading = true
+      this.getTaskHistoryDetail()
     },
     dropdownShow() {
-      this.isShowCopy = true;
+      this.isShowCopy = true
     },
     dropdownHide() {
-      this.isShowCopy = false;
+      this.isShowCopy = false
     },
     // 复制ip
     async handleCopy(key) {
       try {
-        this.copyLoading = true;
-        this.$refs.dropdownCopy.hide();
+        this.copyLoading = true
+        this.$refs.dropdownCopy.hide()
         const res = await this.$store.dispatch('job/ajaxGetSearchIp', {
           jobId: this.$route.params.jobId,
           status: key,
-        });
+        })
         if (res) {
           const content = {
             theme: 'error',
             message: this.$t('没有符合条件的IP'),
-          };
+          }
           if (res.data && res.data.length) {
             const ipStr = res.data
-              .map(item => item.bk_host_innerip)
-              .join('\n');
-            const result = copyText(ipStr);
+              .map((item) => item.bk_host_innerip)
+              .join('\n')
+            const result = copyText(ipStr)
             if (result) {
               Object.assign(content, {
                 theme: 'success',
                 message: this.$t('IP复制成功', { num: res.data.length }),
-              });
+              })
             }
           }
-          this.$bkMessage(content);
+          this.$bkMessage(content)
         }
       } catch (error) {
-        console.warn(error);
+        console.warn(error)
       } finally {
-        this.copyLoading = false;
+        this.copyLoading = false
       }
     },
     // 重试失败
     async onRetry(row) {
       try {
-        row.status = 'running';
+        row.status = 'running'
         this.$store
           .dispatch('job/ajaxRetryJob', {
             jobId: row.job_id,
@@ -784,21 +784,21 @@ export default {
             },
           })
           .then(() => {
-            this.getJobStatus();
-          });
+            this.getJobStatus()
+          })
       } catch (error) {
-        console.warn(error);
+        console.warn(error)
       }
     },
     // 重试所有失败
     async onAllRetry() {
       try {
-        this.retryLoading = true;
+        this.retryLoading = true
         this.taskList.forEach((item) => {
           if (item.status === 'failed') {
-            item.status = 'running';
+            item.status = 'running'
           }
-        });
+        })
         await this.$store
           .dispatch('job/ajaxRetryJob', {
             jobId: this.jobInfo.id,
@@ -807,37 +807,37 @@ export default {
             },
           })
           .then(() => {
-            this.getJobStatus();
-          });
+            this.getJobStatus()
+          })
       } catch (error) {
-        console.warn(error);
+        console.warn(error)
       }
     },
     // 小箭头路由处理
     handleRouterClick() {
-      const fromName = this.$router.__from_name;
+      const fromName = this.$router.__from_name
       if (fromName) {
         if (fromName === 'process-manage-release') {
-          this.$store.commit('routeProcessManageStatus');
+          this.$store.commit('routeProcessManageStatus')
         } else if (fromName === 'config-file-template-distribute') {
-          this.$store.commit('routeConfigTemplateList');
+          this.$store.commit('routeConfigTemplateList')
         } else {
-          this.$router.back();
+          this.$router.back()
         }
       } else {
-        this.$store.commit('routeTaskHistoryList');
+        this.$store.commit('routeTaskHistoryList')
       }
     },
     handlePageChange(page) {
-      this.isTableLoading = true;
-      this.pagination.current = page;
-      this.getTaskHistoryDetail();
+      this.isTableLoading = true
+      this.pagination.current = page
+      this.getTaskHistoryDetail()
     },
     handlePageLimitChange(limit) {
-      this.isTableLoading = true;
-      this.pagination.current = 1;
-      this.pagination.limit = limit;
-      this.getTaskHistoryDetail();
+      this.isTableLoading = true
+      this.pagination.current = 1
+      this.pagination.limit = limit
+      this.getTaskHistoryDetail()
     },
     // 配置对比 - 获取版本信息
     async getActiveVersion() {
@@ -846,72 +846,75 @@ export default {
           'configTemplate/ajaxGetConfigVersionList',
           {
             templateId: this.templateId,
-          },
-        );
-        this.activeVersion = versionRes.data.find(item => item.is_active);
+          }
+        )
+        this.activeVersion = versionRes.data.find((item) => item.is_active)
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       }
     },
     // 配置对比
     async compareConfiguration(row) {
       try {
-        this.sliderData.isShow = true;
-        this.sliderData.isLoading = true;
-        this.sliderData.instancesConfig = row.instancesConfig[0] || {};
-        const templateId = row.extra_data.config_template_ids[0];
-        const isIdenticalTemp = templateId === this.templateId;
+        this.sliderData.isShow = true
+        this.sliderData.isLoading = true
+        this.sliderData.instancesConfig = row.instancesConfig[0] || {}
+        const templateId = row.extra_data.config_template_ids[0]
+        const isIdenticalTemp = templateId === this.templateId
         const promiseList = [
           this.$store.dispatch('configInstance/ajaxGetConfigInstanceDetail', {
             instanceId: this.sliderData.instancesConfig.id,
           }),
-        ];
+        ]
         if (!isIdenticalTemp) {
-          this.templateId = templateId;
+          this.templateId = templateId
           // 获取版本信息 - 拿到配置的language
-          promiseList.push(this.$store.dispatch('configTemplate/ajaxGetConfigVersionList', {
-            templateId,
-          }));
+          promiseList.push(
+            this.$store.dispatch('configTemplate/ajaxGetConfigVersionList', {
+              templateId,
+            })
+          )
         }
-        const [instanceRes, versionRes] = await Promise.all(promiseList);
+        const [instanceRes, versionRes] = await Promise.all(promiseList)
         if (!isIdenticalTemp) {
-          this.activeVersion =            versionRes.data.find(item => item.is_active) || {};
+          this.activeVersion =
+            versionRes.data.find((item) => item.is_active) || {}
         }
-        const language = this.activeVersion.file_format;
+        const language = this.activeVersion.file_format
         // config_snapshot_info快照 实例的实际配置
         const {
           content,
           created_at,
           config_snapshot_info: snapshot = {},
-        } = instanceRes.data;
+        } = instanceRes.data
         this.sliderData.newData = {
           content: snapshot.content,
           language,
           time: snapshot.created_at,
-        };
+        }
         this.sliderData.oldData = {
           content,
           language,
           time: created_at,
-        };
+        }
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       } finally {
-        this.sliderData.isLoading = false;
+        this.sliderData.isLoading = false
       }
     },
     // 关闭配置对比后清除数据
     handleCloseSlider() {
-      this.sliderData.oldData = null;
-      this.sliderData.newData = null;
+      this.sliderData.oldData = null
+      this.sliderData.newData = null
     },
     emptySearchClear() {
-      this.isTableLoading = true;
-      this.searchSelectValue = [];
-      this.handleSearchSelectChange(this.searchSelectValue);
+      this.isTableLoading = true
+      this.searchSelectValue = []
+      this.handleSearchSelectChange(this.searchSelectValue)
     },
   },
-};
+}
 </script>
 
 <style lang="postcss" scoped>

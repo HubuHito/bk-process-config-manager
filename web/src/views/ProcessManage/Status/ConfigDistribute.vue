@@ -110,19 +110,19 @@
           </div>
           <!-- todo 出现CPU占满的问题 -->
           <!-- <DiffEditor
-                v-if="isContrast"
-                ref="diffEditorRef"
-                style="height: calc(100% - 73px)"
-                :old-data="releasedConfig"
-                :new-data="generatedConfig"
-                v-model:diff-count="diffCount"
-              />
-              <CodeEditor
-                v-else
-                :content="generatedConfig.content"
-                :language="generatedConfig.language"
-                style="height: calc(100% - 73px)"
-              /> -->
+                    v-if="isContrast"
+                    ref="diffEditorRef"
+                    style="height: calc(100% - 73px)"
+                    :old-data="releasedConfig"
+                    :new-data="generatedConfig"
+                    v-model:diff-count="diffCount"
+                  />
+                  <CodeEditor
+                    v-else
+                    :content="generatedConfig.content"
+                    :language="generatedConfig.language"
+                    style="height: calc(100% - 73px)"
+                  /> -->
         </div>
         <div class="king-btn-group" v-if="!isBatch">
           <bk-popover

@@ -166,14 +166,14 @@
 </template>
 
 <script>
-import { $on, $off, $once, $emit } from '../../../../../utils/gogocodeTransfer';
-import { mapState } from 'vuex';
-import TemplateFieldList from './TemplateFieldList';
-import CreateDraft from './CreateDraft';
-import TagAvailable from '../TagAvailable';
-import CoverDialog from '@/views/ConfigFile/Template/Version/Detail/CoverDialog';
-import TagDraft from '../TagDraft';
-import { sortByDate, commonFilterMethod, formatDate } from '@/common/util';
+import { $on, $off, $once, $emit } from '../../../../../utils/gogocodeTransfer'
+import { mapState } from 'vuex'
+import TemplateFieldList from './TemplateFieldList'
+import CreateDraft from './CreateDraft'
+import TagAvailable from '../TagAvailable'
+import CoverDialog from '@/views/ConfigFile/Template/Version/Detail/CoverDialog'
+import TagDraft from '../TagDraft'
+import { sortByDate, commonFilterMethod, formatDate } from '@/common/util'
 
 export default {
   name: 'VersionList',
@@ -215,12 +215,14 @@ export default {
       searchConfirmKeyword: '',
       tableLoading: false,
       updatePersonFilters: [],
-    };
+    }
   },
   computed: {
     ...mapState(['authMap']),
     searchedVersionList() {
-      return this.versionList.filter(item => item.description.includes(this.searchConfirmKeyword));
+      return this.versionList.filter((item) =>
+        item.description.includes(this.searchConfirmKeyword)
+      )
     },
   },
   watch: {
@@ -228,14 +230,14 @@ export default {
       deep: true,
 
       handler(val) {
-        const updatePersonFilters = new Set();
+        const updatePersonFilters = new Set()
         val.forEach((item) => {
-          updatePersonFilters.add(item.updated_by);
-        });
-        this.updatePersonFilters = [...updatePersonFilters].map(item => ({
+          updatePersonFilters.add(item.updated_by)
+        })
+        this.updatePersonFilters = [...updatePersonFilters].map((item) => ({
           text: item,
           value: item,
-        }));
+        }))
       },
 
       immediate: true,
@@ -244,28 +246,28 @@ export default {
   methods: {
     handleSearch(val) {
       // 搜索版本描述
-      this.tableLoading = true;
-      this.searchTimer && clearTimeout(this.searchTimer);
+      this.tableLoading = true
+      this.searchTimer && clearTimeout(this.searchTimer)
       this.searchTimer = setTimeout(() => {
-        this.tableLoading = false;
-        this.searchConfirmKeyword = val;
-      }, 300);
+        this.tableLoading = false
+        this.searchConfirmKeyword = val
+      }, 300)
     },
     handleRowClick(event, row) {
       // 查看版本
-      $emit(this, 'clickVersionRow', row);
+      $emit(this, 'clickVersionRow', row)
     },
 
     async handleCopyAndCreate(row) {
       // 复制并新建
-      if (this.versionList.some(item => item.is_draft)) {
+      if (this.versionList.some((item) => item.is_draft)) {
         // 是否覆盖草稿
-        this.coverVersion = row;
-        this.showCoverDialog = true;
+        this.coverVersion = row
+        this.showCoverDialog = true
       } else {
         // 直接以此克隆并新增草稿
         try {
-          $emit(this, 'update:versionLoading', true);
+          $emit(this, 'update:versionLoading', true)
           const res = await this.$store.dispatch(
             'configVersion/ajaxCreateConfigVersion',
             {
@@ -273,55 +275,55 @@ export default {
               data: {
                 description: row.description,
               },
-            },
-          );
-          this.messageSuccess(this.$t('成功创建新版本'));
-          $emit(this, 'createNewVersion', res.data);
+            }
+          )
+          this.messageSuccess(this.$t('成功创建新版本'))
+          $emit(this, 'createNewVersion', res.data)
           this.$store.commit('routeConfigTemplateVersionDetail', {
             templateId: this.$route.params.templateId,
             versionId: res.data.config_version_id,
-          });
+          })
         } catch (e) {
-          console.warn(e);
+          console.warn(e)
         } finally {
-          $emit(this, 'update:versionLoading', false);
+          $emit(this, 'update:versionLoading', false)
         }
       }
     },
     handleCoverSuccess(versionId, version) {
       // 覆盖草稿，实际修改
-      const draftVersion = this.versionList.find(item => item.is_draft);
+      const draftVersion = this.versionList.find((item) => item.is_draft)
       Object.assign(draftVersion, {
         description: version.description,
         content: version.content,
         file_format: version.codeLanguage,
         updated_at: version.updated_at,
         updated_by: version.updated_by,
-      });
-      this.showCoverDialog = false;
-      this.coverVersion = null;
+      })
+      this.showCoverDialog = false
+      this.coverVersion = null
       this.$store.commit('routeConfigTemplateVersionDetail', {
         templateId: this.$route.params.templateId,
         versionId,
-      });
+      })
     },
     closeCoverDialog() {
-      this.showCoverDialog = false;
-      this.coverVersion = null;
+      this.showCoverDialog = false
+      this.coverVersion = null
     },
 
     handleDistributeConfig() {
       // 配置下发
       this.$store.commit('routeConfigTemplateDistribute', {
         templateId: this.$route.params.templateId,
-      });
+      })
     },
     handleCreate() {
       // 新建版本
-      const firstVersion = this.versionList[0];
+      const firstVersion = this.versionList[0]
       if (!firstVersion) {
         // 新建草稿
-        this.handleNewCreate();
+        this.handleNewCreate()
       } else if (firstVersion.is_draft) {
         // 当前已有草稿，是否继续编辑
         this.$bkInfo({
@@ -330,12 +332,12 @@ export default {
             this.$store.commit('routeConfigTemplateVersionDetail', {
               templateId: this.$route.params.templateId,
               versionId: firstVersion.config_version_id,
-            });
+            })
           },
-        });
+        })
       } else {
         // 载入版本克隆草稿
-        this.showCreateDialog = true;
+        this.showCreateDialog = true
       }
     },
     async handleNewCreate() {
@@ -343,13 +345,13 @@ export default {
       this.$store.commit('routeConfigTemplateVersionDetail', {
         templateId: this.$route.params.templateId,
         versionId: '0',
-      });
+      })
     },
     handleSuccessCreated(versionId) {
-      $emit(this, 'updateVersionList', versionId);
+      $emit(this, 'updateVersionList', versionId)
     },
     updateSelectedConfig({ key, value }) {
-      $emit(this, 'change', { key, value });
+      $emit(this, 'change', { key, value })
     },
   },
   emits: [
@@ -359,7 +361,7 @@ export default {
     'updateVersionList',
     'change',
   ],
-};
+}
 </script>
 
 <style lang="postcss" scoped>
