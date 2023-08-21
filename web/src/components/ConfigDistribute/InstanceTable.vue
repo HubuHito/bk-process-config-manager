@@ -17,7 +17,7 @@
           :path="isConfigCheck ? '最后一次下发版本' : '即将下发版本'"
         >
           <span class="blue" v-bk-tooltips="activeTippy"
-          >#{{ activeVersion.config_version_id }}</span
+            >#{{ activeVersion.config_version_id }}</span
           >
         </i18n>
       </div>
@@ -95,9 +95,9 @@
             <div v-bk-tooltips="getVersionTippy(item)">
               #{{ item.config_version_id }} {{ item.description }}
               <span class="percent"
-              >({{
-                $t('占比x%', { x: versionPercents[item.config_version_id] })
-              }})</span
+                >({{
+                  $t('占比x%', { x: versionPercents[item.config_version_id] })
+                }})</span
               >
             </div>
           </bk-checkbox>
@@ -127,7 +127,7 @@
         <template #default="{ row }">
           <div v-bk-overflow-tips class="table-ceil-overflow">
             <span
-            >{{ row.bk_set_name }} / {{ row.bk_module_name }} /
+              >{{ row.bk_set_name }} / {{ row.bk_module_name }} /
               {{ row.bk_service_name }}</span
             >
           </div>
@@ -256,8 +256,8 @@
               v-test.release="'generate'"
               :disabled="
                 isTasking ||
-                  row.taskStatus === 'pending' ||
-                  row.taskStatus === 'running'
+                row.taskStatus === 'pending' ||
+                row.taskStatus === 'running'
               "
               @click="regenerate(row)"
             >
@@ -273,8 +273,8 @@
                 style="margin-right: 6px"
                 :disabled="
                   !row.config_instance_id ||
-                    row.taskStatus === 'pending' ||
-                    row.taskStatus === 'running'
+                  row.taskStatus === 'pending' ||
+                  row.taskStatus === 'running'
                 "
                 @click="handleViewConfig(row)"
               >
@@ -316,8 +316,8 @@
               <div class="create-time">
                 {{
                   $t('更新时间') +
-                    $t('：') +
-                    (formatDate(sliderData.oldData.time) || '--')
+                  $t('：') +
+                  (formatDate(sliderData.oldData.time) || '--')
                 }}
               </div>
             </template>
@@ -326,8 +326,8 @@
               <div class="create-time">
                 {{
                   $t('生成时间') +
-                    $t('：') +
-                    (formatDate(sliderData.newData.time) || '--')
+                  $t('：') +
+                  (formatDate(sliderData.newData.time) || '--')
                 }}
               </div>
             </template>
@@ -344,11 +344,11 @@
 </template>
 
 <script>
-import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer';
-import { formatDate } from '@/common/util';
-import SidesliderDiff from '@/components/SidesliderDiff';
-import ViewConfig from '@/components/ViewConfig';
-import GenerateFailed from '@/components/GenerateFailed';
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
+import { formatDate } from '@/common/util'
+import SidesliderDiff from '@/components/SidesliderDiff'
+import ViewConfig from '@/components/ViewConfig'
+import GenerateFailed from '@/components/GenerateFailed'
 
 export default {
   components: {
@@ -437,45 +437,49 @@ export default {
       scrollLoading: false, // 必须加载完成之后再加载。否则会导致取消请求而不能执行下一步
       needPromissRes: false, // 是否需要 generateConfig generateFailure 执行的结果
       tableResolve: null,
-    };
+    }
   },
   computed: {
     templateId() {
-      return Number(this.configTemplate.config_template_id);
+      return Number(this.configTemplate.config_template_id)
     },
     isConfigCheck() {
-      return this.action === 'configCheck';
+      return this.action === 'configCheck'
     },
     // 版本有在使用的版本列表
     usedVersionList() {
-      return this.versionList.filter(item => this.versionPercents[item.config_version_id] !== undefined);
+      return this.versionList.filter(
+        (item) => this.versionPercents[item.config_version_id] !== undefined
+      )
     },
     activeVersion() {
-      let activeVersion = this.versionList.find(item => item.is_active);
+      let activeVersion = this.versionList.find((item) => item.is_active)
       if (!activeVersion) {
-        console.error('无可用版本');
-        activeVersion = {};
+        console.error('无可用版本')
+        activeVersion = {}
       }
-      return activeVersion;
+      return activeVersion
     },
     activeTippy() {
       if (!this.activeVersion) {
         return {
           disabled: true,
-        };
+        }
       }
-      const updateBy =        this.$t('更新人') + this.$t('：') + this.activeVersion.updated_by;
-      const updateAt =        this.$t('更新时间')
-        + this.$t('：')
-        + formatDate(this.activeVersion.updated_at);
+      const updateBy =
+        this.$t('更新人') + this.$t('：') + this.activeVersion.updated_by
+      const updateAt =
+        this.$t('更新时间') +
+        this.$t('：') +
+        formatDate(this.activeVersion.updated_at)
       return {
         placement: 'right',
         content: `${updateBy}<br>${updateAt}`,
-      };
+      }
     },
   },
   created() {
-    this.init();
+    this.init()
   },
   // todo【upgrade】 - 不可控制行为
   // mounted() {
@@ -496,132 +500,133 @@ export default {
           'configTemplate/ajaxGetConfigVersionList',
           {
             templateId: this.templateId,
-          },
-        );
-        const versionInfoMap = {};
+          }
+        )
+        const versionInfoMap = {}
         versionRes.data.forEach((item) => {
-          versionInfoMap[item.config_version_id] = item;
-        });
+          versionInfoMap[item.config_version_id] = item
+        })
         versionRes.data.push({
           config_version_id: '-',
           description: this.$t('未下发'),
-        });
-        this.versionList = versionRes.data;
-        this.versionInfoMap = versionInfoMap;
-        this.initTableData();
+        })
+        this.versionList = versionRes.data
+        this.versionInfoMap = versionInfoMap
+        this.initTableData()
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       } finally {
-        this.tableLoading = false;
+        this.tableLoading = false
       }
     },
 
     // 暴露给父组件的方法，下一步 - 重置表格数据
     initTableData() {
-      const versionCounter = {};
-      const versionPercents = {};
-      const instanceList = JSON.parse(JSON.stringify(this.originList));
-      const instanceLength = instanceList.length;
+      const versionCounter = {}
+      const versionPercents = {}
+      const instanceList = JSON.parse(JSON.stringify(this.originList))
+      const instanceLength = instanceList.length
       instanceList.forEach((item) => {
-        item.taskStatus = '';
-        item.generatedTime = formatDate(item.created_at);
+        item.taskStatus = ''
+        item.generatedTime = formatDate(item.created_at)
         // 实例已下发的版本
-        const versionId = item.config_version_id;
+        const versionId = item.config_version_id
         if (versionId === '-') {
           // 还未根据配置版本生成实例
-          item.configVersionDescription = '--';
+          item.configVersionDescription = '--'
         } else {
-          item.configVersionDescription =            this.versionInfoMap[versionId].description;
+          item.configVersionDescription =
+            this.versionInfoMap[versionId].description
         }
         if (versionCounter[versionId]) {
-          versionCounter[versionId] += 1;
+          versionCounter[versionId] += 1
         } else {
-          versionCounter[versionId] = 1;
+          versionCounter[versionId] = 1
         }
-      });
+      })
       for (const [key, value] of Object.entries(versionCounter)) {
-        versionPercents[key] = Math.round((value / instanceLength) * 100);
+        versionPercents[key] = Math.round((value / instanceLength) * 100)
       }
       Object.assign(this, {
         versionPercents,
         completeInstanceList: instanceList,
         filterInstanceList: instanceList,
-      });
-      this.initPagination();
+      })
+      this.initPagination()
     },
     // 根据按版本过滤后的实例列表分页
     initPagination() {
-      const list = this.filterInstanceList;
+      const list = this.filterInstanceList
       if (!list.length) {
-        this.tableLoadedList.splice(0);
-        this.tablePagedList.splice(0);
-        this.isPageOver = true;
-        this.totalCount = 0;
-        this.totalPage = 0;
-        this.currentPage = 0;
-        return;
+        this.tableLoadedList.splice(0)
+        this.tablePagedList.splice(0)
+        this.isPageOver = true
+        this.totalCount = 0
+        this.totalPage = 0
+        this.currentPage = 0
+        return
       }
-      this.isPageOver = false;
-      this.totalCount = list.length;
-      this.totalPage = Math.ceil(this.totalCount / this.pageSize);
-      this.currentPage = 0;
-      this.tableLoadedList.splice(0);
-      this.tablePagedList.splice(0);
+      this.isPageOver = false
+      this.totalCount = list.length
+      this.totalPage = Math.ceil(this.totalCount / this.pageSize)
+      this.currentPage = 0
+      this.tableLoadedList.splice(0)
+      this.tablePagedList.splice(0)
       for (let i = 0; i < this.totalCount; i += this.pageSize) {
-        this.tablePagedList.push(list.slice(i, i + this.pageSize));
+        this.tablePagedList.push(list.slice(i, i + this.pageSize))
       }
-      this.loadPage();
-      this.tableScroller.scrollTop = 0;
+      this.loadPage()
+      this.tableScroller.scrollTop = 0
     },
     loadPage() {
       if (!this.scrollLoading) {
-        this.currentPage += 1;
-        this.isPageOver = this.currentPage === this.totalPage;
+        this.currentPage += 1
+        this.isPageOver = this.currentPage === this.totalPage
         this.tableLoadedList.splice(
           this.tableLoadedList.length,
           0,
-          ...this.tablePagedList[this.currentPage - 1],
-        );
-        this.handlePageAdd();
+          ...this.tablePagedList[this.currentPage - 1]
+        )
+        this.handlePageAdd()
       }
     },
     handleTableScroll() {
       if (!this.isPageOver && !this.isThrottled) {
-        this.isThrottled = true;
+        this.isThrottled = true
         setTimeout(() => {
-          this.isThrottled = false;
-          const el = this.tableScroller;
+          this.isThrottled = false
+          const el = this.tableScroller
           if (el.scrollHeight - el.offsetHeight - el.scrollTop < 10) {
-            this.loadPage();
+            this.loadPage()
           }
-        }, 200);
+        }, 200)
       }
     },
 
     // 按版本选择
     toggleVersionList() {
-      this.showVersionList = !this.showVersionList;
+      this.showVersionList = !this.showVersionList
     },
     // 选择指定版本
     async handleVersionsChange(val) {
-      this.selectedVersionIds = val;
+      this.selectedVersionIds = val
       if (val.length) {
-        this.filterInstanceList = [];
-        const newList = await this.getInstanceListByVersions();
+        this.filterInstanceList = []
+        const newList = await this.getInstanceListByVersions()
         // 如果在请求的时候又选择了版本，会取消上次请求并重新请求
         if (newList) {
-          this.filterInstanceList = newList;
+          this.filterInstanceList = newList
         }
       } else {
-        this.filterInstanceList = this.completeInstanceList;
+        this.filterInstanceList = this.completeInstanceList
       }
-      this.initPagination();
-      $emit(this, 'update-version', { [this.templateId]: val });
+      this.initPagination()
+      $emit(this, 'update-version', { [this.templateId]: val })
     },
     // 根据指定版本重新请求实例列表（为了保证 task list 能和实例列表顺序保持一致）
     async getInstanceListByVersions() {
       try {
-        this.tableLoading = true;
+        this.tableLoading = true
         const res = await this.$store.dispatch(
           'configInstance/ajaxGetConfigInstanceList',
           {
@@ -632,23 +637,24 @@ export default {
               config_version_ids: this.selectedVersionIds,
               filter_released: true, // 实例的item.config_version_id版本显示的是下发的版本，而不是生成的版本
             },
-          },
-        );
-        res.data.forEach((item) => {
-          item.taskStatus = '';
-          item.generatedTime = formatDate(item.created_at);
-          if (item.config_version_id === '-') {
-            item.configVersionDescription = '--';
-          } else {
-            item.configVersionDescription =              this.versionInfoMap[item.config_version_id].description;
           }
-        });
-        return res.data;
+        )
+        res.data.forEach((item) => {
+          item.taskStatus = ''
+          item.generatedTime = formatDate(item.created_at)
+          if (item.config_version_id === '-') {
+            item.configVersionDescription = '--'
+          } else {
+            item.configVersionDescription =
+              this.versionInfoMap[item.config_version_id].description
+          }
+        })
+        return res.data
       } catch (e) {
-        console.warn(e);
-        return null;
+        console.warn(e)
+        return null
       } finally {
-        this.tableLoading = false;
+        this.tableLoading = false
       }
     },
 
@@ -656,32 +662,32 @@ export default {
     async generateConfig({ isFirstStep }) {
       return new Promise(async (resolve) => {
         if (
-          isFirstStep
-          && this.filterInstanceList.every(item => item.status === 'generated')
+          isFirstStep &&
+          this.filterInstanceList.every((item) => item.status === 'generated')
         ) {
           // 配置下发第一步下一步，如果已经生成配置就不重新生成了
           this.filterInstanceList.forEach((item) => {
-            item.taskStatus = 'succeeded';
-          });
-          this.statusCounter.succeeded = this.filterInstanceList.length;
-          resolve(true);
+            item.taskStatus = 'succeeded'
+          })
+          this.statusCounter.succeeded = this.filterInstanceList.length
+          resolve(true)
         } else {
           try {
-            this.needPromissRes = true;
-            this.tableResolve = resolve;
+            this.needPromissRes = true
+            this.tableResolve = resolve
 
-            this.jobId = null;
-            this.isJobReady = false;
-            this.hasPollingTask = false;
+            this.jobId = null
+            this.isJobReady = false
+            this.hasPollingTask = false
             this.filterInstanceList.forEach((item) => {
-              item.taskStatus = 'running';
-            });
+              item.taskStatus = 'running'
+            })
             this.statusCounter = {
               succeeded: 0, // 已生成
               failed: 0, // 生成失败
               pending: 0, // 生成中
               running: this.filterInstanceList.length, // 生成中
-            };
+            }
             const res = await this.$store.dispatch(
               'configTemplate/ajaxGenerateConfig',
               {
@@ -691,18 +697,18 @@ export default {
                     this.selectedScope,
                   config_version_ids: this.selectedVersionIds,
                 },
-              },
-            );
-            this.jobId = res.data.job_id;
-            this.hasPollingTask = true;
-            this.pollingJobStatus(resolve);
+              }
+            )
+            this.jobId = res.data.job_id
+            this.hasPollingTask = true
+            this.pollingJobStatus(resolve)
           } catch (e) {
-            console.warn(e);
-            resolve(false);
-            this.needPromissRes = false;
+            console.warn(e)
+            resolve(false)
+            this.needPromissRes = false
           }
         }
-      });
+      })
     },
     // job 状态轮询，job 执行成功后再轮询 task
     pollingJobStatus(resolve) {
@@ -710,109 +716,111 @@ export default {
         try {
           const res = await this.$store.dispatch('job/ajaxGetJobDetail', {
             jobId: this.jobId,
-          });
+          })
           if (res.data.is_ready) {
             if (res.data.status === 'failed') {
-              this.jobId = null;
-              this.hasPollingTask = false;
-              const reason = res.data.extra_data.failed_reason;
+              this.jobId = null
+              this.hasPollingTask = false
+              const reason = res.data.extra_data.failed_reason
               this.filterInstanceList.forEach((item) => {
-                item.taskStatus = 'failed';
-                item.failed_reason = reason;
-              });
+                item.taskStatus = 'failed'
+                item.failed_reason = reason
+              })
               this.statusCounter = {
                 succeeded: 0, // 已生成
                 failed: this.filterInstanceList.length, // 生成失败
                 pending: 0, // 生成中
                 running: 0, // 生成中
-              };
-              resolve(false);
-              this.needPromissRes = false;
+              }
+              resolve(false)
+              this.needPromissRes = false
             } else {
-              this.isJobReady = true;
-              this.getTaskList(resolve);
+              this.isJobReady = true
+              this.getTaskList(resolve)
             }
           } else {
-            this.pollingJobStatus(resolve);
+            this.pollingJobStatus(resolve)
           }
         } catch (e) {
-          console.warn(e);
-          this.pollingJobStatus(resolve);
+          console.warn(e)
+          this.pollingJobStatus(resolve)
         }
-      }, 2000);
+      }, 2000)
     },
     // job 创建成功后拉取 task 列表
     async getTaskList(resolve) {
       try {
-        this.scrollLoading = true;
+        this.scrollLoading = true
         // 滚动加载分页状态时清除之前的状态轮询，新的 task list 开启新一轮轮询
-        this.taskTimer && clearTimeout(this.taskTimer);
+        this.taskTimer && clearTimeout(this.taskTimer)
         const res = await this.$store.dispatch('job/ajaxGetJobTaskList', {
           jobId: this.jobId,
           data: {
             page: 1,
             pagesize: this.tableLoadedList.length,
           },
-        });
+        })
         if (this.hasPollingTask) {
-          this.statusCounter = res.data.status_counter;
+          this.statusCounter = res.data.status_counter
         } else {
           // 当轮询结束后，部分成功部分失败，可以点击单个进程重新生成，
           // 这个时候滚动分页请求 taskList 只需要更新可见列表状态
         }
-        const pollingTaskList = [];
+        const pollingTaskList = []
         this.tableLoadedList.forEach((instanceItem, instanceIndex) => {
           // 从 task list 里面找到对应实例的任务，后台保证顺序一致
           // const matchTaskItem = res.data.find(taskItem => {
           //     return taskItem.bk_process_id === instanceItem.bk_process_id
           //         && taskItem.extra_data.inst_id === instanceItem.inst_id
           // })
-          const matchTaskItem = res.data.list[instanceIndex];
+          const matchTaskItem = res.data.list[instanceIndex]
 
-          instanceItem.generatedTime = formatDate(matchTaskItem.start_time);
+          instanceItem.generatedTime = formatDate(matchTaskItem.start_time)
           // 更新配置实例 id
           try {
-            const configInstances = matchTaskItem.extra_data.config_instances;
+            const configInstances = matchTaskItem.extra_data.config_instances
             if (configInstances.length) {
-              instanceItem.config_instance_id = configInstances.find(item => item.config_template_id === this.templateId).id;
+              instanceItem.config_instance_id = configInstances.find(
+                (item) => item.config_template_id === this.templateId
+              ).id
             } else {
               // 没有绑定配置实例
             }
           } catch (e) {
-            console.warn('任务列表返回数据格式错误，没有找到新的配置实例ID');
-            console.warn(e);
+            console.warn('任务列表返回数据格式错误，没有找到新的配置实例ID')
+            console.warn(e)
           }
 
-          const { id: taskId, status: taskStatus } = matchTaskItem;
+          const { id: taskId, status: taskStatus } = matchTaskItem
           if (taskStatus === 'succeeded') {
-            instanceItem.taskStatus = 'succeeded';
+            instanceItem.taskStatus = 'succeeded'
           } else if (taskStatus === 'failed') {
-            instanceItem.taskStatus = 'failed';
-            instanceItem.failed_reason = matchTaskItem.extra_data.failed_reason;
-            instanceItem.solutions = matchTaskItem.extra_data.solutions;
+            instanceItem.taskStatus = 'failed'
+            instanceItem.failed_reason = matchTaskItem.extra_data.failed_reason
+            instanceItem.solutions = matchTaskItem.extra_data.solutions
           } else {
-            pollingTaskList.push({ taskId, instanceIndex });
+            pollingTaskList.push({ taskId, instanceIndex })
           }
-        });
+        })
         if (this.hasPollingTask) {
           if (this.judgeTaskDone()) {
-            this.hasPollingTask = false;
-            resolve(this.statusCounter.failed === 0);
-            this.needPromissRes = false;
+            this.hasPollingTask = false
+            resolve(this.statusCounter.failed === 0)
+            this.needPromissRes = false
           } else {
             // judgeTaskDone 返回 false 有可能是生成完成之后同步生成造成的
-            this.pollingTaskStatus(pollingTaskList, resolve);
+            this.pollingTaskStatus(pollingTaskList, resolve)
           }
         } else {
           // 当轮询结束后，部分成功部分失败，可以点击单个进程重新生成，
           // 这个时候滚动分页请求 taskList 只需要更新可见列表状态
         }
       } catch (e) {
-        console.warn(e);
-        resolve(false);
-        this.needPromissRes = false;
+        console.warn(e)
+        resolve(false)
+        this.needPromissRes = false
       } finally {
-        this.scrollLoading = false;
+        this.scrollLoading = false
       }
     },
     // task 轮询
@@ -822,47 +830,49 @@ export default {
           const res = await this.$store.dispatch('job/ajaxGetJobStatus', {
             jobId: this.jobId,
             data: {
-              job_task_id_list: pollingTaskList.map(item => item.taskId),
+              job_task_id_list: pollingTaskList.map((item) => item.taskId),
             },
-          });
-          this.statusCounter = res.data.status_counter;
-          const newPollingTaskList = [];
+          })
+          this.statusCounter = res.data.status_counter
+          const newPollingTaskList = []
           // 这里接口应保证顺序和请求的 id 顺序一致
           pollingTaskList.forEach((pollingTask, pollingIndex) => {
-            const instanceItem =              this.filterInstanceList[pollingTask.instanceIndex];
-            const pollingTaskItem = res.data.job_tasks[pollingIndex];
-            const newTaskStatus = pollingTaskItem.status;
+            const instanceItem =
+              this.filterInstanceList[pollingTask.instanceIndex]
+            const pollingTaskItem = res.data.job_tasks[pollingIndex]
+            const newTaskStatus = pollingTaskItem.status
             if (newTaskStatus === 'succeeded') {
-              instanceItem.taskStatus = 'succeeded';
+              instanceItem.taskStatus = 'succeeded'
             } else if (newTaskStatus === 'failed') {
-              instanceItem.taskStatus = 'failed';
-              instanceItem.failed_reason =                pollingTaskItem.extra_data.failed_reason;
-              instanceItem.solutions = pollingTaskItem.extra_data.solutions;
+              instanceItem.taskStatus = 'failed'
+              instanceItem.failed_reason =
+                pollingTaskItem.extra_data.failed_reason
+              instanceItem.solutions = pollingTaskItem.extra_data.solutions
             } else {
-              newPollingTaskList.push(pollingTask);
+              newPollingTaskList.push(pollingTask)
             }
-          });
+          })
           if (this.judgeTaskDone()) {
-            this.hasPollingTask = false;
-            resolve(this.statusCounter.failed === 0);
-            this.needPromissRes = false;
+            this.hasPollingTask = false
+            resolve(this.statusCounter.failed === 0)
+            this.needPromissRes = false
           } else {
-            this.pollingTaskStatus(newPollingTaskList, resolve);
+            this.pollingTaskStatus(newPollingTaskList, resolve)
           }
         } catch (e) {
-          console.warn(e);
-          this.pollingTaskStatus(pollingTaskList, resolve);
+          console.warn(e)
+          this.pollingTaskStatus(pollingTaskList, resolve)
         }
-      }, 5000);
+      }, 5000)
     },
     // 根据 statusCounter 是否有进行中的任务判断 task 是否结束
     judgeTaskDone() {
-      return this.statusCounter.pending + this.statusCounter.running === 0;
+      return this.statusCounter.pending + this.statusCounter.running === 0
     },
     handlePageAdd() {
       if (this.jobId !== null && this.isJobReady) {
         // 需要更新 task_list 获取配置生成后的状态
-        this.getTaskList(this.needPromissRes ? this.tableResolve : null);
+        this.getTaskList(this.needPromissRes ? this.tableResolve : null)
       }
     },
 
@@ -871,33 +881,33 @@ export default {
       return new Promise(async (resolve) => {
         if (!this.jobId || !this.statusCounter.failed) {
           // 没有失败任务需要重试
-          resolve(true);
-          return;
+          resolve(true)
+          return
         }
         try {
-          this.needPromissRes = true;
-          this.tableResolve = resolve;
+          this.needPromissRes = true
+          this.tableResolve = resolve
           // 重试时把表格设为加载状态禁止操作表格，等重试完成，再请求 task list 获取最新状态
-          this.tableLoading = true;
-          this.hasPollingTask = true;
+          this.tableLoading = true
+          this.hasPollingTask = true
           await this.$store.dispatch('job/ajaxRetryJob', {
             jobId: this.jobId,
-          });
+          })
           this.tableLoadedList.forEach((item) => {
             if (item.taskStatus === 'failed') {
-              item.taskStatus = 'running';
+              item.taskStatus = 'running'
             }
-          });
-          this.tableLoading = false;
-          this.getTaskList(resolve);
+          })
+          this.tableLoading = false
+          this.getTaskList(resolve)
         } catch (e) {
-          console.warn(e);
-          this.tableLoading = false;
-          this.hasPollingTask = false;
-          resolve(false);
-          this.needPromissRes = false;
+          console.warn(e)
+          this.tableLoading = false
+          this.hasPollingTask = false
+          resolve(false)
+          this.needPromissRes = false
         }
-      });
+      })
     },
 
     // 暴露给父组件的方法，配置下发
@@ -906,38 +916,40 @@ export default {
         try {
           const actionMethod = `configTemplate/${
             this.isConfigCheck ? 'ajaxSetDiffConfig' : 'ajaxSetReleaseConfig'
-          }`;
+          }`
           const data = {
             config_template_id: this.templateId,
             [this.isDropdownMode ? 'scope' : 'expression_scope']:
               this.selectedScope,
-          };
-          if (!this.isConfigCheck) {
-            data.config_version_ids = this.selectedVersionIds;
           }
-          const res = await this.$store.dispatch(actionMethod, { data });
-          resolve({ jobId: res.data.job_id });
+          if (!this.isConfigCheck) {
+            data.config_version_ids = this.selectedVersionIds
+          }
+          const res = await this.$store.dispatch(actionMethod, { data })
+          resolve({ jobId: res.data.job_id })
         } catch (e) {
-          console.warn(e);
-          resolve({ jobId: null });
+          console.warn(e)
+          resolve({ jobId: null })
         }
-      });
+      })
     },
 
     // 同步重新生成某个进程 id 相关的实例
     async regenerate(row) {
       // 同步生成单个进程下的实例时，其他操作都会被禁用
-      $emit(this, 'update:isTasking', true);
-      const generateList = this.filterInstanceList.filter(item => item.bk_process_id === row.bk_process_id);
+      $emit(this, 'update:isTasking', true)
+      const generateList = this.filterInstanceList.filter(
+        (item) => item.bk_process_id === row.bk_process_id
+      )
       generateList.forEach((item) => {
         if (item.taskStatus === 'succeeded') {
-          this.statusCounter.succeeded -= 1;
+          this.statusCounter.succeeded -= 1
         } else if (item.taskStatus === 'failed') {
-          this.statusCounter.failed -= 1;
+          this.statusCounter.failed -= 1
         }
-        item.taskStatus = 'running';
-        this.statusCounter.running += 1;
-      });
+        item.taskStatus = 'running'
+        this.statusCounter.running += 1
+      })
       try {
         const res = await this.$store.dispatch(
           'configTemplate/ajaxSyncGenerateConfig',
@@ -946,57 +958,62 @@ export default {
               bk_process_id: row.bk_process_id,
             },
             templateId: this.templateId,
-          },
-        );
-        generateList.forEach((item) => {
-          const matchTaskItem =            res.data.find(taskItem => item.inst_id === taskItem.extra_data.inst_id) || {};
-          if (matchTaskItem.status === 'succeeded') {
-            item.taskStatus = 'succeeded';
-            this.statusCounter.running -= 1;
-            this.statusCounter.succeeded += 1;
-          } else if (matchTaskItem.status === 'failed') {
-            item.taskStatus = 'failed';
-            item.failed_reason = matchTaskItem.extra_data.failed_reason;
-            item.solutions = matchTaskItem.extra_data.solutions;
-            this.statusCounter.running -= 1;
-            this.statusCounter.failed += 1;
-          } else {
-            console.warn('同步生成接口出错，没有 matchTaskItem 或者状态不对');
-            item.taskStatus = 'failed';
-            this.statusCounter.running -= 1;
-            this.statusCounter.failed += 1;
           }
-          item.generatedTime = formatDate(matchTaskItem.start_time);
+        )
+        generateList.forEach((item) => {
+          const matchTaskItem =
+            res.data.find(
+              (taskItem) => item.inst_id === taskItem.extra_data.inst_id
+            ) || {}
+          if (matchTaskItem.status === 'succeeded') {
+            item.taskStatus = 'succeeded'
+            this.statusCounter.running -= 1
+            this.statusCounter.succeeded += 1
+          } else if (matchTaskItem.status === 'failed') {
+            item.taskStatus = 'failed'
+            item.failed_reason = matchTaskItem.extra_data.failed_reason
+            item.solutions = matchTaskItem.extra_data.solutions
+            this.statusCounter.running -= 1
+            this.statusCounter.failed += 1
+          } else {
+            console.warn('同步生成接口出错，没有 matchTaskItem 或者状态不对')
+            item.taskStatus = 'failed'
+            this.statusCounter.running -= 1
+            this.statusCounter.failed += 1
+          }
+          item.generatedTime = formatDate(matchTaskItem.start_time)
           // 更新配置实例 id
           try {
-            const configInstances = matchTaskItem.extra_data.config_instances;
+            const configInstances = matchTaskItem.extra_data.config_instances
             if (configInstances.length) {
-              item.config_instance_id = configInstances.find(ins => ins.config_template_id === this.templateId).id;
+              item.config_instance_id = configInstances.find(
+                (ins) => ins.config_template_id === this.templateId
+              ).id
             } else {
               // 没有绑定配置实例
             }
           } catch (e) {
-            console.warn('同步生成返回数据格式错误，没有找到新的配置实例ID');
-            console.warn(e);
+            console.warn('同步生成返回数据格式错误，没有找到新的配置实例ID')
+            console.warn(e)
           }
-        });
+        })
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
         generateList.forEach((item) => {
-          item.taskStatus = 'failed';
-          this.statusCounter.running -= 1;
-          this.statusCounter.failed += 1;
-        });
+          item.taskStatus = 'failed'
+          this.statusCounter.running -= 1
+          this.statusCounter.failed += 1
+        })
       } finally {
-        $emit(this, 'update:isTasking', false);
+        $emit(this, 'update:isTasking', false)
       }
     },
 
     // 配置对比
     async compareConfiguration(row) {
       try {
-        this.sliderData.isShow = true;
-        this.sliderData.isLoading = true;
+        this.sliderData.isShow = true
+        this.sliderData.isLoading = true
         const [releasedRes, previewRes] = await Promise.all([
           this.$store.dispatch('configInstance/ajaxGetLatestConfigInstance', {
             instId: row.inst_id,
@@ -1009,29 +1026,30 @@ export default {
               bk_process_id: row.bk_process_id,
             },
           }),
-        ]);
-        const language = this.activeVersion.file_format;
-        releasedRes.data.released_config =          releasedRes.data.released_config || {}; // 还没有下发配置
+        ])
+        const language = this.activeVersion.file_format
+        releasedRes.data.released_config =
+          releasedRes.data.released_config || {} // 还没有下发配置
         this.sliderData.oldData = {
           content: releasedRes.data.released_config.content,
           language,
           time: releasedRes.data.released_config.created_at,
-        };
+        }
         this.sliderData.newData = {
           content: previewRes.data,
           language,
           time: Date.now(),
-        };
+        }
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       } finally {
-        this.sliderData.isLoading = false;
+        this.sliderData.isLoading = false
       }
     },
     // 关闭配置对比后清除数据
     handleCloseSlider() {
-      this.sliderData.oldData = null;
-      this.sliderData.newData = null;
+      this.sliderData.oldData = null
+      this.sliderData.newData = null
     },
     // 查看配置
     handleViewConfig(row) {
@@ -1040,24 +1058,25 @@ export default {
           id: row.config_instance_id,
           label: row.config_template.file_name,
         },
-      ];
+      ]
     },
     // 版本提示
     getVersionTippy(item) {
       if (item.config_version_id === '-') {
         return {
           disabled: true,
-        };
+        }
       }
-      const updateBy = this.$t('更新人') + this.$t('：') + item.updated_by;
-      const updateAt =        this.$t('更新时间') + this.$t('：') + formatDate(item.updated_at);
+      const updateBy = this.$t('更新人') + this.$t('：') + item.updated_by
+      const updateAt =
+        this.$t('更新时间') + this.$t('：') + formatDate(item.updated_at)
       return {
         placement: 'right',
         content: `${updateBy}<br>${updateAt}`,
-      };
+      }
     },
   },
-};
+}
 </script>
 
 <style lang="postcss" scoped>

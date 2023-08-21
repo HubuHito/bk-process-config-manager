@@ -105,22 +105,22 @@
                       style="display: block; width: 100%; height: 100%"
                     ></div>
                     <template #content>
-                      <i18n path="跳转服务模板">
+                      <i18n-t keypath="跳转服务模板">
                         <span
                           class="text-cursor primary"
                           @click="handleGoServeTemp(row)"
                           >{{ $t('服务模版') }}</span
                         >
-                      </i18n>
+                      </i18n-t>
                     </template>
                   </bk-popover>
                 </div>
                 <!-- <div
-                                                                  :class="['text-content', { 'disabled': row.disabled }]"
-                                                                  v-else
-                                                                  @click="handleEditfocus(head.prop, row, $index)">
-                                                                  <span>{{ emptyCell(row[head.prop]) }}</span>
-                                                                </div> -->
+                                                                    :class="['text-content', { 'disabled': row.disabled }]"
+                                                                    v-else
+                                                                    @click="handleEditfocus(head.prop, row, $index)">
+                                                                    <span>{{ emptyCell(row[head.prop]) }}</span>
+                                                                  </div> -->
               </template>
             </bk-table-column>
             <!-- Column - 常规 -->

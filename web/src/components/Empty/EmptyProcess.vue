@@ -4,8 +4,9 @@
     <div class="empty-process-content" v-if="isEmptyPage">
       <p class="empty-title">{{ $t('接入GSEKit进程管理', [appName]) }}</p>
       <p class="empty-sub-title">
-        <i18n tag="p" path="欢迎使用GSEKit">
+        <i18n-t keypath="欢迎使用GSEKit" tag="p">
           <span>{{ appName }}</span>
+
           <bk-button
             text
             theme="primary"
@@ -17,7 +18,7 @@
               }}<i class="gsekit-icon gsekit-icon-jump-fill"></i>
             </span>
           </bk-button>
-        </i18n>
+        </i18n-t>
       </p>
       <section class="empty-box-list">
         <EmptyBox

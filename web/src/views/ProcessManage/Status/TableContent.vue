@@ -103,21 +103,21 @@
             <div v-bk-overflow-tips>
               <!-- 配置文件数 -->
               <!-- <div v-if="item.id === 'config_templates'" @click.stop>
-                                                          <template v-if="row.templateCount">
-                                                            <bk-popover placement="right">
-                                                              <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
-                                                              <div slot="content">
-                                                                <div v-for="file in row.config_templates" :key="file.config_template_id">
-                                                                  <span>{{ file.template_name }}</span>
-                                                                  {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
+                                                            <template v-if="row.templateCount">
+                                                              <bk-popover placement="right">
+                                                                <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
+                                                                <div slot="content">
+                                                                  <div v-for="file in row.config_templates" :key="file.config_template_id">
+                                                                    <span>{{ file.template_name }}</span>
+                                                                    {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
+                                                                  </div>
                                                                 </div>
-                                                              </div>
-                                                            </bk-popover>
-                                                          </template>
-                                                          <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
-                                                        </div>
-                                                        其他
-                                                        <template v-else> -->
+                                                              </bk-popover>
+                                                            </template>
+                                                            <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
+                                                          </div>
+                                                          其他
+                                                          <template v-else> -->
               <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
               <!-- </template> -->
             </div>

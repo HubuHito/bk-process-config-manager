@@ -44,8 +44,9 @@
         </div>
       </div>
       <p class="empty-footer">
-        <i18n path="快速了解GSEkit">
+        <i18n-t keypath="快速了解GSEkit">
           <span>{{ appName }}</span>
+
           <bk-button
             text
             theme="primary"
@@ -57,7 +58,7 @@
               }}<i class="ml6 gsekit-icon gsekit-icon-jump-fill"></i>
             </span>
           </bk-button>
-        </i18n>
+        </i18n-t>
       </p>
     </div>
     <div class="flex-bottom"></div>

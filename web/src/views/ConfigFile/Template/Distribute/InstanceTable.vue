@@ -105,18 +105,18 @@
               style="margin-right: 6px"
               :disabled="
                 hasPollingTask ||
-                  isDistributing ||
-                  ['pending', 'running'].includes(row.taskStatus)
+                isDistributing ||
+                ['pending', 'running'].includes(row.taskStatus)
               "
               @click="regenerate(row)"
-            >{{ $t('重新生成') }}
+              >{{ $t('重新生成') }}
             </bk-button>
             <bk-button
               theme="primary"
               text
               :disabled="row.taskStatus !== 'succeeded' || isDistributing"
               @click="compareConfiguration(row)"
-            >{{ $t('配置对比') }}
+              >{{ $t('配置对比') }}
             </bk-button>
           </template>
         </bk-table-column>
@@ -153,8 +153,8 @@
               <div class="create-time">
                 {{
                   $t('更新时间') +
-                    $t('：') +
-                    (formatDate(sliderData.oldData.time) || '--')
+                  $t('：') +
+                  (formatDate(sliderData.oldData.time) || '--')
                 }}
               </div>
             </template>
@@ -163,8 +163,8 @@
               <div class="create-time">
                 {{
                   $t('生成时间') +
-                    $t('：') +
-                    (formatDate(sliderData.newData.time) || '--')
+                  $t('：') +
+                  (formatDate(sliderData.newData.time) || '--')
                 }}
               </div>
             </template>
@@ -176,10 +176,10 @@
 </template>
 
 <script>
-import { $on, $off, $once, $emit } from '../../../../utils/gogocodeTransfer';
-import { formatDate } from '@/common/util';
-import SidesliderDiff from '@/components/SidesliderDiff';
-import GenerateFailed from '@/components/GenerateFailed';
+import { $on, $off, $once, $emit } from '../../../../utils/gogocodeTransfer'
+import { formatDate } from '@/common/util'
+import SidesliderDiff from '@/components/SidesliderDiff'
+import GenerateFailed from '@/components/GenerateFailed'
 
 export default {
   components: {
@@ -242,27 +242,29 @@ export default {
         oldData: null, // 配置对比数据
         newData: null, // 配置对比数据
       },
-    };
+    }
   },
   computed: {
     maxHeight() {
       // 表格最大高度
-      const { pageHeight } = this.$store.state;
+      const { pageHeight } = this.$store.state
       if (this.isGeneratePage) {
         // 配置生成
-        return pageHeight - 257;
+        return pageHeight - 257
       } // 配置下发 header 52 标题 60 步骤 40 选择实例 72 下边留余 53
-      return pageHeight - 317;
+      return pageHeight - 317
     },
   },
   watch: {
     instanceList(val) {
-      this.emptyText = this.$t('当前指定范围未能匹配到实例，请确认所选范围是否有误，或对应范围是否存在主机');
-      this.tableLoadedList.splice(0);
+      this.emptyText = this.$t(
+        '当前指定范围未能匹配到实例，请确认所选范围是否有误，或对应范围是否存在主机'
+      )
+      this.tableLoadedList.splice(0)
       if (val.length) {
-        this.initPagination(val);
+        this.initPagination(val)
       } else {
-        this.isPageOver = true;
+        this.isPageOver = true
       }
     },
   },
@@ -277,52 +279,54 @@ export default {
   // },
   methods: {
     initPagination(list) {
-      this.isPageOver = false;
-      this.totalCount = list.length;
-      this.totalPage = Math.ceil(this.totalCount / this.pageSize);
-      this.currentPage = 0;
-      this.tablePagedList.splice(0);
+      this.isPageOver = false
+      this.totalCount = list.length
+      this.totalPage = Math.ceil(this.totalCount / this.pageSize)
+      this.currentPage = 0
+      this.tablePagedList.splice(0)
       for (let i = 0; i < this.totalCount; i += this.pageSize) {
-        this.tablePagedList.push(list.slice(i, i + this.pageSize));
+        this.tablePagedList.push(list.slice(i, i + this.pageSize))
       }
-      this.loadPage();
-      this.tableScroller.scrollTop = 0;
+      this.loadPage()
+      this.tableScroller.scrollTop = 0
     },
     loadPage() {
-      this.currentPage += 1;
-      this.isPageOver = this.currentPage === this.totalPage;
+      this.currentPage += 1
+      this.isPageOver = this.currentPage === this.totalPage
       this.tableLoadedList.splice(
         this.tableLoadedList.length,
         0,
-        ...this.tablePagedList[this.currentPage - 1],
-      );
-      $emit(this, 'pageAdd', this.tableLoadedList.length);
+        ...this.tablePagedList[this.currentPage - 1]
+      )
+      $emit(this, 'pageAdd', this.tableLoadedList.length)
     },
     handleTableScroll() {
       if (!this.isPageOver && !this.isThrottled) {
-        this.isThrottled = true;
+        this.isThrottled = true
         setTimeout(() => {
-          this.isThrottled = false;
-          const el = this.tableScroller;
+          this.isThrottled = false
+          const el = this.tableScroller
           if (el.scrollHeight - el.offsetHeight - el.scrollTop < 10) {
-            this.loadPage();
+            this.loadPage()
           }
-        }, 200);
+        }, 200)
       }
     },
 
     async regenerate(row) {
       // 重新生成
-      const generateList = this.instanceList.filter(item => item.bk_process_id === row.bk_process_id);
+      const generateList = this.instanceList.filter(
+        (item) => item.bk_process_id === row.bk_process_id
+      )
       generateList.forEach((item) => {
-        this.updateStatus('running', this.statusCounter.running + 1);
+        this.updateStatus('running', this.statusCounter.running + 1)
         if (item.taskStatus === 'succeeded') {
-          this.updateStatus('succeeded', this.statusCounter.succeeded - 1);
+          this.updateStatus('succeeded', this.statusCounter.succeeded - 1)
         } else if (item.taskStatus === 'failed') {
-          this.updateStatus('failed', this.statusCounter.failed - 1);
+          this.updateStatus('failed', this.statusCounter.failed - 1)
         }
-        item.taskStatus = 'running';
-      });
+        item.taskStatus = 'running'
+      })
       try {
         const res = await this.$store.dispatch(
           'configTemplate/ajaxSyncGenerateConfig',
@@ -331,76 +335,79 @@ export default {
               bk_process_id: row.bk_process_id,
             },
             templateId: this.$route.params.templateId,
-          },
-        );
-        generateList.forEach((item) => {
-          const matchTaskItem =            res.data.find(taskItem => item.inst_id === taskItem.extra_data.inst_id) || {};
-          if (matchTaskItem.status === 'succeeded') {
-            item.taskStatus = 'succeeded';
-            this.updateStatus('running', this.statusCounter.running - 1);
-            this.updateStatus('succeeded', this.statusCounter.succeeded + 1);
-          } else if (matchTaskItem.status === 'failed') {
-            item.taskStatus = 'failed';
-            item.failed_reason = matchTaskItem.extra_data.failed_reason;
-            item.solutions = matchTaskItem.extra_data.solutions;
-            this.updateStatus('running', this.statusCounter.running - 1);
-            this.updateStatus('failed', this.statusCounter.failed + 1);
-          } else {
-            console.warn('同步生成接口出错，没有 matchTaskItem 或者状态不对');
-            item.taskStatus = 'failed';
-            this.updateStatus('running', this.statusCounter.running - 1);
-            this.updateStatus('failed', this.statusCounter.failed + 1);
           }
-        });
-      } catch (e) {
-        console.warn(e);
+        )
         generateList.forEach((item) => {
-          item.taskStatus = 'failed';
-          this.updateStatus('running', this.statusCounter.running - 1);
-          this.updateStatus('failed', this.statusCounter.failed + 1);
-        });
+          const matchTaskItem =
+            res.data.find(
+              (taskItem) => item.inst_id === taskItem.extra_data.inst_id
+            ) || {}
+          if (matchTaskItem.status === 'succeeded') {
+            item.taskStatus = 'succeeded'
+            this.updateStatus('running', this.statusCounter.running - 1)
+            this.updateStatus('succeeded', this.statusCounter.succeeded + 1)
+          } else if (matchTaskItem.status === 'failed') {
+            item.taskStatus = 'failed'
+            item.failed_reason = matchTaskItem.extra_data.failed_reason
+            item.solutions = matchTaskItem.extra_data.solutions
+            this.updateStatus('running', this.statusCounter.running - 1)
+            this.updateStatus('failed', this.statusCounter.failed + 1)
+          } else {
+            console.warn('同步生成接口出错，没有 matchTaskItem 或者状态不对')
+            item.taskStatus = 'failed'
+            this.updateStatus('running', this.statusCounter.running - 1)
+            this.updateStatus('failed', this.statusCounter.failed + 1)
+          }
+        })
+      } catch (e) {
+        console.warn(e)
+        generateList.forEach((item) => {
+          item.taskStatus = 'failed'
+          this.updateStatus('running', this.statusCounter.running - 1)
+          this.updateStatus('failed', this.statusCounter.failed + 1)
+        })
       }
     },
     async compareConfiguration(row) {
       // 配置对比
       try {
-        this.sliderData.isShow = true;
-        this.sliderData.isLoading = true;
+        this.sliderData.isShow = true
+        this.sliderData.isLoading = true
         const res = await this.$store.dispatch(
           'configInstance/ajaxGetLatestConfigInstance',
           {
             instId: row.inst_id,
             processId: row.bk_process_id,
             templateId: Number(this.$route.params.templateId),
-          },
-        );
-        res.data.released_config = res.data.released_config || {}; // 第一次生成时还没有下发内容
+          }
+        )
+        res.data.released_config = res.data.released_config || {} // 第一次生成时还没有下发内容
         this.sliderData.oldData = {
           content: res.data.released_config.content,
           language: res.data.released_config.file_format,
           time: res.data.released_config.created_at,
-        };
+        }
         this.sliderData.newData = {
           content: res.data.generated_config.content,
           language: res.data.generated_config.file_format,
           time: res.data.generated_config.created_at,
-        };
+        }
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       } finally {
-        this.sliderData.isLoading = false;
+        this.sliderData.isLoading = false
       }
     },
     handleCloseSlider() {
       // 关闭配置对比后清除数据
-      this.sliderData.oldData = null;
-      this.sliderData.newData = null;
+      this.sliderData.oldData = null
+      this.sliderData.newData = null
     },
     updateStatus(key, value) {
-      $emit(this, 'updateStatus', { key, value });
+      $emit(this, 'updateStatus', { key, value })
     },
   },
-};
+}
 </script>
 
 <style lang="postcss" scoped>

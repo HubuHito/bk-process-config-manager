@@ -3,10 +3,10 @@
     <template v-if="['search-empty', '500'].includes(typeDisplay)" #default>
       <template v-if="typeDisplay === 'search-empty'">
         <p class="empty-title">{{ $t('搜索结果为空') }}</p>
-        <i18n
+        <i18n-t
+          keypath="可以尝试调整关键词或清空筛选条件"
           tag="p"
           class="empty-desc"
-          path="可以尝试调整关键词或清空筛选条件"
         >
           <bk-link
             theme="primary"
@@ -15,7 +15,7 @@
           >
             {{ $t('清空筛选条件') }}
           </bk-link>
-        </i18n>
+        </i18n-t>
       </template>
       <template v-if="typeDisplay === '500'">
         <div class="empty">

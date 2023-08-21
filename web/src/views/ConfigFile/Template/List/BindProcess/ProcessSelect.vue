@@ -2,7 +2,7 @@
   <div v-if="isEmptyTopo" class="empty-topo-container">
     <img src="../../../../../assets/images/empty-topo.png" width="240" alt="" />
     <div class="empty-title">{{ $t('暂无业务拓扑') }}</div>
-    <i18n path="无拓扑提示">
+    <i18n-t keypath="无拓扑提示">
       <slot>
         <bk-button
           text
@@ -13,7 +13,7 @@
           {{ $t('配置平台') }}<i class="gsekit-icon gsekit-icon-jump-fill"></i>
         </bk-button>
       </slot>
-    </i18n>
+    </i18n-t>
     <bk-button class="king-button-init" :loading="isLoading" @click="init">{{
       $t('刷新')
     }}</bk-button>

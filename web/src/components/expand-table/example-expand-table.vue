@@ -52,13 +52,13 @@
             row.startParams || '--'
           }}</span>
           <template v-slot:content>
-            <i18n path="跳转服务模板">
+            <i18n-t keypath="跳转服务模板">
               <span
                 class="text-cursor primary"
                 @click="handleGoServeTemp(row)"
                 >{{ $t('服务模版') }}</span
               >
-            </i18n>
+            </i18n-t>
           </template>
         </bk-popover>
         <span v-else>{{ row.startParams || '--' }}</span>

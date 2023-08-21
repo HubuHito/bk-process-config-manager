@@ -18,27 +18,27 @@
       >
       </bk-checkbox>
       <!-- <bk-popover
-                                                          ref="popover"
-                                                          theme="light agent-operate"
-                                                          trigger="click"
-                                                          placement="bottom"
-                                                          :arrow="false"
-                                                          offset="26, 0"
-                                                          :on-show="handleOnShow"
-                                                          :on-hide="handleOnHide">
-                                                          <div class="icon-container">
-                                                            <i class="bk-icon icon-angle-down" :class="isDropDownShow && 'active'"></i>
-                                                          </div>
-                                                          <template slot="content">
-                                                            <ul class="dropdown-list">
-                                                              <template v-for="(item, index) in checkType.list">
-                                                                <li class="list-item" :key="index" @click="handleCheckAll(item.id)">
-                                                                  {{ item.name }}
-                                                                </li>
-                                                              </template>
-                                                            </ul>
-                                                          </template>
-                                                      </bk-popover> -->
+                                                            ref="popover"
+                                                            theme="light agent-operate"
+                                                            trigger="click"
+                                                            placement="bottom"
+                                                            :arrow="false"
+                                                            offset="26, 0"
+                                                            :on-show="handleOnShow"
+                                                            :on-hide="handleOnHide">
+                                                            <div class="icon-container">
+                                                              <i class="bk-icon icon-angle-down" :class="isDropDownShow && 'active'"></i>
+                                                            </div>
+                                                            <template slot="content">
+                                                              <ul class="dropdown-list">
+                                                                <template v-for="(item, index) in checkType.list">
+                                                                  <li class="list-item" :key="index" @click="handleCheckAll(item.id)">
+                                                                    {{ item.name }}
+                                                                  </li>
+                                                                </template>
+                                                              </ul>
+                                                            </template>
+                                                        </bk-popover> -->
     </template>
   </div>
 </template>

@@ -2,8 +2,8 @@
   <div class="edit-wrapper">
     <div class="edit-content">
       <div class="edit-title">
-        <i18n path="编辑范围Num"
-          ><span class="num">{{ selections.length }}</span></i18n
+        <i18n-t keypath="编辑范围Num"
+          ><span class="num">{{ selections.length }}</span></i18n-t
         >
       </div>
       <bk-form
