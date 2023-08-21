@@ -15,10 +15,10 @@
     <div class="bind-process">
       <div class="block-title">{{ $t('选择关联进程') }}</div>
       <div class="bk-button-group">
-        <bk-button :class="['king-button', showTemp && 'is-selected']" @click="activeTab = 'service-temp'">
+        <bk-button :class="['king-button', showTemp && 'is-selected']" :selected="showTemp" @click="activeTab = 'service-temp'">
           {{ $t('按服务模板') }}
         </bk-button>
-        <bk-button :class="['king-button', showTopo && 'is-selected']" @click="activeTab = 'biz-topo'">
+        <bk-button :class="['king-button', showTopo && 'is-selected']" :selected="showTopo" @click="activeTab = 'biz-topo'">
           {{ $t('按业务拓扑') }}
         </bk-button>
       </div>

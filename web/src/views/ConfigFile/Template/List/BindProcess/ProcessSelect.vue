@@ -24,12 +24,14 @@
       <div class="bk-button-group">
         <bk-button
           :class="['king-button', showTemp && 'is-selected']"
+          :selected="showTemp"
           @click="activeTab = 'service-temp'"
         >
           {{ $t('按服务模板') }}
         </bk-button>
         <bk-button
           :class="['king-button', showTopo && 'is-selected']"
+          :selected="showTopo"
           @click="activeTab = 'biz-topo'"
         >
           {{ $t('按业务拓扑') }}

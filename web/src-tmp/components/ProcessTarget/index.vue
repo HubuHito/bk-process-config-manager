@@ -4,7 +4,8 @@
       <div class="bk-button-group">
         <bk-button
           v-for="tab in tabList" :key="tab.id"
-          :theme="tab.id === tabActive ? 'primary' : 'default'"
+          :theme="tab.id === tabActive ? 'primary' : ''"
+          :selected="tab.id === tabActive"
           @click="handleTabClick(tab)">
           {{ tab.name }}
         </bk-button>
