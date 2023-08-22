@@ -32,7 +32,7 @@
       :row-class-name="handlerRowClassName"
       @sort-change="handleSortChange"
       @row-click="handleRowClick"
-      @page-change="handlePageChange"
+      @page-value-change="handlePageChange"
       @page-limit-change="handlePageLimitChange"
     >
       <bk-table-column prop="id" :label="$t('ID')" width="90">

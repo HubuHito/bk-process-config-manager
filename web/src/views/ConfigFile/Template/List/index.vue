@@ -39,7 +39,7 @@
       :max-height="$store.state.pageHeight - 190"
       :data="templateList"
       @sort-change="handleSortChange"
-      @page-change="handlePageChange"
+      @page-value-change="handlePageChange"
       @page-limit-change="handlePageLimitChange"
     >
       <bk-table-column
