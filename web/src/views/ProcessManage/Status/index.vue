@@ -39,12 +39,12 @@
             ref="searchSelect"
             v-test.common="'searchSelect'"
             :placeholder="$t('内网IP、云区域')"
-            :show-condition="false"
+            :conditions="[]"
             :data="searchSelectData"
-            v-model:value="searchSelectValue"
+            v-model="searchSelectValue"
             @paste.capture.prevent="handlePaste"
             @show-menu="handleSearchSelectShowMenu"
-            @change="handleSearchSelectChange"
+            @update:model-value="handleSearchSelectChange"
           >
           </bk-search-select>
         </div>

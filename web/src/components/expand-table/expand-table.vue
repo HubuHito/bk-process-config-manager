@@ -116,11 +116,11 @@
                   </bk-popover>
                 </div>
                 <!-- <div
-                                                                    :class="['text-content', { 'disabled': row.disabled }]"
-                                                                    v-else
-                                                                    @click="handleEditfocus(head.prop, row, $index)">
-                                                                    <span>{{ emptyCell(row[head.prop]) }}</span>
-                                                                  </div> -->
+                                                                      :class="['text-content', { 'disabled': row.disabled }]"
+                                                                      v-else
+                                                                      @click="handleEditfocus(head.prop, row, $index)">
+                                                                      <span>{{ emptyCell(row[head.prop]) }}</span>
+                                                                    </div> -->
               </template>
             </bk-table-column>
             <!-- Column - 常规 -->
@@ -147,7 +147,7 @@
   </div>
 </template>
 
-<script>
+<script lang="tsx">
 import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 import ExpandTh from './expand-th'
 import Correct from '@/assets/images/icon-correct.svg'

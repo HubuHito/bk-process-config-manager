@@ -6,10 +6,10 @@
         ref="searchSelect"
         v-test.common="'searchSelect'"
         :data="searchSelectData"
-        v-model:value="searchSelectValue"
-        :show-condition="false"
+        v-model="searchSelectValue"
+        :conditions="[]"
         @show-menu="handleSearchSelectShowMenu"
-        @change="handleSearchSelectChange"
+        @update:model-value="handleSearchSelectChange"
       >
       </bk-search-select>
       <bk-date-picker

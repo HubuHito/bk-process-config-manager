@@ -44,7 +44,7 @@
         >
         </EmptyServiceBox>
         <!-- <EmptyServiceBox v-else-if="isShowTopoTree && isEmtpyInstance" type="instance" :info="emptyInstanceInfo">
-                                                          </EmptyServiceBox> -->
+                                                            </EmptyServiceBox> -->
 
         <template v-else>
           <section class="temp-head" v-if="isTemplateTab">
@@ -83,10 +83,10 @@
               ref="searchSelect"
               v-test.common="'searchSelect'"
               :placeholder="$t('进程别名、进程名称、配置缺失情况')"
-              :show-condition="false"
+              :conditions="[]"
               :data="filterSearchSelectData"
-              v-model:value="searchSelectValue"
-              @change="handleSearchSelectChange"
+              v-model="searchSelectValue"
+              @update:model-value="handleSearchSelectChange"
             >
             </bk-search-select>
           </section>
@@ -122,16 +122,16 @@
           </section>
 
           <!-- <bk-sideslider
-                                                              ext-cls="process-edit-slider" :is-show.sync="slider.show" :title="slider.title" :width="slider.width">
-                                                              <template slot="content">
-                                                                <ProcessSliderEidt
-                                                                  v-if="selections.length"
-                                                                  :selections="selections"
-                                                                  :prop-list="propList"
-                                                                  @cancel-edit="slider.show = false">
-                                                                </ProcessSliderEidt>
-                                                              </template>
-                                                            </bk-sideslider> -->
+                                                                ext-cls="process-edit-slider" :is-show.sync="slider.show" :title="slider.title" :width="slider.width">
+                                                                <template slot="content">
+                                                                  <ProcessSliderEidt
+                                                                    v-if="selections.length"
+                                                                    :selections="selections"
+                                                                    :prop-list="propList"
+                                                                    @cancel-edit="slider.show = false">
+                                                                  </ProcessSliderEidt>
+                                                                </template>
+                                                              </bk-sideslider> -->
         </template>
       </section>
     </div>

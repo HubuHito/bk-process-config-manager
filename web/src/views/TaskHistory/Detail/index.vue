@@ -104,11 +104,11 @@
         <bk-search-select
           ref="searchSelect"
           v-test.common="'searchSelect'"
-          v-model:value="searchSelectValue"
-          :show-condition="false"
+          v-model="searchSelectValue"
+          :conditions="[]"
           :data="searchSelectData"
           @show-menu="handleSearchSelectShowMenu"
-          @change="handleSearchSelectChange"
+          @update:model-value="handleSearchSelectChange"
         ></bk-search-select>
       </section>
       <section class="tab-header" v-if="statusTabList.length">
@@ -322,33 +322,33 @@
                   <!-- </template> -->
                   <!-- 暂时隐藏单行重试 -->
                   <!-- <bk-popover
-                                                                    :disabled="row.status !== 'failed' || row.extra_data.retryable"
-                                                                    ext-cls="failed-tips"
-                                                                    placement="bottom"
-                                                                    theme="light"
-                                                                    :max-width="500">
-                                                                    <bk-button
-                                                                        :disabled="row.status !== 'failed' || !row.extra_data.retryable"
-                                                                        theme="primary"
-                                                                        text
-                                                                        @click="onRetry(row)">
-                                                                        {{ $t('重试') }}</bk-button>
-                                                                    <template slot="content">
-                                                                        <div class="failed-message">
-                                                                            <div class="message-text">{{ '失败信息：' }}</div>
-                                                                            <div v-html="row.extra_data.failed_reason || '--'"></div>
-                                                                        </div>
-                                                                        <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
-                                                                            <div class="message-text">{{ '解决方案：' }}</div>
-                                                                            <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
-                                                                                <div class="solute-item">
-                                                                                <span class="solute-item-order">{{ index + 1 + '.' }}</span>
-                                                                                <div class="solute-item-content" v-html="soluteItem.html"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </template>
-                                                                  </bk-popover> -->
+                                                                      :disabled="row.status !== 'failed' || row.extra_data.retryable"
+                                                                      ext-cls="failed-tips"
+                                                                      placement="bottom"
+                                                                      theme="light"
+                                                                      :max-width="500">
+                                                                      <bk-button
+                                                                          :disabled="row.status !== 'failed' || !row.extra_data.retryable"
+                                                                          theme="primary"
+                                                                          text
+                                                                          @click="onRetry(row)">
+                                                                          {{ $t('重试') }}</bk-button>
+                                                                      <template slot="content">
+                                                                          <div class="failed-message">
+                                                                              <div class="message-text">{{ '失败信息：' }}</div>
+                                                                              <div v-html="row.extra_data.failed_reason || '--'"></div>
+                                                                          </div>
+                                                                          <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
+                                                                              <div class="message-text">{{ '解决方案：' }}</div>
+                                                                              <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
+                                                                                  <div class="solute-item">
+                                                                                  <span class="solute-item-order">{{ index + 1 + '.' }}</span>
+                                                                                  <div class="solute-item-content" v-html="soluteItem.html"></div>
+                                                                                  </div>
+                                                                              </div>
+                                                                          </div>
+                                                                      </template>
+                                                                    </bk-popover> -->
                 </template>
               </div>
             </template>
